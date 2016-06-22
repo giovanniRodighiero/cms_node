@@ -4,7 +4,7 @@ var controllers = {
       find: function(user){
         return true;
       },
-      findOne: function(user){
+      findone: function(user){
         return true;
       },
       create: function(user){
@@ -32,7 +32,7 @@ var controllers = {
       find: function(user){
         return true;
       },
-      findOne: function(user){
+      findone: function(user){
         return true;
       },
       create: function(user){
@@ -62,7 +62,7 @@ var models = {
       find: function(record, user){
         return true;
       },
-      findOne: function(record, user){
+      findone: function(record, user){
         return true;
       },
       create: function(record, user){
@@ -81,7 +81,7 @@ var models = {
       find: function(record, user){
         return true;
       },
-      findOne: function(record, user){
+      findone: function(record, user){
         return true;
       },
       create: function(record, user){
