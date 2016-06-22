@@ -35,6 +35,12 @@ module.exports = {
         model: "<%= userModel.associations.oneWay[index].model %>"
       },
     <% } %>
+    <% for (index in model.associations.oneToOne){ %>
+      <%= model.associations.oneToOne[index].fieldName %>: {
+        model: "<%= model.associations.oneWay[index].model %>",
+        unique: true
+      },
+    <% } %>
   },
   toJSON() {
     let obj = this.toObject();
