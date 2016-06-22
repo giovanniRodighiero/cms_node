@@ -31,8 +31,8 @@ module.exports = {
       "api/models",
       "api/controllers",
       "api/services",
-      "config",
-      "views"
+      "api/assets",
+      "config"
     ]
   }
 };
