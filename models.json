@@ -1,0 +1,68 @@
+{
+  "defaults":
+    {
+      "website":{
+        "fields":[
+          {"name":"name", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
+              ]
+            }
+          ]
+        },
+      "metadata":{
+        "fields":[
+          {"name":"path", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
+            ]
+          },
+          {"name":"meta_title", "params":[
+            {"parName":"type","value":"string"}
+              ]
+            },
+          {"name":"meta_descr", "params":[
+            {"parName":"type","value":"string"}
+              ]
+            },
+          {"name":"published", "params":[
+            {"parName":"type","value":"boolean"}
+              ]
+            },
+          {"name":"locale", "params":[
+            {"parName":"type","value":"string"}
+              ]
+            }
+          ]
+        }
+    },
+  "models":[
+    {
+      "modelName":"website",
+      "inheritsFrom": "website",
+      "fields":[],
+      "associations":{
+        "manyToMany":[],
+        "oneToMany":[
+          {"fieldName":"users", "collection":"user","via":"website"},
+          {"fieldName":"metadatas", "collection":"metadata","via":"website"}
+        ],
+        "oneToOne":[],
+        "oneWay":[]
+      }
+    },
+    {
+      "modelName":"metadata",
+      "inheritsFrom": "metadata",
+      "fields":[],
+      "associations":{
+        "manyToMany":[],
+        "oneToMany":[],
+        "oneToOne":[],
+        "oneWay":[
+          {"fieldName":"website", "model":"website"}
+        ]
+      }
+    }
+  ]
+}

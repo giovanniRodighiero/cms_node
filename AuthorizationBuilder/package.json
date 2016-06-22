@@ -1,0 +1,32 @@
+{
+  "name": "sails-generate-authorizationbuilder",
+  "version": "0.10.0",
+  "description": "sails generate AuthorizationBuilder",
+  "main": "Generator.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "AuthorizationBuilder",
+    "generator",
+    "sails",
+    "generate",
+    "plugin"
+  ],
+  "author": "balderdashy",
+  "license": "MIT",
+  "dependencies": {
+  	"lodash": ">=2.4.x",
+  	"merge-defaults": ">=0.1.0"
+  },
+  "devDependencies": {
+    "sails-generate": "*",
+    "reportback": "*",
+    "fs-extra": "*"
+  },
+  "sailsGenerator": {
+    "type": "AuthorizationBuilder",
+    "behavior": "overrides `sails generate AuthorizationBuilder`",
+    "sailsVersion": "~0.10.0"
+  }
+}

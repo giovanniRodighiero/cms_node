@@ -1,0 +1,40 @@
+{
+  "defaults":
+    {
+      "user":{
+        "fields":[
+          {"name":"password", "params":[
+            {"parName":"type","value":"string"}
+            ]
+          },
+          {"name":"role", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
+            ]
+          },
+          {"name":"email", "params":[
+            {"parName":"type","value":"email"},
+            {"parName":"required","value":"true"},
+            {"parName":"unique","value":"true"}
+            ]
+          }
+        ]
+      }
+    },
+  "models":[
+    {
+      "modelName":"user",
+      "inheritsFrom": "user",
+      "fields":[
+      ],
+      "associations":{
+        "manyToMany":[],
+        "oneToMany":[],
+        "oneToOne":[],
+        "oneWay":[
+          {"fieldName":"website", "model":"website"}
+        ]
+      }
+    }
+  ]
+}
