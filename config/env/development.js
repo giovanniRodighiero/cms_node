@@ -21,7 +21,18 @@ module.exports = {
       connection: 'someMysqlServer',
       migrate: 'alter'
     },
-    log: {
-      level: 'silly'
-    }
+  log: {
+    level: 'silly'
+  },
+  autoreload: {
+    active: true,
+    usePolling: false,
+    dirs: [
+      "api/models",
+      "api/controllers",
+      "api/services",
+      "config",
+      "views"
+    ]
+  }
 };

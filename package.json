@@ -41,5 +41,8 @@
     "url": "git://github.com/grodighiero/cms.git"
   },
   "author": "grodighiero",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "sails-hook-autoreload": "^0.13.1"
+  }
 }

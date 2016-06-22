@@ -1,5 +1,5 @@
 var controllers = {
-  
+
     website:{
       find: function(user){
         return true;
@@ -26,7 +26,7 @@ var controllers = {
         }
       }
     },
-  
+
     metadata:{
       find: function(user){
         return true;
@@ -53,8 +53,8 @@ var controllers = {
         }
       }
     },
-  
-  
+
+
     user:{
       find: function(user){
         return true;
@@ -81,10 +81,10 @@ var controllers = {
         }
       }
     },
-  
+
 };
 var models = {
-  
+
     website:{
       find: function(record, user){
         return true;
@@ -102,7 +102,7 @@ var models = {
         return true;
       }
     },
-  
+
     metadata:{
       find: function(record, user){
         return true;
@@ -120,8 +120,8 @@ var models = {
         return true;
       }
     },
-  
-  
+
+
     user:{
       find: function(record, user){
         return true;
@@ -129,7 +129,7 @@ var models = {
       findOne: function(record, user){
         return true;
       },
-      create: function(record user){
+      create: function(record, user){
         return true;
       },
       update: function(record, user){
@@ -139,7 +139,7 @@ var models = {
         return true;
       }
     },
-  
+
 };
 module.exports.authorization = {
   authorize_controller: function(controller, action, user){
