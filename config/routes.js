@@ -35,6 +35,7 @@ module.exports.routes = {
   '/': {
     view: 'home'
   },
+  '/homeLoggato':'index'
   'post /signin':'AuthController.signin'
 
   /***************************************************************************
