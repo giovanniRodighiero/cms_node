@@ -84,7 +84,7 @@ var models = {
       findOne: function(record, user){
         return true;
       },
-      create: function(record user){
+      create: function(record, user){
         return true;
       },
       update: function(record, user){
