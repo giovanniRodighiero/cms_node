@@ -1,10 +1,15 @@
 extends ./layout.jade
 
-
 block title
   title Home Autenticato
 block content
   h1 sei loggato come 
-    = user.role
-  h2
-    a(href="/users") Users
+    =curr_user.role
+  each model in models
+    if(authorize_controller(model.modelName, 'find', curr_user))
+      a(href="/"+model.modelName)= model.modelName
+      br
+  each model in user    
+    if(authorize_controller(model.modelName, 'find', curr_user))
+      a(href="/"+model.modelName)= model.modelName
+      br
