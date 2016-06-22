@@ -1,10 +1,10 @@
 var controllers = {
-  
+
     website:{
       find: function(user){
         return true;
       },
-      findOne: function(user){
+      findone: function(user){
         return true;
       },
       create: function(user){
@@ -26,12 +26,12 @@ var controllers = {
         }
       }
     },
-  
+
     metadata:{
       find: function(user){
         return true;
       },
-      findOne: function(user){
+      findone: function(user){
         return true;
       },
       create: function(user){
@@ -53,13 +53,16 @@ var controllers = {
         }
       }
     },
-  
-  
+
+
     user:{
       find: function(user){
-        return true;
+        if(user.role != 'superAdmin')
+          return false;
+        else
+          return true;
       },
-      findOne: function(user){
+      findone: function(user){
         return true;
       },
       create: function(user){
@@ -81,15 +84,15 @@ var controllers = {
         }
       }
     },
-  
+
 };
 var models = {
-  
+
     website:{
       find: function(record, user){
         return true;
       },
-      findOne: function(record, user){
+      findone: function(record, user){
         return true;
       },
       create: function(record, user){
@@ -102,12 +105,12 @@ var models = {
         return true;
       }
     },
-  
+
     metadata:{
       find: function(record, user){
         return true;
       },
-      findOne: function(record, user){
+      findone: function(record, user){
         return true;
       },
       create: function(record, user){
@@ -120,14 +123,17 @@ var models = {
         return true;
       }
     },
-  
-  
+
+
     user:{
       find: function(record, user){
         return true;
       },
-      findOne: function(record, user){
-        return true;
+      findone: function(record, user){
+        if(record.result.id === user.id)
+          return true;
+        else
+          return false;
       },
       create: function(record, user){
         return true;
@@ -139,7 +145,7 @@ var models = {
         return true;
       }
     },
-  
+
 };
 module.exports.authorization = {
   authorize_controller: function(controller, action, user){
