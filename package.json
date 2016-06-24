@@ -23,6 +23,7 @@
     "grunt-sync": "0.2.4",
     "include-all": "~0.1.6",
     "jade": "^1.11.0",
+    "jade-bootstrap": "^1.0.6",
     "lodash": "^4.13.1",
     "passport": "^0.3.2",
     "passport-jwt": "^2.0.0",

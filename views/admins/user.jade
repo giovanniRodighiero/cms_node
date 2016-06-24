@@ -1,0 +1,22 @@
+extends ../index.jade
+
+block admin
+  block nav
+    +nav_item("/admin") Dashboard    
+  block page
+    h1.page-header.text-center #{page}
+    .table-responsive
+      table.table
+        thead
+          tr 
+            each field in sails.config.models_structure.getUserByName(page).root.fields
+              if(field.name != 'password')
+                th= field.name
+        tbody
+          each user in results
+            tr
+              each field in sails.config.models_structure.getUserByName(page).root.fields
+                if(field.name != 'password')
+                  th= user[field.name]
+            
+    

@@ -1,12 +1,10 @@
-extends ./layout.jade
+extends layout.jade
 
 block content
-  h1(class="page-header") Metadati ap
-  form(method="post" action="/signin")
-      label email
-      input(type="text" name="email")
-      br
-      label password
-      input(type="password" name="password")
-      br
-      button(type="submit") login
+  h1(class="page-header text-center") CMS Metadati
+  section(class="row")
+    div(class="col-xs-6 col-xs-offset-3")
+      form(method="post" action="/signin" )
+        +input("email","email","email","email","email")
+        +input("password","password","password","password","password")
+        +submit("log in")

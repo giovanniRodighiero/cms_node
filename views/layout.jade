@@ -1,16 +1,8 @@
-doctype html
-html(lang="en")
-  head
-    block title
-    // STYLES
-    link(rel="stylesheet", href="/styles/boostrap.css")
-    link(rel="stylesheet", href="/styles/folder/style.css")
-    link(rel="stylesheet", href="/styles/myStyle.css")
-    // STYLES END
+extends ../node_modules/jade-bootstrap/_bootstrap.jade
 
-  body
-    main
-      block content
-    // SCRIPTS
-    script(src="/js/dependencies/sails.io.js")
-    // SCRIPTS END
+append styles
+  // STYLES
+  link(rel="stylesheet", href="/styles/boostrap.css")
+  link(rel="stylesheet", href="/styles/folder/style.css")
+  link(rel="stylesheet", href="/styles/myStyle.css")
+  // STYLES END

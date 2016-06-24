@@ -38,7 +38,8 @@ module.exports.routes = {
   },
   'post /signin':'AuthController.signin',
   'get /signout':'AuthController.signout',
-  'get /admin': 'AdminController.index'
+  'get /admin': 'AdminController.index',
+  'get /user': 'AdminController.user'
 
   /***************************************************************************
   *                                                                          *

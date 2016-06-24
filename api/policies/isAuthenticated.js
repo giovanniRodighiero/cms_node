@@ -38,7 +38,7 @@ module.exports = (req, res, next) => {
           res.negotiate(err);
         })
       }else
-        res.redirect(401,'/');
+        res.view('401');
     }else{
       req.user = user;
       next();

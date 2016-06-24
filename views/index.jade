@@ -1,15 +1,33 @@
 extends ./layout.jade
 
-block title
-  title Home Autenticato
 block content
-  h1 sei loggato come 
-    =curr_user.role
-  each model in models
-    if(authorize_controller(model.modelName, 'find', curr_user))
-      a(href="/"+model.modelName)= model.modelName
-      br
-  each model in user    
-    if(authorize_controller(model.modelName, 'find', curr_user))
-      a(href="/"+model.modelName)= model.modelName
-      br
+  nav
+    +navbar("CMS metadati","dropdown_menu")
+      block nav
+        +nav_item("/admin","active") Dashboard
+      +nav_item("#")= req.user.email
+      +nav_item("/signout") Log out
+  main.container-fluid
+    div.row
+      section.col-md-2
+        ul.nav.nav-pills.nav-stacked
+          each model in sails.config.models_structure.getModels().models
+            if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
+              if page == model.modelName
+                li.active(role="presentation")
+                  a(href="/"+model.modelName)= model.modelName                  
+              else
+                li(role="presentation")                
+                  a(href="/"+model.modelName)= model.modelName
+          each model in sails.config.models_structure.getUser().models
+            if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
+              if page == model.modelName
+                li.active(role="presentation")
+                  a(href="/"+model.modelName)= model.modelName                  
+              else
+                li(role="presentation")                
+                  a(href="/"+model.modelName)= model.modelName
+      section(class="col-md-10")
+        block page
+          h1.page-header.text-center Pannello Amministrazione, 
+            small ruolo: #{req.user.role}                      
