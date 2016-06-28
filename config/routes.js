@@ -39,8 +39,33 @@ module.exports.routes = {
   'post /signin':'AuthController.signin',
   'get /signout':'AuthController.signout',
   'get /admin': 'AdminController.index',
-  'get /user': 'AdminController.user'
 
+  'get /admin/user': 'admin/UserController.find',
+  'get /admin/user/new': 'admin/UserController.new',
+  'get /admin/user/:id': 'admin/UserController.findOne',
+  'post /admin/user': 'admin/UserController.create',
+  'put /admin/user/:id': 'admin/UserController.update',
+  'delete /admin/user/:id': 'admin/UserController.destroy',
+
+  'get /admin/metadata': 'admin/MetadataController.find',
+  'get /admin/metadata/new': 'admin/MetadataController.new',
+  'get /admin/metadata/:id': 'admin/MetadataController.findOne',
+  'post /admin/metadata': 'admin/MetadataController.create',
+  'put /admin/metadata/:id': 'admin/MetadataController.update',
+  'delete /admin/metadata/:id': 'admin/MetadataController.destroy',
+
+
+  'get /admin/website': 'admin/WebsiteController.find',
+  'get /admin/website/new': 'admin/WebsiteController.new',
+  'get /admin/website/:id': 'admin/WebsiteController.findOne',
+  'post /admin/website': 'admin/WebsiteController.create',
+  'put /admin/website/:id': 'admin/WebsiteController.update',
+  'delete /admin/website/:id': 'admin/WebsiteController.destroy',
+
+  'get /admin/account/:id': 'admin/UserController.findOne',
+
+  'get /:locale/metadata':'MetadataController.findByLoc',
+  'get /:locale/metadata/:id':'MetadataController.findOneWithLoc'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

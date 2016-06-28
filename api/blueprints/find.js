@@ -27,6 +27,9 @@ module.exports = (req, res) => {
 
   // const query = Model.find(null, fields.length > 0 ? {select: fields} : null).where(where).limit(limit).skip(skip).sort(sort);
   // const findQuery = _.reduce(_.intersection(populate, takeAlias(Model.associations)), populateAlias, query);
+
+  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
+    return res.unauthorized();
   if(req.user)
     var query = Model.find().limit(limit).skip(skip).sort(sort);// mostro tutto
   else
@@ -35,7 +38,7 @@ module.exports = (req, res) => {
   findQuery
     .then(function(records){
   			var myResult = {
-  				results: records,
+  				results: _.omit(records, 'password'),
   				model: Model.identity,
   				start: skip,
           limit: limit,
@@ -44,4 +47,4 @@ module.exports = (req, res) => {
         return res.ok(myResult);
     })
     .catch(res.negotiate);
-};
+  };

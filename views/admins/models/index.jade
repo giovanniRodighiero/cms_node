@@ -1,0 +1,37 @@
+extends ../index.jade
+  
+block admin
+  block nav
+    +nav_item("/admin") Dashboard    
+  block page
+    ul.nav.nav-tabs
+      li.active(role="presentation") 
+        a(href="/admin/#{page}") Index
+      if(sails.config.authorization.authorize_controller(page, 'create', req.user))
+        li(role="presentation") 
+          a(href="/admin/#{page}/new") Nuovo  
+    h1.page-header.text-center #{page}        
+    .table-responsive
+      table.table
+        thead
+          tr 
+            each field in sails.config.models_structure.getModelByName(page).root.fields
+              if(field.name != 'password')
+                th= field.name
+            th Azioni
+        tbody
+          each user in results
+            if(sails.config.authorization.authorize_resource(user, 'find', req.user))
+              tr
+                each field in sails.config.models_structure.getModelByName(page).root.fields
+                  if(field.name != 'password')
+                    th= user[field.name]
+                th
+                  a(href="/admin/#{page}/#{user.id}")
+                    button.btn.btn-warning Modifica
+                  if(sails.config.authorization.authorize_resource(user, 'destroy', req.user))
+                    form(method="post" action="/admin/#{page}/#{user.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+                      input(type="hidden" name="_method" value="DELETE")
+                      button.btn.btn-danger(type="submit") Elimina
+              
+    

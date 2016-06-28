@@ -77,8 +77,12 @@ function _onLocalStrategyAuth (req, username, password, next) {
   User
     .findOne({[LOCAL_STRATEGY_CONFIG.usernameField]: username})
     .then( function(user) {
-      if (!user) return next(null, null, sails.config.errors.USER_NOT_FOUND);
-      if (!HashService.bcrypt.compareSync(password, user.password)) return next(null, null, sails.config.errors.USER_NOT_FOUND);
+      if (!user){
+        return next(null, null, sails.config.errors.USER_NOT_FOUND);
+      }
+      if (!HashService.bcrypt.compareSync(password, user.password)){
+        return next(null, null, sails.config.errors.USER_NOT_FOUND);
+      }
       // store in session
       req.session.me = {id: user.id, website: user.website, role: user.role};
       return next(null, user, {});
@@ -153,8 +157,15 @@ module.exports = {
      * @private
      */
     onPassportAuth(req, res, error, user, info) {
-      if (error || !user) return res.negotiate(error || info);
-      if(req.get('Authorization')){
+      if (error || !user){
+        if(req.wantsJSON){
+          return res.negotiate(error || info);
+        }else {
+          req.addFlash('danger','Credenziali errate');
+          return res.redirect('/');
+        }
+      }
+      if(req.wantsJSON){
         return res.ok({
           token: CipherService.jwt.encodeSync({id: user.id}),
           user: user

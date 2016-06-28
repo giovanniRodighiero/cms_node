@@ -3,40 +3,46 @@
 module.exports = {
   attributes: {
     // base model fields
-    
+
       password: {
-        
+
           type:"string",
-        
+
       },
-    
+
       role: {
-        
+
           type:"string",
-        
+
+          enum:['admin','superAdmin'],
+
           required:true,
-        
+
+          defaultsTo:"admin",
+
       },
-    
+
       email: {
-        
+
           type:"email",
-        
+
           required:true,
-        
+
           unique:true,
-        
+
       },
-    
+
     // custom fields
-    
-    
-    
-    
+
       website: {
-        model: "website"
+
+          model:"website",
+
+          required:true,
+
       },
-    
+
+
   },
   toJSON() {
     let obj = this.toObject();
@@ -65,5 +71,6 @@ beforeCreate(values, next) {
       next();
     })
     .catch(next);
-}
+},
+
 };

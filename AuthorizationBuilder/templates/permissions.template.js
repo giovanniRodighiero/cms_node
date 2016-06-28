@@ -4,7 +4,7 @@ var controllers = {
       find: function(user){
         return true;
       },
-      findOne: function(user){
+      findone: function(user){
         return true;
       },
       create: function(user){
@@ -13,7 +13,7 @@ var controllers = {
       update: function(user){
         return true;
       },
-      delete: function(user){
+      destroy: function(user){
         return true;
       },
       isAllowed: function(action, user){
@@ -32,7 +32,7 @@ var controllers = {
       find: function(user){
         return true;
       },
-      findOne: function(user){
+      findone: function(user){
         return true;
       },
       create: function(user){
@@ -41,11 +41,16 @@ var controllers = {
       update: function(user){
         return true;
       },
-      delete: function(user){
+      destroy: function(user){
         return true;
       },
       isAllowed: function(action, user){
         switch (action) {
+          case 'new':
+            if(user.role === 'superAdmin')
+              return true;
+            else
+              return false;
           // case expression:
           //
           //   break;
@@ -62,7 +67,7 @@ var models = {
       find: function(record, user){
         return true;
       },
-      findOne: function(record, user){
+      findone: function(record, user){
         return true;
       },
       create: function(record, user){
@@ -71,7 +76,7 @@ var models = {
       update: function(record, user){
         return true;
       },
-      delete: function(record, user){
+      destroy: function(record, user){
         return true;
       }
     },
@@ -81,7 +86,7 @@ var models = {
       find: function(record, user){
         return true;
       },
-      findOne: function(record, user){
+      findone: function(record, user){
         return true;
       },
       create: function(record, user){
@@ -90,7 +95,7 @@ var models = {
       update: function(record, user){
         return true;
       },
-      delete: function(record, user){
+      destroy: function(record, user){
         return true;
       }
     },

@@ -8,16 +8,21 @@ var controllers = {
         return true;
       },
       create: function(user){
-        return true;
+        return (user.role === 'superAdmin');
       },
       update: function(user){
         return true;
       },
-      delete: function(user){
+      destroy: function(user){
         return true;
       },
       isAllowed: function(action, user){
         switch (action) {
+          case 'new':
+            if(user.role === 'superAdmin')
+              return true;
+            else
+              return false;
           // case expression:
           //
           //   break;
@@ -40,11 +45,20 @@ var controllers = {
       update: function(user){
         return true;
       },
-      delete: function(user){
+      destroy: function(user){
         return true;
       },
       isAllowed: function(action, user){
         switch (action) {
+          case 'new':
+            return true;
+            break;
+          case 'findbyloc':
+            return true;
+            break;
+          case 'findonewithloc':
+            return true;
+            break;
           // case expression:
           //
           //   break;
@@ -57,25 +71,30 @@ var controllers = {
 
     user:{
       find: function(user){
-        if(user.role != 'superAdmin')
-          return false;
-        else
+        if(user.role === 'superAdmin')
           return true;
+        else
+          return false;
       },
       findone: function(user){
         return true;
       },
       create: function(user){
-        return true;
+        return (user.role === 'superAdmin');
       },
       update: function(user){
         return true;
       },
-      delete: function(user){
-        return true;
+      destroy: function(user){
+        return (user.role === 'superAdmin');
       },
       isAllowed: function(action, user){
         switch (action) {
+          case 'new':
+            if(user.role === 'superAdmin')
+              return true;
+            else
+              return false;
           // case expression:
           //
           //   break;
@@ -90,19 +109,22 @@ var models = {
 
     website:{
       find: function(record, user){
-        return true;
+        return (user.role === 'superAdmin' || record.id == user.website);
       },
       findone: function(record, user){
-        return true;
+        return (user.role === 'superAdmin' || record.id == user.website);
       },
       create: function(record, user){
-        return true;
+        return (user.role === 'superAdmin');
       },
       update: function(record, user){
-        return true;
+        return (user.role === 'superAdmin' || record.id == user.website);
       },
-      delete: function(record, user){
-        return true;
+      destroy: function(record, user){
+        if(user.role === 'superAdmin')
+          return true;
+        else
+          return false;
       }
     },
 
@@ -119,7 +141,7 @@ var models = {
       update: function(record, user){
         return true;
       },
-      delete: function(record, user){
+      destroy: function(record, user){
         return true;
       }
     },
@@ -130,19 +152,19 @@ var models = {
         return true;
       },
       findone: function(record, user){
-        if(record.result.id === user.id)
-          return true;
-        else
-          return false;
+        return (record.id == user.id || user.role === 'superAdmin');
       },
       create: function(record, user){
         return true;
       },
       update: function(record, user){
-        return true;
+        return (record.id == user.id || user.role === 'superAdmin');
       },
-      delete: function(record, user){
-        return true;
+      destroy: function(record, user){
+        return (user.role === 'superAdmin');
+      },
+      password: function(record, user){
+        return (record.id == user.id)
       }
     },
 

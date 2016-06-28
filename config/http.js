@@ -8,6 +8,11 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.http.html
  */
+ function supports(method) {
+   var methods = ['put','delete'];
+   return methods.indexOf(method);
+ }
+ var actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 
 module.exports.http = {
 
@@ -37,10 +42,11 @@ module.exports.http = {
       'bodyParser',
       'handleBodyParserError',
       'compress',
-      'methodOverride',
+      'methodOverride',//
       'poweredBy',
       '$custom',
       'router',
+
     //  'myRequestLogger',
       'www',
       'favicon',
@@ -60,8 +66,27 @@ module.exports.http = {
     //     console.log("Requested :: ", req.method, req.url);
     //     return next();
     // }
+  methodOverride:  function (req, res , next){
+        var key =  "_method";
+        var method;
+        req.originalMethod = req.originalMethod || req.method;
 
+        // req.body
+        if (req.body && typeof req.body === 'object' && key in req.body) {
+          method = req.body[key].toLowerCase();
+          delete req.body[key];
+        }
 
+        // check X-HTTP-Method-Override
+        if (req.headers['x-http-method-override']) {
+          method = req.headers['x-http-method-override'].toLowerCase();
+        }
+
+        // replace
+        if (supports(method) != -1) req.method = method.toUpperCase();
+
+        return  next();
+    },
   /***************************************************************************
   *                                                                          *
   * The body parser that will handle incoming multipart HTTP requests. By    *

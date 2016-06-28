@@ -1,0 +1,28 @@
+extends ../index.jade
+block admin
+  block nav
+    +nav_item("/admin") Dashboard    
+  block page
+    ul.nav.nav-tabs
+      if(sails.config.authorization.authorize_controller(page, 'find', req.user))    
+        li(role="presentation") 
+          a(href="/admin/#{page}") Index
+      li.active(role="presentation") 
+        a(href="/admin/#{page}/new") Nuovo 
+    h1.page-header.text-center Aggiungi un nuovo #{page}    
+    .row
+      .col-xs-8.col-xs-offset-2
+        form(method="post" action="/admin/#{page}" )
+          each field in sails.config.models_structure.getFields(page)
+            if(field.infos.enum)
+              label(for="field.name")= field.name
+              select.form-control(id="#{field.name}" name="#{field.name}")
+                each f in field.infos.enum                
+                  option= f
+            else
+              +input(field.infos.type, field.name, field.name, field.name, field.name)
+              
+          br
+          +submit-success("Crea")      
+    
+    

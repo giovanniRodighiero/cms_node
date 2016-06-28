@@ -40,29 +40,28 @@
     {
       "modelName":"website",
       "inheritsFrom": "website",
-      "fields":[],
-      "associations":{
-        "manyToMany":[],
-        "oneToMany":[
-          {"fieldName":"users", "collection":"user","via":"website"},
-          {"fieldName":"metadatas", "collection":"metadata","via":"website"}
-        ],
-        "oneToOne":[],
-        "oneWay":[]
-      }
+      "fields":[
+        {"name":"users", "isAssociation":"user", "params":[
+          {"parName":"collection","value":"user"},
+          {"parName":"via","value":"website"}
+          ]
+        },
+        {"name":"metadatas","isAssociation":"metadata", "params":[
+          {"parName":"collection","value":"metadata"},
+          {"parName":"via","value":"website"}
+          ]
+        }
+      ]
     },
     {
       "modelName":"metadata",
       "inheritsFrom": "metadata",
-      "fields":[],
-      "associations":{
-        "manyToMany":[],
-        "oneToMany":[],
-        "oneToOne":[],
-        "oneWay":[
-          {"fieldName":"website", "model":"website"}
-        ]
-      }
+      "fields":[
+        {"name":"website","isAssociation":"website", "params":[
+          {"parName":"model","value":"website"}
+          ]
+        }
+      ]
     }
   ]
 }

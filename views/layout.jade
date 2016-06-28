@@ -6,3 +6,11 @@ append styles
   link(rel="stylesheet", href="/styles/folder/style.css")
   link(rel="stylesheet", href="/styles/myStyle.css")
   // STYLES END
+block content
+  .container
+    each message in flash.get('danger')
+      +alert-danger(message)
+    each message in flash.get('warning')
+      +alert-warning(message)
+    each message in flash.get('success')
+      +alert-success(message)

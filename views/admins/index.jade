@@ -1,11 +1,11 @@
-extends ./layout.jade
+extends ../layout.jade
 
-block content
+append content
   nav
     +navbar("CMS metadati","dropdown_menu")
       block nav
         +nav_item("/admin","active") Dashboard
-      +nav_item("#")= req.user.email
+      +nav_item("/admin/account/"+req.user.id)= req.user.email
       +nav_item("/signout") Log out
   main.container-fluid
     div.row
@@ -15,18 +15,18 @@ block content
             if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
               if page == model.modelName
                 li.active(role="presentation")
-                  a(href="/"+model.modelName)= model.modelName                  
+                  a(href="/admin/"+model.modelName)= model.modelName                  
               else
                 li(role="presentation")                
-                  a(href="/"+model.modelName)= model.modelName
+                  a(href="/admin/"+model.modelName)= model.modelName
           each model in sails.config.models_structure.getUser().models
             if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
               if page == model.modelName
                 li.active(role="presentation")
-                  a(href="/"+model.modelName)= model.modelName                  
+                  a(href="/admin/"+model.modelName)= model.modelName                  
               else
                 li(role="presentation")                
-                  a(href="/"+model.modelName)= model.modelName
+                  a(href="/admin/"+model.modelName)= model.modelName
       section(class="col-md-10")
         block page
           h1.page-header.text-center Pannello Amministrazione, 

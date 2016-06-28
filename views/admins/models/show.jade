@@ -1,0 +1,35 @@
+extends ../index.jade
+
+block admin
+  block nav
+    +nav_item("/admin") Dashboard    
+  block page
+    ul.nav.nav-tabs
+      li(role="presentation") 
+        a(href="/admin/#{page}") Index
+      li(role="presentation") 
+        a(href="/admin/#{page}/new") Nuovo
+      li.active(role="presentation") 
+        a(href="/admin/#{page}/#{result.id}") Modifica  
+    h1.page-header.text-center Modifica #{page}    
+    .row
+      .col-xs-8.col-xs-offset-2
+        form(method="post" action="/admin/#{page}/#{result.id}" enctype="application/x-http-method-override")
+          input(type="hidden" name="_method" value="PUT")
+          each field in sails.config.models_structure.getFields(page)
+            if(field.infos.enum)
+              label(for="#{field.name}")= field.name
+              select.form-control(id="#{field.name}" name="#{field.name}")
+                each f in field.infos.enum       
+                  if(f === result.role)
+                    option(selected="#{result.role}")= f
+                  else
+                    option= f
+            else
+              if(field.name != 'password')
+                label(for="#{field.name}")= field.name
+                input(id="#{field.name}" class="form-control" name="#{field.name}" type="#{field.name}" value="#{result[field.name]}")
+              //- +input(field.infos.type, field.name, field.name, field.name, field.name, "value")
+              
+          br
+          +submit-success("Modifica")      

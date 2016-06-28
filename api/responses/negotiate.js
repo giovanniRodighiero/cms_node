@@ -17,6 +17,8 @@ module.exports = function (error) {
   var statusCode = _.get(error, 'status') || _.get(error, 'oauthError') || 500;
   var config = {code, message, root};
   var info = _.get(error, 'Error');
+  if (statusCode === 201) return res.created(data, config);
+  if (statusCode === 200) return res.ok(data, config);
   if (statusCode === 401) return res.unauthorized(data, config);
   if (statusCode === 403) return res.forbidden(data, config);
   if (statusCode === 404) return res.notFound(data, config);
