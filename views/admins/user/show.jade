@@ -16,24 +16,53 @@ block admin
     h1.page-header.text-center Modifica #{page}    
     .row
       .col-xs-8.col-xs-offset-2
-        form(method="post" action="/admin/#{page}/#{result.id}" enctype="application/x-http-method-override")
+        form(method="post" action="/admin/#{page}/#{result.id}" enctype="application/x-http-method-override") 
           input(type="hidden" name="_method" value="PUT")
           each field in sails.config.models_structure.getFields(page)
-            if(field.infos.enum)
-              label(for="#{field.name}")= field.name
-              select.form-control(id="#{field.name}" name="#{field.name}")
-                each f in field.infos.enum       
-                  if(f === result.role)
-                    option(selected="#{result.role}")= f
-                  else
-                    option= f
-            else
-              if(field.name != 'password')
-                label(for="#{field.name}")= field.name
-                input(id="#{field.name}" class="form-control" name="#{field.name}" type="#{field.name}" value="#{result[field.name]}")
+            if(previousData)
+              if(field.infos.enum)
+                label(for="#{field.name}")= field.name              
+                select.form-control(id="#{field.name}" name="#{field.name}" )
+                  each f in field.infos.enum  
+                    if(f == previousData[field.name])
+                      option(selected="")= f
+                    else
+                      option= f
               else
-                if(sails.config.authorization.authorize_resource(result, 'password', req.user))                  
-                  +input(field.infos.type, field.name, field.name, field.name, field.name)
-              
+                if(field.name != 'password')
+                  if(previousData[field.name])
+                    +input(field.infos.type, field.name, field.name, field.name, field.name,previousData[field.name])         
+                  else
+                    +input(field.infos.type, field.name, field.name, field.name, field.name, "")
+                  if(err[field.name])
+                    each e in err[field.name]
+                      span.validation-error= i18n(e.rule)
+                      br 
+                else
+                  if(sails.config.authorization.authorize_resource(result, 'password', req.user))
+                    +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name]) 
+                    if(err[field.name])
+                      each e in err[field.name]
+                        span.validation-error= i18n(e.rule)
+                        br             
+            else
+              if(field.infos.enum)
+                label(for="#{field.name}")= field.name  
+                select.form-control(id="#{field.name}" name="#{field.name}" )
+                  each f in field.infos.enum  
+                    if(f == result[field.name])
+                      option(selected="")= f
+                    else
+                      option= f
+              else
+                if(field.name != 'password')
+                  if(result[field.name])
+                    +input(field.infos.type, field.name, field.name, field.name, field.name, result[field.name])
+                  else
+                    +input(field.infos.type, field.name, field.name, field.name, field.name, "")
+                else
+                  if(sails.config.authorization.authorize_resource(result, 'password', req.user))
+                    +input(field.infos.type, field.name, field.name, field.name, field.name)           
           br
-          +submit-success("Modifica")      
+          +submit-success("Modifica")  
+    

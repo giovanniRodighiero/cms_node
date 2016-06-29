@@ -58,7 +58,8 @@
       "inheritsFrom": "metadata",
       "fields":[
         {"name":"website","isAssociation":"website", "params":[
-          {"parName":"model","value":"website"}
+          {"parName":"model","value":"website"},
+          {"parName":"required","value":"true"}
           ]
         }
       ]

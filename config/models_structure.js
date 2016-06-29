@@ -33,18 +33,18 @@ function setUpEnum(string) {
 };
 function setUpFieldsAux(field, complexItem, i){
   for (var j = 0; j < complexItem.fields[i].params.length; j++) {
-    if(field.name === 'password'){
+    if(field.name === 'password' && complexItem.fields[i].params[j].parName === 'type'){
       field.infos[complexItem.fields[i].params[j].parName] = 'password';
-      break;
-    }
-    switch (complexItem.fields[i].params[j].parName) {
-      case 'enum':
-        field.infos[complexItem.fields[i].params[j].parName] = [];
-        field.infos[complexItem.fields[i].params[j].parName] = setUpEnum(complexItem.fields[i].params[j].value);
-        break;
-      default:
-        field.infos[complexItem.fields[i].params[j].parName] = complexItem.fields[i].params[j].value;
-        break;
+    }else{
+      switch (complexItem.fields[i].params[j].parName) {
+        case 'enum':
+          field.infos[complexItem.fields[i].params[j].parName] = [];
+          field.infos[complexItem.fields[i].params[j].parName] = setUpEnum(complexItem.fields[i].params[j].value);
+          break;
+        default:
+          field.infos[complexItem.fields[i].params[j].parName] = complexItem.fields[i].params[j].value;
+          break;
+      }
     }
   }
   count++;

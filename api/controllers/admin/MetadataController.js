@@ -1,8 +1,6 @@
 var auth = sails.config.authorization;
 var _ = require('lodash');
-function confirmation() {
 
-}
 module.exports = {
   find: function(req, res){
     if(auth.authorize_controller('metadata', 'find', req.user)){
@@ -33,33 +31,39 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message , 'success','/admin/metadata');
   },
   create: function(req, res){
-    var permitted = ['email','password','role'];
+    var permitted = ['path','meta_title','meta_descr','published','locale','website'];
     if(auth.authorize_controller('metadata', 'create', req.user)){
-    //  if( !req.param('id') || !req.param('email') || !req.param('role') || !req.param('password') || !req.param('website'))
-      //  ErrorService.handleError(req, res, sails.config.errors.BAD_REQUEST,sails.config.errors.BAD_REQUEST.message , 'danger','/admin/user/create');
       var item = _.pick(req.allParams(),permitted);
+      var aux = sails.config.models_structure.getFields('metadata');
       Metadata.create(item)
       .then(function(created){
         ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/metadata/new');
       })
       .catch(function(err){
-        ErrorService.handleError(req, res, err, err.message , 'danger','/admin/metadata/new');
+        req.addFlash('warning', 'Errore nella compilazione dei campi');
+        return res.view('admins/models/new', {page: 'metadata', previousData: item, err: err.invalidAttributes});
       })
     }
   },
   update: function(req, res){
-    var permitted = ['path','meta_title','meta_descr','published','locale'];
+    var permitted = ['path','meta_title','meta_descr','published','locale','website'];
     if(auth.authorize_controller('metadata', 'update', req.user)){
-    //  if( !req.param('id') || !req.param('email') || !req.param('role') || !req.param('password') || !req.param('website'))
-      //  ErrorService.handleError(req, res, sails.config.errors.BAD_REQUEST,sails.config.errors.BAD_REQUEST.message , 'danger','/admin/user/create');
       if(auth.authorize_resource(req.record,'update', req.user)){
-        var item = _.pick(req.allParams(),permitted);
-        Metadata.update({id: req.record.id}, item)
+        var item = _.pick(req.allParams(), permitted);
+        User.update({id: req.record.id}, item)
         .then(function(updated){
           ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/metadata/'+updated[0].id);
         })
         .catch(function(err){
-          ErrorService.handleError(req, res, err, err.message , 'danger','/admin/metadata');
+          sails.log(item);
+          req.addFlash('warning', 'Errore nella compilazione dei campi');
+          if(auth.authorize_controller('metadata', 'findone', req.user)){
+            if(auth.authorize_resource(req.record,'findone', req.user))
+              return res.view('admins/models/show', {page: 'metadata', result: req.record, previousData: item, err: err.invalidAttributes});
+            else
+              ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/metadata');
+          }else
+            ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/metadata');
         })
       }else
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/metadata');

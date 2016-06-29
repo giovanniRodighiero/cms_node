@@ -15,22 +15,22 @@ block admin
       table.table
         thead
           tr 
-            each field in sails.config.models_structure.getModelByName(page).root.fields
+            each field in sails.config.models_structure.getFields(page)
               if(field.name != 'password')
                 th= field.name
             th Azioni
         tbody
-          each user in results
-            if(sails.config.authorization.authorize_resource(user, 'find', req.user))
+          each result in results
+            if(sails.config.authorization.authorize_resource(result, 'find', req.user))
               tr
-                each field in sails.config.models_structure.getModelByName(page).root.fields
+                each field in sails.config.models_structure.getFields(page)
                   if(field.name != 'password')
-                    th= user[field.name]
+                    th= result[field.name]
                 th
-                  a(href="/admin/#{page}/#{user.id}")
+                  a(href="/admin/#{page}/#{result.id}")
                     button.btn.btn-warning Modifica
-                  if(sails.config.authorization.authorize_resource(user, 'destroy', req.user))
-                    form(method="post" action="/admin/#{page}/#{user.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+                  if(sails.config.authorization.authorize_resource(result, 'destroy', req.user))
+                    form(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
                       input(type="hidden" name="_method" value="DELETE")
                       button.btn.btn-danger(type="submit") Elimina
               

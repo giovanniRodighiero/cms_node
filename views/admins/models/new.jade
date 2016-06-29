@@ -12,18 +12,36 @@ block admin
     .row
       .col-xs-8.col-xs-offset-2
         form(method="post" action="/admin/#{page}" )
-          each field in sails.config.models_structure.getFields(page)     
-            if(field.infos.enum)
-              label(for="field.name")= field.name
-              select.form-control(id="#{field.name}" name="#{field.name}")
-                each f in field.infos.enum                
-                  option= f
+          each field in sails.config.models_structure.getFields(page) 
+            if(previousData)
+              if(field.infos.enum)
+                label(for="#{field.name}")= field.name
+                select.form-control(id="#{field.name}" name="#{field.name}")
+                  each f in field.infos.enum                
+                    if(f == previousData[field.name])
+                      option(selected="")= f
+                    else
+                      option= f     
+              else
+                if(field.infos.type === 'boolean')
+                  +checkbox(field.name, field.name, field.name, previousData[field.name])  
+                else     
+                  +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
+                  if(err[field.name])
+                    each e in err[field.name]
+                      span.validation-error= i18n(e.rule)
+                      br
             else
-              if(field.infos.type === 'boolean')
-                +checkbox-inline(field.name, field.name, field.name)  
-              else     
-                +input(field.infos.type, field.name, field.name, field.name, field.name)
-            p= query
+              if(field.infos.enum)
+                label(for="#{field.name}")= field.name
+                select.form-control(id="#{field.name}" name="#{field.name}")
+                  each f in field.infos.enum                
+                    option= f     
+              else
+                if(field.infos.type === 'boolean')
+                  +checkbox(field.name, field.name, field.name, false)  
+                else     
+                  +input(field.infos.type, field.name, field.name, field.name, field.name, "")
           br
           +submit-success("Crea")      
     

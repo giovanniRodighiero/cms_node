@@ -4,7 +4,8 @@
       "user":{
         "fields":[
           {"name":"password", "params":[
-            {"parName":"type","value":"string"}
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
             ]
           },
           {"name":"role", "params":[

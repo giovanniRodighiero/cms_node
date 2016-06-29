@@ -41,6 +41,7 @@ module.exports = {
       website: {
 
           model:"website",
+          required: true
 
       },
 
