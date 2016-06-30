@@ -4,7 +4,7 @@ var _ = require('lodash');
 module.exports = {
   find: function(req, res){
     if(auth.authorize_controller('user', 'find', req.user)){
-      var skip = req.param('page')
+      var skip = req.param('page');
       User.find()
       .then(function(results){
         for (var i = 0; i < results.length; i++) {

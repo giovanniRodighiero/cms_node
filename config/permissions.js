@@ -162,18 +162,6 @@ var models = {
       },
       destroy: function(record, user){
         return (user.role === 'superAdmin');
-      },
-      fields: function(record, user, field){
-        switch (field) {
-          case 'password':
-            return (record.id == user.id);
-            break;
-          case 'role':
-            return (record.id != user.id && user.role === 'superAdmin');
-            break;
-          default:
-            return true;
-        }
       }
     },
 
@@ -187,7 +175,9 @@ var fields = {
 
   },
   user:{
-
+    password: function(user){
+      return false;
+    }
   }
 }
 module.exports.authorization = {
@@ -199,11 +189,11 @@ module.exports.authorization = {
       return ctrl.isAllowed(action, user);
   },
   authorize_resource: function(model, action, user){
-    var mdl = models[model];
+    var mdl = models[model.model];
     if( action in mdl)
-      return mdl[action](record, user);
+      return mdl[action](model, user);
     else
-      return mdl.fields(record, user, action);
+      return true;
   },
   authorize_field: function(model, field, user){
     var fld = fields[model];

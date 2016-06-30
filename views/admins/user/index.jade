@@ -22,11 +22,11 @@ block admin
           each result in results
             tr
               each field in sails.config.models_structure.getFields(page)
-                if(field.name != 'password')                
-                  th= result[field.name]
+                if(sails.config.authorization.authorize_field(page, field.name, req.user))                
+                  td= result[field.name]
                 else
-                  th private field
-              th
+                  td private field
+              td
                 if(sails.config.authorization.authorize_resource(result, 'findone', req.user))                
                   a(href="/admin/#{page}/#{result.id}")
                     button.btn.btn-warning Dettagli
