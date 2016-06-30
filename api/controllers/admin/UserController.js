@@ -29,7 +29,13 @@ module.exports = {
   },
   new: function(req, res){
     if(auth.authorize_controller('user', 'new', req.user)){
-      return res.view('admins/user/new', {page: 'user'});
+      Website.find()
+      .then(function(websites){
+        return res.view('admins/user/new', {page: 'user', websites});
+      })
+      .catch(function(err){
+        ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'success','/admin/user');
+      });
     }else
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
   },
@@ -42,8 +48,14 @@ module.exports = {
         ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/user/new');
       })
       .catch(function(err){
-        req.addFlash('warning', 'Errore nella compilazione dei campi');
-        return res.view('admins/user/new',{page: 'user', previousData: item, err: err.invalidAttributes});
+        Website.find()
+        .then(function(websites){
+          req.addFlash('warning', 'Errore nella compilazione dei campi');
+          return res.view('admins/user/new',{page: 'user', previousData: item, err: err.invalidAttributes, websites});
+        })
+        .catch(function(err){
+          ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'success','/admin/user');
+        });
       })
     }
   },
