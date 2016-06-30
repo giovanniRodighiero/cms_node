@@ -23,21 +23,12 @@ block admin
                       option(selected="")= f
                     else
                       option= f
-              else
-                if(field.name === 'website')
-                  label(for="#{field.name}")= field.name                  
-                  select.form-control(name="#{field.name}")
-                    each f in websites  
-                      if(f.id == previousData[field.name])
-                        option(value="#{f.id}" selected="")= f.name
-                      else  
-                        option(value="#{f.id}")= f.name
-                else
-                  +input(field.infos.type, field.name, field.name, field.name, field.name,previousData[field.name])          
-                  if(err[field.name])
-                    each e in err[field.name]
-                      span.validation-error= i18n(e.rule)
-                      br
+              else                
+                +input(field.infos.type, field.name, field.name, field.name, field.name,previousData[field.name])          
+                if(err[field.name])
+                  each e in err[field.name]
+                    span.validation-error= i18n(e.rule)
+                    br
             else
               if(field.infos.enum)
                 label(for="#{field.name}")= field.name  
@@ -45,13 +36,7 @@ block admin
                   each f in field.infos.enum                
                     option= f
               else
-                if(field.name === 'website')
-                  label(for="#{field.name}")= field.name                  
-                  select.form-control(name="#{field.name}")
-                    each f in websites              
-                      option(value="#{f.id}")= f.name
-                else
-                  +input(field.infos.type, field.name, field.name, field.name, field.name,"")           
+                +input(field.infos.type, field.name, field.name, field.name, field.name,"")           
           br
           +submit-success("Crea")      
     
