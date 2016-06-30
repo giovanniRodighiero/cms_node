@@ -163,8 +163,17 @@ var models = {
       destroy: function(record, user){
         return (user.role === 'superAdmin');
       },
-      password: function(record, user){
-        return (record.id == user.id)
+      fields: function(record, user, field){
+        switch (field) {
+          case 'password':
+            return (record.id == user.id);
+            break;
+          case 'role':
+            return (record.id != user.id && user.role === 'superAdmin');
+            break;
+          default:
+            return true;
+        }
       }
     },
 
@@ -182,6 +191,6 @@ module.exports.authorization = {
     if( action in mdl)
       return mdl[action](record, user);
     else
-      return false;
+      return mdl.fields(record, user, action);
   }
 }

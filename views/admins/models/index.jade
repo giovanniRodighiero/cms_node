@@ -16,22 +16,23 @@ block admin
         thead
           tr 
             each field in sails.config.models_structure.getFields(page)
-              if(field.name != 'password')
-                th= field.name
+              th= field.name
             th Azioni
         tbody
           each result in results
-            if(sails.config.authorization.authorize_resource(result, 'find', req.user))
-              tr
-                each field in sails.config.models_structure.getFields(page)
-                  if(field.name != 'password')
-                    th= result[field.name]
-                th
+            tr
+              each field in sails.config.models_structure.getFields(page)
+                if(field.name != 'password')
+                  th= result[field.name]
+                else
+                  th private field
+              th
+                if(sails.config.authorization.authorize_resource(result, 'findone', req.user))                
                   a(href="/admin/#{page}/#{result.id}")
-                    button.btn.btn-warning Modifica
-                  if(sails.config.authorization.authorize_resource(result, 'destroy', req.user))
-                    form(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
-                      input(type="hidden" name="_method" value="DELETE")
-                      button.btn.btn-danger(type="submit") Elimina
-              
-    
+                    button.btn.btn-warning Dettagli
+                if(sails.config.authorization.authorize_resource(result, 'destroy', req.user))
+                  form(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+                    input(type="hidden" name="_method" value="DELETE")
+                    button.btn.btn-danger(type="submit") Elimina
+                
+      

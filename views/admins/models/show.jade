@@ -17,6 +17,7 @@ block admin
         form(method="post" action="/admin/#{page}/#{result.id}" enctype="application/x-http-method-override")
           input(type="hidden" name="_method" value="PUT")
           each field in sails.config.models_structure.getFields(page)
+            //- if field.name != 'password' && field.name != 'role'          
             if(previousData)
               if(field.infos.enum)
                 label(for="#{field.name}")= field.name
@@ -46,7 +47,7 @@ block admin
                   +input(field.infos.type, field.name, field.name, field.name, field.name, result[field.name])
                 else  
                   +input(field.infos.type, field.name, field.name, field.name, field.name, "")
+                    
                   
-                
           br
           +submit-success("Modifica")      

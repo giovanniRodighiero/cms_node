@@ -7,7 +7,7 @@ module.exports = {
   find: function(req, res){
     if(auth.authorize_controller('website', 'find', req.user)){
       var skip = req.param('page')
-      Website.findCustom(null, function(err, results){        
+      Website.findCustom(null, function(err, results){
         if(!err)
           return res.view('admins/models/index', {page: 'website', results});
         else

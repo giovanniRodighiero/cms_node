@@ -7,6 +7,9 @@ module.exports = {
       var skip = req.param('page')
       User.find()
       .then(function(results){
+        for (var i = 0; i < results.length; i++) {
+          results[i] = _.assign(results[i], {'model': 'user'});
+        }
         return res.view('admins/user/index', {page: 'user', results});
       })
       .catch(function(err){
@@ -27,8 +30,7 @@ module.exports = {
   new: function(req, res){
     if(auth.authorize_controller('user', 'new', req.user)){
       return res.view('admins/user/new', {page: 'user'});
-    }
-    else
+    }else
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
   },
   create: function(req, res){
@@ -49,14 +51,12 @@ module.exports = {
     var permitted = ['email','role','password','website'];
     if(auth.authorize_controller('user', 'update', req.user)){
       if(auth.authorize_resource(req.record,'update', req.user)){
-        sails.log('ok');
         var item = _.pick(req.allParams(), permitted);
         User.update({id: req.record.id}, item)
         .then(function(updated){
           ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/user/'+updated[0].id);
         })
         .catch(function(err){
-          sails.log(item);
           req.addFlash('warning', 'Errore nella compilazione dei campi');
           if(auth.authorize_controller('user', 'findone', req.user)){
             if(auth.authorize_resource(req.record,'findone', req.user))
