@@ -178,6 +178,18 @@ var models = {
     },
 
 };
+
+var fields = {
+  website:{
+
+  },
+  metadata:{
+
+  },
+  user:{
+
+  }
+}
 module.exports.authorization = {
   authorize_controller: function(controller, action, user){
     var ctrl = controllers[controller];
@@ -186,11 +198,18 @@ module.exports.authorization = {
     else
       return ctrl.isAllowed(action, user);
   },
-  authorize_resource: function(record, action, user){
-    var mdl = models[record.model];
+  authorize_resource: function(model, action, user){
+    var mdl = models[model];
     if( action in mdl)
       return mdl[action](record, user);
     else
       return mdl.fields(record, user, action);
+  },
+  authorize_field: function(model, field, user){
+    var fld = fields[model];
+    if( field in fld)
+      return fld[field](user);
+    else
+      return true;
   }
 }
