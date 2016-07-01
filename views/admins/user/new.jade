@@ -1,0 +1,73 @@
+extends ../index.jade
+block admin
+  block nav
+    +nav_item("/admin") Dashboard    
+  block page
+    ul.nav.nav-tabs
+      if(sails.config.authorization.authorize_controller(page, 'find', req.user))    
+        li(role="presentation") 
+          a(href="/admin/#{page}") Index
+      li.active(role="presentation") 
+        a(href="/admin/#{page}/new") Nuovo 
+    h1.page-header.text-center Aggiungi un nuovo #{page}    
+    .row
+      .col-xs-8.col-xs-offset-2
+        form(method="post" action="/admin/#{page}")
+          each field in sails.config.models_structure.getFields(page)
+            if(previousData)
+              if(field.infos.enum)
+                label(for="#{field.name}")= field.name
+                select.form-control(id="#{field.name}" name="#{field.name}" )
+                  each f in field.infos.enum  
+                    if(f == previousData[field.name])
+                      option(selected="")= f
+                    else
+                      option= f
+              else                
+                +input(field.infos.type, field.name, field.name, field.name, field.name,previousData[field.name])          
+                if(err[field.name])
+                  each e in err[field.name]
+                    span.validation-error= i18n(e.rule)
+                    br
+            else
+              if(field.infos.enum)
+                label(for="#{field.name}")= field.name  
+                select.form-control(id="#{field.name}" name="#{field.name}" )
+                  each f in field.infos.enum                
+                    option= f
+              else
+                if(field.name === 'website')
+                  select.form-control#mySelect(name="website")
+                else
+                  +input(field.infos.type, field.name, field.name, field.name, field.name,"")           
+          br
+          +submit-success("Crea")      
+    
+append scripts
+  script(type='text/javascript').
+    $("#mySelect").select2({
+      ajax: {
+        url: 'http://localhost:1337/website',
+        dataType: "json",
+        type: "GET",
+        data: function (params) {
+          var query = {
+            //search: params.term,
+            //page: params.page
+          }
+
+          // Query paramters will be ?search=[term]&page=[page]
+          return query;
+        },
+        processResults: function (data) {
+           return {
+               results: $.map(data.data.results, function (item) {
+                   return {
+                       text: item.name,
+                       id: item.id
+                   }
+               })
+           };
+         }
+      }
+    });

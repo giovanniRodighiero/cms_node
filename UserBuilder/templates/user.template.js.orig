@@ -18,7 +18,33 @@ module.exports = {
         <% } %>
       },
     <% } %>
+<<<<<<< HEAD
+    <% for (index in userModel.associations.manyToMany){ %>
+      <%= userModel.associations.manyToMany[index].fieldName %>: {
+        collection: "<%= userModel.associations.manyToMany[index].collection %>",
+        via: "<%= userModel.associations.manyToMany[index].via %>"
+      },
+    <% } %>
+    <% for (index in userModel.associations.oneToMany){ %>
+      <%= userModel.associations.oneToMany[index].fieldName %>: {
+        collection: "<%= userModel.associations.oneToMany[index].collection %>",
+        via: "<%= userModel.associations.oneToMany[index].via %>"
+      },
+    <% } %>
+    <% for (index in userModel.associations.oneWay){ %>
+      <%= userModel.associations.oneWay[index].fieldName %>: {
+        model: "<%= userModel.associations.oneWay[index].model %>"
+      },
+    <% } %>
+    <% for (index in model.associations.oneToOne){ %>
+      <%= model.associations.oneToOne[index].fieldName %>: {
+        model: "<%= model.associations.oneWay[index].model %>",
+        unique: true
+      },
+    <% } %>
+=======
 
+>>>>>>> metadati
   },
   toJSON() {
     let obj = this.toObject();

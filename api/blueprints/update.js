@@ -13,7 +13,12 @@ module.exports = (req, res) => {
   const Model = actionUtil.parseModel(req);
   const pk = actionUtil.requirePk(req);
   const values = actionUtil.parseValues(req);
-
+  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
+    return res.unautorized();
+  var aux = _.assign(values, {'model': Model.identity});
+  sails.log(aux);
+  if(!sails.config.authorization.authorize_resource(aux, req.options.action, req.user))
+    return res.unautorized();
   Model
     .update(pk, _.omit(values, 'id'))
     .then(records => records[0] ? res.ok(records[0]) : res.notFound())

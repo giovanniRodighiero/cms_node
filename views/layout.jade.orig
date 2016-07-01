@@ -1,4 +1,15 @@
+<<<<<<< HEAD
+doctype html
+html(lang="en")
+  head
+    block title
+    // STYLES
+    link(rel="stylesheet", href="/styles/boostrap.css")
+    link(rel="stylesheet", href="/styles/mystyle.css")
+    // STYLES END
+=======
 extends ../node_modules/jade-bootstrap/_bootstrap.jade
+>>>>>>> metadati
 
 append styles
   link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css")

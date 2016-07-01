@@ -11,7 +11,8 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 module.exports = (req, res) => {
   const Model = actionUtil.parseModel(req);
   const pk = actionUtil.requirePk(req);
-
+  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
+    return res.unauthorized();
   Model
     .destroy(pk)
     .then(records => records[0] ? res.ok(records[0]) : res.notFound())

@@ -18,28 +18,5 @@ module.exports = {
         <% } %>
       },
     <% } %>
-    <% for (index in model.associations.manyToMany){ %>
-      <%= model.associations.manyToMany[index].fieldName %>: {
-        collection: "<%= model.associations.manyToMany[index].collection %>",
-        via: "<%= model.associations.manyToMany[index].via %>"
-      },
-    <% } %>
-    <% for (index in model.associations.oneToMany){ %>
-      <%= model.associations.oneToMany[index].fieldName %>: {
-        collection: "<%= model.associations.oneToMany[index].collection %>",
-        via: "<%= model.associations.oneToMany[index].via %>"
-      },
-    <% } %>
-    <% for (index in model.associations.oneWay){ %>
-      <%= model.associations.oneWay[index].fieldName %>: {
-        model: "<%= model.associations.oneWay[index].model %>"
-      },
-    <% } %>
-    <% for (index in model.associations.oneToOne){ %>
-      <%= model.associations.oneToOne[index].fieldName %>: {
-        model: "<%= model.associations.oneWay[index].model %>",
-        unique: true
-      },
-    <% } %>
   }
 };

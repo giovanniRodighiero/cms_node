@@ -57,9 +57,10 @@ module.exports = {
       createdAt: new Date()
     });
     scope.filename = 'permissions'
+    scope.index = scope.args[0];
     var modelsFile = fs.readFileSync('models.json');
     var userFile = fs.readFileSync('user.json');
-    scope.models = JSON.parse(modelsFile).models;
+    scope.models = JSON.parse(modelsFile).models[scope.index];
     scope.user = JSON.parse(userFile).models;
 
     cb();

@@ -6,22 +6,12 @@
  */
 const passport = require('passport');
 
-// function isAllowed(path, action, user){
-//   var splittedPath = path.split('/');
-//   var modelName = splittedPath[2];
-//   sails.log('modelname: '+modelName +  ' ------ action: '+action);
-//   var aux = models.permissions[modelName];
-//   //sails.log('models:' + aux[method]);
-//   if(defaultActions.indexOf(action) != -1)
-//     return aux[action](user);
-//   else
-//     return aux.isAllowed(action,user);
-// }
-
 module.exports = (req, res, next) => {
-  passport.authenticate('jwt', function(error, user, info) {
-    if(error)
-      return res.negotiate(error);
+
+    passport.authenticate('jwt', function(error, user, info) {
+    if(error){
+      ErrorService.handleError(req, res, error, 'non sei autenticato', 'danger','/');
+    }
     if(!user){ // non trovo lo user dal token
       if(req.session.me){
         User.findOne({id: req.session.me.id})
@@ -37,11 +27,12 @@ module.exports = (req, res, next) => {
         .catch(function(err){
           res.negotiate(err);
         })
-      }else
-        res.redirect(401,'/');
+      }else{
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autenticato', 'danger','/');
+      }
     }else{
       req.user = user;
-      next();
+      return next();
     }
   })(req, res);
 };

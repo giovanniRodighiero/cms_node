@@ -28,7 +28,7 @@ module.exports = (req, res) => {
   findQuery
     .then(function(result){
       var myResult = {
-        results: result
+        result: _.omit(result, 'password'),
       }
       return res.ok(myResult);
     })

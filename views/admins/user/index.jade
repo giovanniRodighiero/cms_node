@@ -1,0 +1,65 @@
+extends ../index.jade
+  
+block admin
+  block nav
+    +nav_item("/admin") Dashboard    
+  block page
+    ul.nav.nav-tabs
+      if(sails.config.authorization.authorize_controller(page, 'find', req.user))
+        li.active(role="presentation") 
+          a(href="/admin/#{page}") Index
+      li(role="presentation") 
+        a(href="/admin/#{page}/new") Nuovo  
+    h1.page-header.text-center #{page}        
+    .table-responsive
+      table.table
+        thead
+          tr 
+            each field in sails.config.models_structure.getFields(page)
+              th= field.name
+            th Azioni
+        tbody
+          each result in results
+            tr
+              each field in sails.config.models_structure.getFields(page)
+                if(sails.config.authorization.authorize_field(page, field.name, req.user))                
+                  td= result[field.name]
+                else
+                  td private field
+              td
+                if(sails.config.authorization.authorize_resource(result, 'findone', req.user))                
+                  a(href="/admin/#{page}/#{result.id}")
+                    button.btn.btn-warning Dettagli
+                if(sails.config.authorization.authorize_resource(result, 'destroy', req.user))            
+                  form(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+                    input(type="hidden" name="_method" value="DELETE")
+                    button.btn.btn-danger(type="submit") Elimina
+    
+    div
+      ul.pagination
+        if(pageIndex > 1)      
+          li
+            a(href="/admin/#{page}?page=#{pageIndex-1}")
+              span(aria-hidden="true") &laquo;
+            - console.log(pageIndex+1);
+              
+        - var n = 1
+        while n < totPages+1   
+          if(n == pageIndex)
+            li.active
+              a(href="/admin/#{page}?page=#{n}")= n
+          else
+            li
+              a(href="/admin/#{page}?page=#{n}")= n
+              
+          - n++
+        if(pageIndex < totPages)          
+          li
+            - var index = parseInt(pageIndex, 10) + 1
+            a(href="/admin/#{page}?page=#{index}")
+              span(aria-hidden="true") &raquo;
+              - console.log(pageIndex+1);
+              
+        
+              
+      

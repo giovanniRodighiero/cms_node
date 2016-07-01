@@ -1,3 +1,4 @@
+
 /**
  * Policy Mappings
  * (sails.config.policies)
@@ -49,10 +50,13 @@ module.exports.policies = {
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
 	// }
 
-  '*': ['isAuthenticated'],
-  
+  '*': ['isAuthenticated','recordLoader'],
+
   AuthController:{
     'signin': true
+  },
+  MetadataController:{
+    'findByLoc': true,
+    'findOneWithLoc': true
   }
-
 };

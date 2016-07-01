@@ -13,7 +13,7 @@ var controllers = {
       update: function(user){
         return true;
       },
-      delete: function(user){
+      destroy: function(user){
         return true;
       },
       isAllowed: function(action, user){
@@ -41,11 +41,16 @@ var controllers = {
       update: function(user){
         return true;
       },
-      delete: function(user){
+      destroy: function(user){
         return true;
       },
       isAllowed: function(action, user){
         switch (action) {
+          case 'new':
+            if(user.role === 'superAdmin')
+              return true;
+            else
+              return false;
           // case expression:
           //
           //   break;
@@ -71,7 +76,7 @@ var models = {
       update: function(record, user){
         return true;
       },
-      delete: function(record, user){
+      destroy: function(record, user){
         return true;
       }
     },
@@ -90,7 +95,7 @@ var models = {
       update: function(record, user){
         return true;
       },
-      delete: function(record, user){
+      destroy: function(record, user){
         return true;
       }
     },

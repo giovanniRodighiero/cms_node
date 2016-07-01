@@ -1,0 +1,49 @@
+extends ../index.jade
+block admin
+  block nav
+    +nav_item("/admin") Dashboard    
+  block page
+    ul.nav.nav-tabs
+      li(role="presentation") 
+        a(href="/admin/#{page}") Index
+      li.active(role="presentation") 
+        a(href="/admin/#{page}/new") Nuovo 
+    h1.page-header.text-center Aggiungi un nuovo #{page}    
+    .row
+      .col-xs-8.col-xs-offset-2
+        form(method="post" action="/admin/#{page}" )
+          each field in sails.config.models_structure.getFields(page) 
+            if(field.name != 'users' && field.name != 'metadatas')
+              if(previousData)
+                if(field.infos.enum)
+                  label(for="#{field.name}")= field.name
+                  select.form-control(id="#{field.name}" name="#{field.name}")
+                    each f in field.infos.enum                
+                      if(f == previousData[field.name])
+                        option(selected="")= f
+                      else
+                        option= f     
+                else
+                  if(field.infos.type === 'boolean')
+                    +checkbox(field.name, field.name, field.name, previousData[field.name])  
+                  else     
+                    +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
+                    if(err[field.name])
+                      each e in err[field.name]
+                        span.validation-error= i18n(e.rule)
+                        br
+              else
+                if(field.infos.enum)
+                  label(for="#{field.name}")= field.name
+                  select.form-control(id="#{field.name}" name="#{field.name}")
+                    each f in field.infos.enum                
+                      option= f     
+                else
+                  if(field.infos.type === 'boolean')
+                    +checkbox(field.name, field.name, field.name, false)  
+                  else     
+                    +input(field.infos.type, field.name, field.name, field.name, field.name, "")
+          br
+          +submit-success("Crea")      
+    
+    
