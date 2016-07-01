@@ -12,7 +12,6 @@ append content
       section.col-md-2
         ul.nav.nav-pills.nav-stacked
           each model in sails.config.models_structure.getModels().models
-            - console.log(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user));
             if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
               if page == model.modelName
                 li.active(role="presentation")
@@ -22,6 +21,7 @@ append content
                   a(href="/admin/"+model.modelName)= model.modelName
           each model in sails.config.models_structure.getUser().models
             if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
+              - console.log(model);
               if page == model.modelName
                 li.active(role="presentation")
                   a(href="/admin/"+model.modelName)= model.modelName                  

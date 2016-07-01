@@ -26,8 +26,11 @@ function makeModels(modelsFile, cmd) {
   }
 }
 function makePermissions() {
+  var models = JSON.parse(modelsFile).models;
   var execSync = cp.execSync;
-  execSync('sails generate AuthorizationBuilder --force');
+  for (var i = 0; i < models.length; i++) {
+    execSync('sails generate AuthorizationBuilder '+i+' --force');
+  }
 }
 
 makeApis(modelsFile);

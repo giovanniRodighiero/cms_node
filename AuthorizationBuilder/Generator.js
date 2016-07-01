@@ -56,13 +56,16 @@ module.exports = {
     _.defaults(scope, {
       createdAt: new Date()
     });
-    scope.filename = 'permissions'
+    scope.filename = 'user'
     scope.index = scope.args[0];
-    var modelsFile = fs.readFileSync('models.json');
-    var userFile = fs.readFileSync('user.json');
+    var modelsFile = fs.readFileSync('customModels.json');
+  //  var userFile = fs.readFileSync('user.json');
     scope.models = JSON.parse(modelsFile).models[scope.index];
-    scope.user = JSON.parse(userFile).models;
+    //scope.user = JSON.parse(userFile).models;
+    scope.modelName = scope.models.modelName;
 
+    scope.fileAction = scope.modelName+'_actions.js';
+    scope.fileRescource = scope.modelName+'_resources.js';
     cb();
   },
 
@@ -84,10 +87,10 @@ module.exports = {
     // The `template` helper reads the specified template, making the
     // entire scope available to it (uses underscore/JST/ejs syntax).
     // Then the file is copied into the specified destination (on the left).
-    './config/permissions': { folder: 'filename' },
+    //'./config/permissions/:filename': { folder: { force: 'true'}},
 
-    './config/permissions/:filename/actions.js': {template: 'actions.template.js'}
-    // './config/permissions/:filename/resource.js': {template: 'permissions.template.js'},
+    './config/permissions/:modelName/:fileAction': {template: 'actions.template.js'},
+    './config/permissions/:modelName/:fileRescource': {template: 'resources.template.js'},
 
     // Creates a folder at a static path
   },
