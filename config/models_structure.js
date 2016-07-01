@@ -1,25 +1,21 @@
 var fs = require('fs');
 var async = require('async');
 var _ = require('lodash');
-var models;
-var user;
+var defaultModels;
+var customModels;
 var hashModels = {};
-var hashUser = {};
+// var hashUser = {};
 var count = 0;
-async.parallel([
-  fs.readFile.bind(fs, 'models.json'),
-  fs.readFile.bind(fs, 'user.json')
-],
-function(err, results){
-  models = JSON.parse(results[0]);
-  user = JSON.parse(results[1]);
-  for (var i = 0; i < models.models.length; i++) {
-    hashModels[models.models[i].modelName] = models.models[i];
+var defaultModelsFile = fs.readFileSync('defaultModels.json');
+var customModelsFile = fs.readFileSync('customModels.json');
+
+function loadHashes() {
+  defaultModels = JSON.parse(defaultModelsFile);
+  customModels = JSON.parse(customModelsFile);
+  for (var i = 0; i < customModels.models.length; i++) {
+    hashModels[customModels.models[i].modelName] = customModels.models[i];
   }
-  for (var i = 0; i < user.models.length; i++) {
-    hashUser[user.models[i].modelName] = user.models[i];
-  }
-});
+};
 function setUpEnum(string) {
   var base = _.trim(string, '[');
   base = _.trimEnd(base, ']');
@@ -55,43 +51,45 @@ function prepareFields(fields, complexItem) {
   complexItem.fields.forEach(function(listItem, i){
     var field = {
       name: '',
-      associations: [],
       infos: {}
     };
     field.name = complexItem.fields[i].name;
+    if(complexItem.fields[i].isAssociation){
+      field.association = complexItem.fields[i].isAssociation;
+    }
     fields.push(setUpFieldsAux(field, complexItem, i));
   });
     return fields;
   }
+  loadHashes();
+
 module.exports.models_structure = {
   getModels: function(){
-    return models;
+    return customModels;
   },
-  getUser: function(){
-    return user;
-  },
+  // getUser: function(){
+  //   return user;
+  // },
   getModelByName(name){
     var rootName = hashModels[name].inheritsFrom;
     var complexItem = {
       child: hashModels[name],
-      root: models.defaults[rootName]
+      root: defaultModels.defaults[rootName]
     }
     return complexItem;
   },
-  getUserByName(name){
-    var rootName = hashUser[name].inheritsFrom;
-    var complexItem = {
-      child: hashUser[name],
-      root: user.defaults[rootName]
-    }
-    return complexItem;
-  },
+  // getUserByName(name){
+  //   var rootName = hashUser[name].inheritsFrom;
+  //   var complexItem = {
+  //     child: hashUser[name],
+  //     root: user.defaults[rootName]
+  //   }
+  //   return complexItem;
+  // },
   getFields(name){
-    var complexItem;
-    if(name === 'user')
-      complexItem = this.getUserByName(name);
-    else
-      complexItem = this.getModelByName(name);
+    loadHashes();
+    var complexItem = this.getModelByName(name);
+    console.log(complexItem);
     var fields = [];
     fields = prepareFields(fields, complexItem.root);
     fields = prepareFields(fields, complexItem.child);

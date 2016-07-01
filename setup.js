@@ -1,9 +1,15 @@
 var fs = require('fs');
 var cp = require('child_process');
-
+var models_structure = require('./models_structure.js');
+var fields_helper = require('./config/fields_helper.js');
 var done = false;
 var modelsFile = fs.readFileSync('customModels.json');
 //var usersModelsFile = fs.readFileSync('user.json');
+
+
+function test() {
+fields_helper.fields_helper.test = models_structure.models_structure.getFields('website');
+}
 
 function makeApis(modelsFile) {
   var models = JSON.parse(modelsFile).models;
@@ -33,9 +39,10 @@ function makePermissions() {
   }
 }
 
-makeApis(modelsFile);
-console.log('Fine creazioni APIs, inizio override modelli');
-makeModels(modelsFile, 'sails generate ModelBuilder ');
-console.log('Fine ridefinizione modelli');
-makePermissions();
-console.log('Fine definizione file permessi');
+// makeApis(modelsFile);
+// console.log('Fine creazioni APIs, inizio override modelli');
+// makeModels(modelsFile, 'sails generate ModelBuilder ');
+// console.log('Fine ridefinizione modelli');
+// makePermissions();
+// console.log('Fine definizione file permessi');
+test();
