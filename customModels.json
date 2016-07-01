@@ -1,0 +1,42 @@
+{
+  "models":[
+    {
+      "modelName":"user",
+      "inheritsFrom": "user",
+      "fields":[
+        {"name":"website", "params":[
+          {"parName":"model","value":"website"},
+          {"parName":"required","value":"true"}
+          ]
+        }
+      ]
+    },
+    {
+      "modelName":"website",
+      "inheritsFrom": "website",
+      "fields":[
+        {"name":"users", "isAssociation":"user", "params":[
+          {"parName":"collection","value":"user"},
+          {"parName":"via","value":"website"}
+          ]
+        },
+        {"name":"metadatas","isAssociation":"metadata", "params":[
+          {"parName":"collection","value":"metadata"},
+          {"parName":"via","value":"website"}
+          ]
+        }
+      ]
+    },
+    {
+      "modelName":"metadata",
+      "inheritsFrom": "metadata",
+      "fields":[
+        {"name":"website","isAssociation":"website", "params":[
+          {"parName":"model","value":"website"},
+          {"parName":"required","value":"true"}
+          ]
+        }
+      ]
+    }
+  ]
+}

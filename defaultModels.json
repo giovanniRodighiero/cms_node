@@ -1,0 +1,61 @@
+{
+  "defaults":
+    {
+      "user":{
+        "fields":[
+          {"name":"password", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
+            ]
+          },
+          {"name":"role", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"enum","value":"['admin','superAdmin']"},
+            {"parName":"required","value":"true"},
+            {"parName":"defaultsTo","value":"admin"}
+            ]
+          },
+          {"name":"email", "params":[
+            {"parName":"type","value":"email"},
+            {"parName":"required","value":"true"},
+            {"parName":"unique","value":"true"}
+            ]
+          }
+        ]
+      },
+      "website":{
+        "fields":[
+          {"name":"name", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
+              ]
+            }
+          ]
+        },
+      "metadata":{
+        "fields":[
+          {"name":"path", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
+            ]
+          },
+          {"name":"meta_title", "params":[
+            {"parName":"type","value":"string"}
+              ]
+            },
+          {"name":"meta_descr", "params":[
+            {"parName":"type","value":"string"}
+              ]
+            },
+          {"name":"published", "params":[
+            {"parName":"type","value":"boolean"}
+              ]
+            },
+          {"name":"locale", "params":[
+            {"parName":"type","value":"string"}
+              ]
+            }
+          ]
+        }
+    }
+}

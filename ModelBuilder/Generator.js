@@ -66,19 +66,23 @@ module.exports = {
     scope.whatIsThis = 'an example file created at '+scope.createdAt;
 
 
-    var modelsFile = fs.readFileSync('models.json');
-    var userFile = fs.readFileSync('user.json');
+    var defaultModels = fs.readFileSync('defaultModels.json');
+    var customModels = fs.readFileSync('customModels.json');
     //var associationsFile = fs.readFileSync('associations.json');
     // carico i file con le config
-    scope.model = JSON.parse(modelsFile).models[scope.args[0]];
+    scope.customModel = JSON.parse(customModels).models[scope.args[0]];
+
+    // uso un flag per sapere se devo scrivere anche le funzioni per lo user (hash passoword ecc)
     // mi segno da che modello eredita
-    var baseModel = scope.model.inheritsFrom;
+  //  var baseModel = scope.model.inheritsFrom;
     // mi ricavo i modelli base da cui ereditare gli attributi a partire dalla varibile di prima
-    if( baseModel != '')
-      scope.base = JSON.parse(modelsFile).defaults[baseModel];
+//    if( baseModel != '')
+//      scope.base = JSON.parse(modelsFile).defaults[baseModel];
     // faccio l'uppercase del nome
-    scope.modelName = scope.model.modelName.toString();
-    scope.modelName = scope.modelName.substr(0, 1).toUpperCase() + scope.modelName.substr(1);
+    scope.modelNameLow = scope.customModel.modelName.toString();
+    scope.defaultModel = JSON.parse(defaultModels).defaults[scope.modelNameLow];
+
+    scope.modelName = scope.modelNameLow.substr(0, 1).toUpperCase() + scope.modelNameLow.substr(1);
     cb();
 
   },
@@ -104,7 +108,7 @@ module.exports = {
     // Then the file is copied into the specified destination (on the left).
 
     /************************** Models ******************************/
-    './api/models/:modelName.js': {template: 'model.template.js'},
+    './api/models/:modelName.js': {template: 'models.template.js'},
 
 
 

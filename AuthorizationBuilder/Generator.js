@@ -84,7 +84,10 @@ module.exports = {
     // The `template` helper reads the specified template, making the
     // entire scope available to it (uses underscore/JST/ejs syntax).
     // Then the file is copied into the specified destination (on the left).
-    './config/:filename.js': {template: 'permissions.template.js'},
+    './config/permissions': { folder: 'filename' },
+
+    './config/permissions/:filename/actions.js': {template: 'actions.template.js'}
+    // './config/permissions/:filename/resource.js': {template: 'permissions.template.js'},
 
     // Creates a folder at a static path
   },
