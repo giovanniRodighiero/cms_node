@@ -19,7 +19,7 @@ block admin
               th= field.name
             th Azioni
         tbody
-          each result in results
+          each result in results.results
             tr
               each field in sails.config.models_structure.getFields(page)
                 if(field.name != 'password')
@@ -35,4 +35,25 @@ block admin
                     input(type="hidden" name="_method" value="DELETE")
                     button.btn.btn-danger(type="submit") Elimina
                 
-      
+    if(results.totPages > 1 )
+      div
+        ul.pagination
+          if(results.pageIndex > 1)      
+            li
+              a(href="/admin/#{page}?page=#{results.pageIndex-1}")
+                span(aria-hidden="true") &laquo;              
+          - var n = 1
+          while n < results.totPages+1   
+            if(n == results.pageIndex)
+              li.active
+                a(href="/admin/#{page}?page=#{n}")= n
+            else
+              li
+                a(href="/admin/#{page}?page=#{n}")= n
+                
+            - n++
+          if(results.pageIndex < results.totPages)          
+            li
+              - var index = parseInt(results.pageIndex, 10) + 1
+              a(href="/admin/#{page}?page=#{index}")
+                span(aria-hidden="true") &raquo;

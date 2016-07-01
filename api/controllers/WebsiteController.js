@@ -6,6 +6,17 @@
  */
 
 module.exports = {
-	
+	getWebsites: function(req, res){
+		Website.find()
+		.then(function(results){
+			var myRes = {
+				results: results,
+				addInfo: 'ciao'
+			}
+			res.json(myRes);
+		})
+		.catch(function(err){
+			res.negotiate(err);
+		})
+	}
 };
-

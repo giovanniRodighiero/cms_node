@@ -1,3 +1,4 @@
+
 /**
  * Policy Mappings
  * (sails.config.policies)
@@ -58,5 +59,4 @@ module.exports.policies = {
     'findByLoc': true,
     'findOneWithLoc': true
   }
-
 };

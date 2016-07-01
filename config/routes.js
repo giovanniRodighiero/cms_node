@@ -36,6 +36,8 @@ module.exports.routes = {
   '/': {
     view: 'home'
   },
+  'get /myApy/websites': 'WebsiteController.getWebsites',
+
   'post /signin':'AuthController.signin',
   'get /signout':'AuthController.signout',
   'get /admin': 'AdminController.index',

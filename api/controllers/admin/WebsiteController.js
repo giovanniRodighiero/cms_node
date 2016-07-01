@@ -6,8 +6,9 @@ function confirmation() {
 module.exports = {
   find: function(req, res){
     if(auth.authorize_controller('website', 'find', req.user)){
-      var skip = req.param('page')
-      Website.findCustom(null, function(err, results){
+      var skip = req.param('page') || 1;
+      var limit = 5;
+      Website.findCustom({skip, limit}, function(err, results){
         if(!err)
           return res.view('admins/models/index', {page: 'website', results});
         else
@@ -42,7 +43,6 @@ module.exports = {
         ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/website/new');
       })
       .catch(function(err){
-        sails.log(err.invalidAttributes)
         req.addFlash('warning', 'Errore nella compilazione dei campi');
         return res.view('admins/models/new', {page: 'website', previousData: item, err: err.invalidAttributes});
       })
@@ -58,7 +58,6 @@ module.exports = {
           ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/website/'+updated[0].id);
         })
         .catch(function(err){
-          sails.log(item);
           req.addFlash('warning', 'Errore nella compilazione dei campi');
           if(auth.authorize_controller('website', 'findone', req.user)){
             if(auth.authorize_resource(req.record,'findone', req.user))

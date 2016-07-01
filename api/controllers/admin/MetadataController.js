@@ -4,10 +4,12 @@ var _ = require('lodash');
 module.exports = {
   find: function(req, res){
     if(auth.authorize_controller('metadata', 'find', req.user)){
-      var skip = req.param('page')
-      Metadata.findCustom(null, function(err, results){
-        if(!err)
+      var skip = req.param('page') || 1;
+      var limit = 5;
+      Metadata.findCustom({skip, limit}, function(err, results){
+        if(!err){
           return res.view('admins/models/index', {page: 'metadata', results});
+        }
         else
           res.negotiate(err);
       })
@@ -55,7 +57,6 @@ module.exports = {
           ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/metadata/'+updated[0].id);
         })
         .catch(function(err){
-          sails.log(item);
           req.addFlash('warning', 'Errore nella compilazione dei campi');
           if(auth.authorize_controller('metadata', 'findone', req.user)){
             if(auth.authorize_resource(req.record,'findone', req.user))

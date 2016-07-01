@@ -1,6 +1,7 @@
 extends ../node_modules/jade-bootstrap/_bootstrap.jade
 
 append styles
+  link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css")
   // STYLES
   link(rel="stylesheet", href="/styles/boostrap.css")
   link(rel="stylesheet", href="/styles/folder/style.css")
@@ -14,3 +15,6 @@ block content
       +alert-warning(message)
     each message in flash.get('success')
       +alert-success(message)
+append scripts
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js")
+  //script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js")

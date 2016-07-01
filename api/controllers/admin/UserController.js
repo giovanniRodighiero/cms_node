@@ -1,16 +1,20 @@
 var auth = sails.config.authorization;
 var _ = require('lodash');
+var usersNumber;
 
 module.exports = {
   find: function(req, res){
     if(auth.authorize_controller('user', 'find', req.user)){
-      var skip = req.param('page');
-      User.find()
+      var skip = req.param('page') || 1;
+      var limit = 5;
+      User.find().paginate({page: skip, limit: limit})
       .then(function(results){
         for (var i = 0; i < results.length; i++) {
           results[i] = _.assign(results[i], {'model': 'user'});
         }
-        return res.view('admins/user/index', {page: 'user', results});
+        var pageIndex =  skip;
+        var totPages = Math.ceil(sails.config.counter.user/limit);
+        return res.view('admins/user/index', {page: 'user', results, pageIndex, totPages});
       })
       .catch(function(err){
         return res.negotiate(err);
@@ -20,8 +24,9 @@ module.exports = {
   },
   findOne: function(req, res){
     if(auth.authorize_controller('user', 'findone', req.user)){
-      if(auth.authorize_resource(req.record,'findone', req.user))
+      if(auth.authorize_resource(req.record,'findone', req.user)){
         return res.view('admins/user/show', {page: 'user', result: req.record});
+      }
       else
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
     }else

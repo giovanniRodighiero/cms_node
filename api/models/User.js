@@ -65,7 +65,6 @@ beforeUpdate(values, next) {
 
 beforeCreate(values, next) {
   if (false === values.hasOwnProperty('password')) return next();
-
   return HashService.bcrypt.hash(values.password)
     .then(hash => {
       values.password = hash;
@@ -73,5 +72,17 @@ beforeCreate(values, next) {
     })
     .catch(next);
 },
+afterCreate(values, next ){
+  sails.models.user.count.exec(function(err, count){
+    sails.config.counter.user = count;
+    next();
+  })
+},
+afterDestroy(destroyedRecords, next){
+  User.count.exec(function(err, count){
+    sails.config.counter.user = count;
+    next();
+  })
+}
 
 };

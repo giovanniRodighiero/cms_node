@@ -12,7 +12,7 @@ block admin
     h1.page-header.text-center Aggiungi un nuovo #{page}    
     .row
       .col-xs-8.col-xs-offset-2
-        form(method="post" action="/admin/#{page}" )
+        form(method="post" action="/admin/#{page}")
           each field in sails.config.models_structure.getFields(page)
             if(previousData)
               if(field.infos.enum)
@@ -36,8 +36,38 @@ block admin
                   each f in field.infos.enum                
                     option= f
               else
-                +input(field.infos.type, field.name, field.name, field.name, field.name,"")           
+                if(field.name === 'website')
+                  select.form-control#mySelect(name="website")
+                else
+                  +input(field.infos.type, field.name, field.name, field.name, field.name,"")           
           br
           +submit-success("Crea")      
     
-    
+append scripts
+  script(type='text/javascript').
+    $("#mySelect").select2({
+      ajax: {
+        url: 'http://localhost:1337/website',
+        dataType: "json",
+        type: "GET",
+        data: function (params) {
+          var query = {
+            //search: params.term,
+            //page: params.page
+          }
+
+          // Query paramters will be ?search=[term]&page=[page]
+          return query;
+        },
+        processResults: function (data) {
+           return {
+               results: $.map(data.data.results, function (item) {
+                   return {
+                       text: item.name,
+                       id: item.id
+                   }
+               })
+           };
+         }
+      }
+    });
