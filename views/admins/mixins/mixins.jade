@@ -1,0 +1,59 @@
+// barra in alto 
+mixin navCustom(user)
+  nav
+    +navbar("CMS metadati","dropdown_menu")
+      +nav_item("/admin") Dashboard
+      +nav_item("/admin/account/"+user.id)= user.email
+      +nav_item("/signout") Log out
+      
+// menù laterale      
+mixin menu(user, page)
+  ul.nav.nav-pills.nav-stacked
+    each model in sails.config.fields_helper.modelList
+      if(sails.config.authorization.authorize_controller(model, 'find', user))
+        if page == model
+          li.active(role="presentation")
+            a(href="/admin/"+model)= model                  
+        else
+          li(role="presentation")                
+            a(href="/admin/"+model)= model
+
+// tab sezioni per modello, index, details, edit ecc
+mixin navtabsCustom(page, user, current)
+  ul.nav.nav-tabs
+    case current
+      when 'index'        
+        li.active(role="presentation") 
+          a(href="/admin/#{page}") Index
+        if(sails.config.authorization.authorize_controller(page, 'create', req.user))
+          li(role="presentation") 
+            a(href="/admin/#{page}/new") Nuovo 
+
+mixin tableIndex(results)
+  .table-responsive
+    table.table
+      thead
+        tr 
+          each field in sails.config.fields_helper[page]
+          //  if(sails.config.authorization.)
+            th= field.name
+          th Azioni
+      tbody
+        each result in results.results
+          tr
+            each field in sails.config.fields_helper[page]
+              if(field.name != 'password')
+                th= result[field.name]
+              else
+                th private field
+            th
+              if(sails.config.authorization.authorize_resource(result, 'findone', req.user))                
+                a(href="/admin/#{page}/#{result.id}")
+                  button.btn.btn-warning Dettagli
+              if(sails.config.authorization.authorize_resource(result, 'destroy', req.user))
+                form(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+                  input(type="hidden" name="_method" value="DELETE")
+                  button.btn.btn-danger(type="submit") Elimina
+
+// mixins vari di jade-bootstrap + layout
+include ../../../node_modules/jade-bootstrap/_bootstrap.jade

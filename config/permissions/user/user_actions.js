@@ -1,7 +1,7 @@
 module.exports.user = {
   actions:{
     find: function(user){
-      return true;
+      return (user.role === 'superAdmin');
     },
     findone: function(user){
       return true;
@@ -24,5 +24,5 @@ module.exports.user = {
           return false;
       }
     }
-  }  
+  }
 }

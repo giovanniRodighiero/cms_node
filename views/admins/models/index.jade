@@ -1,59 +1,51 @@
 extends ../index.jade
   
-block admin
-  block nav
-    +nav_item("/admin") Dashboard    
-  block page
-    ul.nav.nav-tabs
-      li.active(role="presentation") 
-        a(href="/admin/#{page}") Index
-      if(sails.config.authorization.authorize_controller(page, 'create', req.user))
-        li(role="presentation") 
-          a(href="/admin/#{page}/new") Nuovo  
-    h1.page-header.text-center #{page}        
-    .table-responsive
-      table.table
-        thead
-          tr 
-            each field in sails.config.models_structure.getFields(page)
-              th= field.name
-            th Azioni
-        tbody
-          each result in results.results
-            tr
-              each field in sails.config.models_structure.getFields(page)
-                if(field.name != 'password')
-                  th= result[field.name]
-                else
-                  th private field
-              th
-                if(sails.config.authorization.authorize_resource(result, 'findone', req.user))                
-                  a(href="/admin/#{page}/#{result.id}")
-                    button.btn.btn-warning Dettagli
-                if(sails.config.authorization.authorize_resource(result, 'destroy', req.user))
-                  form(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
-                    input(type="hidden" name="_method" value="DELETE")
-                    button.btn.btn-danger(type="submit") Elimina
-                
-    if(results.totPages > 1 )
-      div
-        ul.pagination
-          if(results.pageIndex > 1)      
-            li
-              a(href="/admin/#{page}?page=#{results.pageIndex-1}")
-                span(aria-hidden="true") &laquo;              
-          - var n = 1
-          while n < results.totPages+1   
-            if(n == results.pageIndex)
-              li.active
-                a(href="/admin/#{page}?page=#{n}")= n
-            else
-              li
-                a(href="/admin/#{page}?page=#{n}")= n
-                
-            - n++
-          if(results.pageIndex < results.totPages)          
-            li
-              - var index = parseInt(results.pageIndex, 10) + 1
-              a(href="/admin/#{page}?page=#{index}")
-                span(aria-hidden="true") &raquo;
+block page
+  +navtabsCustom(page, req.user, 'index')
+  //- h1.page-header.text-center #{page}        
+  //- .table-responsive
+  //-   table.table
+  //-     thead
+  //-       tr 
+  //-         each field in sails.config.models_structure.getFields(page)
+  //-           th= field.name
+  //-         th Azioni
+  //-     tbody
+  //-       each result in results.results
+  //-         tr
+  //-           each field in sails.config.models_structure.getFields(page)
+  //-             if(field.name != 'password')
+  //-               th= result[field.name]
+  //-             else
+  //-               th private field
+  //-           th
+  //-             if(sails.config.authorization.authorize_resource(result, 'findone', req.user))                
+  //-               a(href="/admin/#{page}/#{result.id}")
+  //-                 button.btn.btn-warning Dettagli
+  //-             if(sails.config.authorization.authorize_resource(result, 'destroy', req.user))
+  //-               form(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+  //-                 input(type="hidden" name="_method" value="DELETE")
+  //-                 button.btn.btn-danger(type="submit") Elimina
+  //-             
+  //- if(results.totPages > 1 )
+  //-   div
+  //-     ul.pagination
+  //-       if(results.pageIndex > 1)      
+  //-         li
+  //-           a(href="/admin/#{page}?page=#{results.pageIndex-1}")
+  //-             span(aria-hidden="true") &laquo;              
+  //-       - var n = 1
+  //-       while n < results.totPages+1   
+  //-         if(n == results.pageIndex)
+  //-           li.active
+  //-             a(href="/admin/#{page}?page=#{n}")= n
+  //-         else
+  //-           li
+  //-             a(href="/admin/#{page}?page=#{n}")= n
+  //-             
+  //-         - n++
+  //-       if(results.pageIndex < results.totPages)          
+  //-         li
+  //-           - var index = parseInt(results.pageIndex, 10) + 1
+  //-           a(href="/admin/#{page}?page=#{index}")
+  //-             span(aria-hidden="true") &raquo;

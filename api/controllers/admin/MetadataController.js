@@ -6,8 +6,9 @@ module.exports = {
     if(auth.authorize_controller('metadata', 'find', req.user)){
       var skip = req.param('page') || 1;
       var limit = 5;
-      Metadata.findCustom({skip, limit}, function(err, results){
+      Metadata.find({skip, limit}, function(err, results){
         if(!err){
+          console.log(results);
           return res.view('admins/models/index', {page: 'metadata', results});
         }
         else

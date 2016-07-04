@@ -1,34 +1,12 @@
 extends ../layout.jade
 
 append content
-  nav
-    +navbar("CMS metadati","dropdown_menu")
-      block nav
-        +nav_item("/admin","active") Dashboard
-      +nav_item("/admin/account/"+req.user.id)= req.user.email
-      +nav_item("/signout") Log out
+  +navCustom(req.user)
   main.container-fluid
     div.row
       section.col-md-2
-        ul.nav.nav-pills.nav-stacked
-          each model in sails.config.models_structure.getModels().models
-            if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
-              if page == model.modelName
-                li.active(role="presentation")
-                  a(href="/admin/"+model.modelName)= model.modelName                  
-              else
-                li(role="presentation")                
-                  a(href="/admin/"+model.modelName)= model.modelName
-          each model in sails.config.models_structure.getUser().models
-            if(sails.config.authorization.authorize_controller(model.modelName, 'find', req.user))
-              - console.log(model);
-              if page == model.modelName
-                li.active(role="presentation")
-                  a(href="/admin/"+model.modelName)= model.modelName                  
-              else
-                li(role="presentation")                
-                  a(href="/admin/"+model.modelName)= model.modelName
-      section(class="col-md-10")
+        +menu(req.user, page)  
+      section.col-md-10
         block page
           h1.page-header.text-center Pannello Amministrazione, 
             small ruolo: #{req.user.role}                      

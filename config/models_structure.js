@@ -47,7 +47,6 @@ function setUpFieldsAux(field, complexItem, i){
   return field;
 };
 function prepareFields(fields, complexItem) {
-
   complexItem.fields.forEach(function(listItem, i){
     var field = {
       name: '',
@@ -89,7 +88,6 @@ module.exports.models_structure = {
   getFields(name){
     loadHashes();
     var complexItem = this.getModelByName(name);
-    console.log(complexItem);
     var fields = [];
     fields = prepareFields(fields, complexItem.root);
     fields = prepareFields(fields, complexItem.child);
