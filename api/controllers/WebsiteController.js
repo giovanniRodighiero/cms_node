@@ -6,6 +6,16 @@
  */
 
 module.exports = {
-	
-};
+	findCustom: function(req, res){
+		var page = req.param('page') || 0;
+		var limit = 5;
+		Website.find().paginate({page: page, limit: limit})
+		.then(function(results){
+			var myResult
+			_.assignIn
+		})
+		.catch(function(err){
 
+		});
+	}
+};
