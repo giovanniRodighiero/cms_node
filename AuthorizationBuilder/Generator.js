@@ -56,16 +56,20 @@ module.exports = {
     _.defaults(scope, {
       createdAt: new Date()
     });
-    scope.filename = 'user'
     scope.index = scope.args[0];
-    var modelsFile = fs.readFileSync('customModels.json');
+    var defaultModelsFile = fs.readFileSync('defaultModels.json');
+    var customModelsFile = fs.readFileSync('customModels.json');
   //  var userFile = fs.readFileSync('user.json');
-    scope.models = JSON.parse(modelsFile).models[scope.index];
+    scope.customModel = JSON.parse(customModelsFile).models[scope.index];
     //scope.user = JSON.parse(userFile).models;
-    scope.modelName = scope.models.modelName;
+    scope.modelName = scope.customModel.modelName;
+
+    scope.modelNameLow = scope.modelName.toString();
+    scope.defaultModel = JSON.parse(defaultModelsFile).defaults[scope.modelNameLow];
 
     scope.fileAction = scope.modelName+'_actions.js';
     scope.fileRescource = scope.modelName+'_resources.js';
+    scope.fileField = scope.modelName+'_fields.js';
     cb();
   },
 
@@ -91,6 +95,7 @@ module.exports = {
 
     './config/permissions/:modelName/:fileAction': {template: 'actions.template.js'},
     './config/permissions/:modelName/:fileRescource': {template: 'resources.template.js'},
+    './config/permissions/:modelName/:fileField': {template: 'fields.template.js'},
 
     // Creates a folder at a static path
   },

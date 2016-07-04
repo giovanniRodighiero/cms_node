@@ -1,4 +1,4 @@
-module.exports.<%=models.modelName%> = {
+module.exports.<%=customModel.modelName%> = {
   resources:{
     find: function(record, user){
       return true;

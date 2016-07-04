@@ -24,5 +24,5 @@ module.exports.metadata = {
           return false;
       }
     }
-  }  
+  }
 }

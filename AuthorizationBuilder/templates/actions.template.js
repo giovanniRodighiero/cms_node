@@ -1,4 +1,4 @@
-module.exports.<%=models.modelName%> = {
+module.exports.<%=customModel.modelName%> = {
   actions:{
     find: function(user){
       return true;
@@ -24,5 +24,5 @@ module.exports.<%=models.modelName%> = {
           return false;
       }
     }
-  }  
+  }
 }
