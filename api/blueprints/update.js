@@ -10,17 +10,29 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
  * An API call to update a model instance with the specified `id`, treating the other unbound parameters as attributes.
  */
 module.exports = (req, res) => {
+  if(! sails.config.authorization.authorize_controller(req.options.controller, 'update', req.user))
+    return res.unautorized();
+  if(!sails.config.authorization.authorize_resource(req.record, 'update', req.user))
+    return res.unautorized();
+
   const Model = actionUtil.parseModel(req);
   const pk = actionUtil.requirePk(req);
-  const values = actionUtil.parseValues(req);
-  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
-    return res.unautorized();
-  var aux = _.assign(values, {'model': Model.identity});
-  sails.log(aux);
-  if(!sails.config.authorization.authorize_resource(aux, req.options.action, req.user))
-    return res.unautorized();
+  var values = actionUtil.parseValues(req);
+  var permitted = [];
+  var fields = sails.config.fields_helper.fieldsInfo[Model.identity];
+  for (var i = 0; i < fields.length; i++) {
+    permitted.push(fields[i].name);
+  }
+  values = _.pick(values, permitted);
+
+
   Model
-    .update(pk, _.omit(values, 'id'))
-    .then(records => records[0] ? res.ok(records[0]) : res.notFound())
-    .catch(res.negotiate);
+    .update(pk, values)
+    .then(function(updated){
+      _.assign(updated, {'model': Model.identity});
+      return res.ok(updated);
+    })
+    .catch(function(err){
+      return res.negotiate(err);
+    });
 };

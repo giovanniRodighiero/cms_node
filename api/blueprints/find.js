@@ -14,11 +14,10 @@ const populateAlias = (model, alias) => model.populate(alias);
  * If an id was specified, just the instance with that unique id will be returned.
  */
 module.exports = (req, res) => {
-  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
+  if(! sails.config.authorization.authorize_controller(req.options.controller, 'find', req.user))
     return res.unauthorized();
   // blakclist dei parametri accettati
   _.set(req.options, 'criteria.blacklist', ['fields', 'populate', 'limit', 'skip', 'page', 'sort']);
-
   // const fields = req.param('fields') ? req.param('fields').replace(/ /g, '').split(',') : [];// off
   // const populate = req.param('populate') ? req.param('populate').replace(/ /g, '').split(',') : [];// off
   const Model = actionUtil.parseModel(req);
@@ -35,26 +34,14 @@ module.exports = (req, res) => {
   // if(actionUtil.parseSort(req))
   //   params.sort = actionUtil.parseSort(req);
 
-
-  // if(req.user)
-  //   var query = Model.find().limit(limit).skip(skip).sort(sort);// mostro tutto
-  // else
-  var query = Model.find().paginate({page: params.page, limit: params.limit});// mando solo quello pubblicato
+  var query = Model.find().paginate({page: params.page, limit: params.limit});
   const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
   var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
 
   findQuery
     .then(function(records){
-      var toDelete = [];
       for (var i = 0; i < records.length; i++) {
         _.assign(records[i], {'model': Model.identity});
-        if(!sails.config.authorization.authorize_resource(records[i], 'find', req.user))
-          toDelete.push(i);
-      }
-      for (var i = 0; i < toDelete.length; i++) {
-        records.splice(toDelete[i], 1);
-        sails.log('dentro toDelete');
-        //toDelete[i+1] = toDelete[i+1]-1;
       }
 			var myResult = {
 				results: _.omit(records, 'password'),
@@ -62,7 +49,7 @@ module.exports = (req, res) => {
         pageIndex: params.page,
         totPages: totPages
 			};
-      return res.json(myResult);
+      return res.ok(myResult);
     })
     .catch(function(err){
       return res.negotiate(err);

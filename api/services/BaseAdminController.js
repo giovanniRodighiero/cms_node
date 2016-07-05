@@ -4,8 +4,6 @@ function Base() {
 	var auth = sails.config.authorization;
   // homepage admin
   this.index = function(r, res){
-		sails.log(sails.config.user);
-		sails.log(sails.config.website);
 		return res.view('admins/index', {page:'index'});
   },
   // user page

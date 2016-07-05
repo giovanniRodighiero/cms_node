@@ -10,12 +10,23 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
  * An API call to create and return a single model instance using the specified parameters.
  */
 module.exports = (req, res) => {
-  const Model = actionUtil.parseModel(req);
-  const values = actionUtil.parseValues(req);
-  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
+  if(! sails.config.authorization.authorize_controller(req.options.controller, 'create', req.user))
     return res.unauthorized();
+  const Model = actionUtil.parseModel(req);
+  var values = actionUtil.parseValues(req);
+  var permitted = [];
+  var fields = sails.config.fields_helper.fieldsInfo[Model.identity];
+  for (var i = 0; i < fields.length; i++) {
+    permitted.push(fields[i].name);
+  }
+  values = _.pick(values, permitted);
   Model
-    .create(_.omit(values, 'id'))
-    .then(res.created)
-    .catch(res.negotiate);
+    .create(values)
+    .then(function(created){
+      _.assign(created, {'model': Model.identity});
+      return res.created(created);
+    })
+    .catch(function(err){
+      return res.negotiate(err);
+    });
 };
