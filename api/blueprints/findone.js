@@ -14,7 +14,6 @@ const populateAliases = (model, alias) => model.populate(alias);
  */
 module.exports = (req, res) => {
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'findone', req.user)){
-    sails.log('first one');
     return res.unauthorized();
   }
 
@@ -42,7 +41,6 @@ module.exports = (req, res) => {
   if(sails.config.authorization.authorize_resource(req.record, 'findone', req.user))
     return res.ok(req.record);
   else{
-    sails.log('second one');
     return res.unauthorized();
   }
 };
