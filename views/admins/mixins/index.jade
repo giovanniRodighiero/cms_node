@@ -1,0 +1,50 @@
+mixin tableIndex(results, user)
+  .table-responsive
+    table.table
+      thead
+        tr 
+          each field in sails.config.fields_helper.fieldsInfo[page]
+            if(sails.config.authorization.show_field(results.results[0].model, 'index', field.name, user))
+              th= field.name
+          th Azioni
+      tbody
+        each result in results.results
+          tr
+            each field in sails.config.fields_helper.fieldsInfo[page]
+              if(sails.config.authorization.show_field(result.model, 'index', field.name, user))
+                th= result[field.name]
+            th
+              if(sails.config.authorization.authorize_resource(result, 'findone', user))                
+                a.inline(href="/admin/#{page}/#{result.id}")
+                  button.btn.btn-warning Dettagli
+              if(sails.config.authorization.authorize_resource(result, 'update', user))                
+                a.inline(href="/admin/#{page}/#{result.id}")
+                  button.btn.btn-warning Modifica
+              if(sails.config.authorization.authorize_resource(result, 'destroy', user))              
+                form.inline(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+                  input(type="hidden" name="_method" value="DELETE")
+                  button.btn.btn-danger(type="submit") Elimina
+
+mixin pagination(results)
+  if(results.totPages > 1 )
+    div
+      ul.pagination
+        if(results.pageIndex > 1)      
+          li
+            a(href="/admin/#{page}?page=#{results.pageIndex-1}")
+              span(aria-hidden="true") &laquo;              
+        - var n = 1
+        while n < results.totPages+1   
+          if(n == results.pageIndex)
+            li.active
+              a(href="/admin/#{page}?page=#{n}")= n
+          else
+            li
+              a(href="/admin/#{page}?page=#{n}")= n
+              
+          - n++
+        if(results.pageIndex < results.totPages)          
+          li
+            - var index = parseInt(results.pageIndex, 10) + 1
+            a(href="/admin/#{page}?page=#{index}")
+              span(aria-hidden="true") &raquo;

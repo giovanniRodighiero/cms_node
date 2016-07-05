@@ -1,30 +1,30 @@
 module.exports.metadata = {
   fields:{
-    
-      path: function(user){
+
+      path: function(page, user){
         return true;
       },
-    
-      meta_title: function(user){
+
+      meta_title: function(page, user){
         return true;
       },
-    
-      meta_descr: function(user){
+
+      meta_descr: function(page, user){
         return true;
       },
-    
-      published: function(user){
+
+      published: function(page, user){
         return true;
       },
-    
-      locale: function(user){
+
+      locale: function(page, user){
         return true;
       },
-    
-    
-      website: function(user){
+
+
+      website: function(page,user){
         return true;
       },
-    
+
   }
 }

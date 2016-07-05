@@ -17,11 +17,11 @@ module.exports.authorization = {
     else
       return false;
   },
-  show_field: function(model, fieldName, user){
+  show_field: function(model, page, fieldName, user){
     var res = sails.config[model];
     res = res.fields;
     if(fieldName in res)
-      return res[fieldName](user);
+      return res[fieldName](page, user);
     else
       return false;
   }
