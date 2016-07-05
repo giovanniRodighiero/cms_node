@@ -55,9 +55,8 @@ module.exports = {
       sails.config.counter.user = count;
       next();
     })
-  }
+  },
   
-    ,
     toJSON() {
       let obj = this.toObject();
       delete obj.password;
@@ -85,6 +84,28 @@ module.exports = {
         next();
       })
       .catch(next);
-  }
+  },
   
+  findCustom: function(opts, callback){
+    var pageIndex =  parseInt(opts.page);
+    var limit =  opts.limit;
+    var totPages = Math.ceil(sails.config.fields_helper.modelCount[user]/opts.limit);
+
+    sails.models[user].find().paginate({page: pageIndex, limit: limit})
+    .then(function(results){
+      var customResults = [];
+      for (var i = 0; i < results.length; i++) {
+        _.assign(results[i], {'model': 'user'});
+      }
+      var myResult = {
+        results: results,
+        pageIndex: pageIndex,
+        totPages: totPages
+      }
+      return callback(null, myResult);
+    })
+    .catch(function(err){
+      return callback(err);
+    });
+  }
 };

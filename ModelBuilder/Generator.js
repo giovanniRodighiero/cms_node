@@ -83,6 +83,7 @@ module.exports = {
     scope.defaultModel = JSON.parse(defaultModels).defaults[scope.modelNameLow];
 
     scope.modelName = scope.modelNameLow.substr(0, 1).toUpperCase() + scope.modelNameLow.substr(1);
+    scope.controllerName = scope.modelName+'Controller';
     cb();
 
   },
@@ -109,6 +110,7 @@ module.exports = {
 
     /************************** Models ******************************/
     './api/models/:modelName.js': {template: 'models.template.js'},
+    './api/controllers/:controllerName.js': {template: 'controllers.template.js'},
 
 
 

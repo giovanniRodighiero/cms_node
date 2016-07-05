@@ -29,9 +29,8 @@ module.exports = {
       sails.config.counter.<%=modelNameLow%> = count;
       next();
     })
-  }
+  },
   <% if(modelNameLow === 'user'){ %>
-    ,
     toJSON() {
       let obj = this.toObject();
       delete obj.password;
