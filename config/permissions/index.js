@@ -1,6 +1,5 @@
 module.exports.authorization = {
   authorize_controller: function(controller, action, user){
-    var name = controller+'_actions';
     var ctrl = sails.config[controller];
     ctrl = ctrl.actions;
     if(action in ctrl){
@@ -11,7 +10,6 @@ module.exports.authorization = {
     }
   },
   authorize_resource: function(record, action, user){
-    var name = record.model+'_resources';
     var mdl = sails.config[record.model];
     mdl = mdl.resources;
     if( action in mdl)
@@ -20,7 +18,6 @@ module.exports.authorization = {
       return false;
   },
   show_field: function(model, fieldName, user){
-    var name = model+'_fields';
     var res = sails.config[model];
     res = res.fields;
     if(fieldName in res)

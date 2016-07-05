@@ -14,6 +14,8 @@ const populateAlias = (model, alias) => model.populate(alias);
  * If an id was specified, just the instance with that unique id will be returned.
  */
 module.exports = (req, res) => {
+  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
+    return res.unauthorized();
   // blakclist dei parametri accettati
   _.set(req.options, 'criteria.blacklist', ['fields', 'populate', 'limit', 'skip', 'page', 'sort']);
 
@@ -21,30 +23,48 @@ module.exports = (req, res) => {
   // const populate = req.param('populate') ? req.param('populate').replace(/ /g, '').split(',') : [];// off
   const Model = actionUtil.parseModel(req);
   // const where = actionUtil.parseCriteria(req);// off
-  const limit = actionUtil.parseLimit(req);
-  const skip = req.param('page') * limit || actionUtil.parseSkip(req);
-  const sort = actionUtil.parseSort(req);
+  var params = {
+    page: 0,
+    limit: 5
+    // sort
+  };
+  if(req.param('limit'))
+    params.limit = parseInt(req.param('limit'));
+  if(req.param('page'))
+    params.page = parseInt(req.param('page'));
+  // if(actionUtil.parseSort(req))
+  //   params.sort = actionUtil.parseSort(req);
 
-  // const query = Model.find(null, fields.length > 0 ? {select: fields} : null).where(where).limit(limit).skip(skip).sort(sort);
-  // const findQuery = _.reduce(_.intersection(populate, takeAlias(Model.associations)), populateAlias, query);
 
-  if(! sails.config.authorization.authorize_controller(req.options.controller, req.options.action, req.user))
-    return res.unauthorized();
-  if(req.user)
-    var query = Model.find().limit(limit).skip(skip).sort(sort);// mostro tutto
-  else
-    var query = Model.find({published: true}).limit(limit).skip(skip).sort(sort);// mando solo quello pubblicato
+  // if(req.user)
+  //   var query = Model.find().limit(limit).skip(skip).sort(sort);// mostro tutto
+  // else
+  var query = Model.find().paginate({page: params.page, limit: params.limit});// mando solo quello pubblicato
   const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
+  var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
+
   findQuery
     .then(function(records){
-  			var myResult = {
-  				results: _.omit(records, 'password'),
-  				model: Model.identity,
-  				start: skip,
-          limit: limit,
-          page: Math.floor(skip / limit)
-  			}
-        return res.ok(myResult);
+      var toDelete = [];
+      for (var i = 0; i < records.length; i++) {
+        _.assign(records[i], {'model': Model.identity});
+        if(!sails.config.authorization.authorize_resource(records[i], 'find', req.user))
+          toDelete.push(i);
+      }
+      for (var i = 0; i < toDelete.length; i++) {
+        records.splice(toDelete[i], 1);
+        sails.log('dentro toDelete');
+        //toDelete[i+1] = toDelete[i+1]-1;
+      }
+			var myResult = {
+				results: _.omit(records, 'password'),
+        limit: params.limit,
+        pageIndex: params.page,
+        totPages: totPages
+			};
+      return res.json(myResult);
     })
-    .catch(res.negotiate);
+    .catch(function(err){
+      return res.negotiate(err);
+    });
   };
