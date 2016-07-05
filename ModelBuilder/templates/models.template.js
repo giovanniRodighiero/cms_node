@@ -29,9 +29,8 @@ module.exports = {
       sails.config.counter.<%=modelNameLow%> = count;
       next();
     })
-  }
+  },
   <% if(modelNameLow === 'user'){ %>
-    ,
     toJSON() {
       let obj = this.toObject();
       delete obj.password;
@@ -59,6 +58,28 @@ module.exports = {
         next();
       })
       .catch(next);
-  }
+  },
   <% } %>
+  findCustom: function(opts, callback){
+    var pageIndex =  parseInt(opts.page);
+    var limit =  opts.limit;
+    var totPages = Math.ceil(sails.config.fields_helper.modelCount['<%=modelNameLow%>']/opts.limit);
+
+    sails.models['<%=modelNameLow%>'].find().paginate({page: pageIndex, limit: limit})
+    .then(function(results){
+      var customResults = [];
+      for (var i = 0; i < results.length; i++) {
+        _.assign(results[i], {'model': '<%=modelNameLow%>'});
+      }
+      var myResult = {
+        results: results,
+        pageIndex: pageIndex,
+        totPages: totPages
+      }
+      return callback(null, myResult);
+    })
+    .catch(function(err){
+      return callback(err);
+    });
+  }
 };

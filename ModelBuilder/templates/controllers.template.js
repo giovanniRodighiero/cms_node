@@ -10,7 +10,7 @@ module.exports = {
     if(req.param('limit'))
       aux.limit = req.param('limit');
 
-    sails.models['user'].findCustom(aux, function(err, results){
+    sails.models['<%=modelNameLow%>'].findCustom(aux, function(err, results){
       if(err)
         return res.negotiate(err);
       else
