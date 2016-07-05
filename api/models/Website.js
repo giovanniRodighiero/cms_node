@@ -2,32 +2,32 @@
 module.exports = {
   attributes: {
     // base model fields
-    
+
       name: {
-        
+
           type:"string",
-        
+
           required:true,
-        
+
       },
-    
-    
+
+
       users: {
-        
+
           collection:"user",
-        
+
           via:"website",
-        
+
       },
-    
+
       metadatas: {
-        
+
           collection:"metadata",
-        
+
           via:"website",
-        
+
       },
-    
+
   },
 
   afterCreate(destroyedRecords, next){
@@ -42,7 +42,7 @@ module.exports = {
       next();
     })
   },
-  
+
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;

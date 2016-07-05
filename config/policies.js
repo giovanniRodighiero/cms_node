@@ -59,7 +59,7 @@ module.exports.policies = {
     'findByLoc': true,
     'findOneWithLoc': true
   },
-  WebsiteController: {
+  WebsiteController:{
     'find': true
   }
 };

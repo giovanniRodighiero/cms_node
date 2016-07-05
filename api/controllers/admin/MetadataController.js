@@ -36,7 +36,7 @@ module.exports = {
   create: function(req, res){
     var permitted = ['path','meta_title','meta_descr','published','locale','website'];
     if(auth.authorize_controller('metadata', 'create', req.user)){
-      var item = _.pick(req.allParams(),permitted);
+      var item = _.pick(req.allParams(), permitted);
       var aux = sails.config.models_structure.getFields('metadata');
       Metadata.create(item)
       .then(function(created){
