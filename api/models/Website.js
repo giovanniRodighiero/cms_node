@@ -43,10 +43,10 @@ module.exports = {
     })
   },
   findCustom: function(opts, callback){
-      var pageIndex =  opts.skip ;
-      var limit =  opts.limit;
+    var pageIndex =  parseInt(opts.page);
+    var limit =  opts.limit;
+    var totPages = Math.ceil(sails.config.fields_helper.modelCount.website/opts.limit);
 
-    var totPages = Math.ceil(sails.config.counter.website/opts.limit);
     Website.find().paginate({page: pageIndex, limit: limit})
     .then(function(results){
       var customResults = [];

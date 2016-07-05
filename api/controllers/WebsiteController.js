@@ -13,6 +13,8 @@ module.exports = {
 		};
 		if(req.param('page'))
 			aux.page = req.param('page');
+		if(req.param('limit'))
+			aux.limit = req.param('limit');
 		Website.findCustom(aux, function(err, results){
 			if(err)
 				return res.negotiate(err);
