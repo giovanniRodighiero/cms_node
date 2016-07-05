@@ -20,13 +20,13 @@ module.exports = {
 
   afterCreate(destroyedRecords, next){
     sails.models.<%=modelNameLow%>.count().exec(function(err, count){
-      sails.config.counter.<%=modelNameLow%> = count;
+      sails.config.fields_helper.modelCount['<%=modelNameLow%>'] = count;
       next();
     })
   },
   afterDestroy(destroyedRecords, next){
     sails.models.<%=modelNameLow%>.count().exec(function(err, count){
-      sails.config.counter.<%=modelNameLow%> = count;
+      sails.config.fields_helper.modelCount['<%=modelNameLow%>'] = count;
       next();
     })
   },

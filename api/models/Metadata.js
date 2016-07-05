@@ -48,13 +48,13 @@ module.exports = {
 
   afterCreate(destroyedRecords, next){
     sails.models.metadata.count().exec(function(err, count){
-      sails.config.counter.metadata = count;
+      sails.config.fields_helper.modelCount['metadata'] = count;
       next();
     })
   },
   afterDestroy(destroyedRecords, next){
     sails.models.metadata.count().exec(function(err, count){
-      sails.config.counter.metadata = count;
+      sails.config.fields_helper.modelCount['metadata'] = count;
       next();
     })
   },

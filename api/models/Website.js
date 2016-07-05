@@ -32,13 +32,13 @@ module.exports = {
 
   afterCreate(destroyedRecords, next){
     sails.models.website.count().exec(function(err, count){
-      sails.config.counter.website = count;
+      sails.config.fields_helper.modelCount['website'] = count;
       next();
     })
   },
   afterDestroy(destroyedRecords, next){
     sails.models.website.count().exec(function(err, count){
-      sails.config.counter.website = count;
+      sails.config.fields_helper.modelCount['website'] = count;
       next();
     })
   },

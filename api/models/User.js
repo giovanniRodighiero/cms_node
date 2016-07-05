@@ -46,13 +46,13 @@ module.exports = {
 
   afterCreate(destroyedRecords, next){
     sails.models.user.count().exec(function(err, count){
-      sails.config.counter.user = count;
+      sails.config.fields_helper.modelCount['user'] = count;
       next();
     })
   },
   afterDestroy(destroyedRecords, next){
     sails.models.user.count().exec(function(err, count){
-      sails.config.counter.user = count;
+      sails.config.fields_helper.modelCount['user'] = count;
       next();
     })
   },
