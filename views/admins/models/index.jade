@@ -2,7 +2,9 @@ extends ../index.jade
   
 block page
   +navtabsCustom(page, req.user, 'index')
-  //- h1.page-header.text-center #{page}        
+  h1.page-header.text-center #{page}   
+  +tableIndex(results, req.user)
+  +pagination(results)
   //- .table-responsive
   //-   table.table
   //-     thead

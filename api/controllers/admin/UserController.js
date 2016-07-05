@@ -4,23 +4,25 @@ var usersNumber;
 
 module.exports = {
   find: function(req, res){
-    if(auth.authorize_controller('user', 'find', req.user)){
-      var skip = req.param('page') || 1;
-      var limit = 5;
-      User.find().paginate({page: skip, limit: limit})
-      .then(function(results){
-        for (var i = 0; i < results.length; i++) {
-          results[i] = _.assign(results[i], {'model': 'user'});
-        }
-        var pageIndex =  skip;
-        var totPages = Math.ceil(sails.config.counter.user/limit);
-        return res.view('admins/user/index', {page: 'user', results, pageIndex, totPages});
-      })
-      .catch(function(err){
-        return res.negotiate(err);
-      })
-    }else
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin');
+    if(!auth.authorize_controller('user', 'find', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED, 'danger','/admin');
+    var aux = {
+      page: 1,
+      limit: 5
+    };
+    if(req.param('page'))
+      aux.page = req.param('page');
+    if(req.param('limit'))
+      aux.limit = req.param('limit');
+
+    sails.models['user'].findCustom(aux, function(err, results){
+      if(!err){
+        sails.log(results);
+        return res.view('admins/models/index', {page: 'user', results});
+      }
+      else
+        res.negotiate(err);
+    });
   },
   findOne: function(req, res){
     if(auth.authorize_controller('user', 'findone', req.user)){
@@ -34,13 +36,7 @@ module.exports = {
   },
   new: function(req, res){
     if(auth.authorize_controller('user', 'new', req.user)){
-      Website.find()
-      .then(function(websites){
-        return res.view('admins/user/new', {page: 'user', websites});
-      })
-      .catch(function(err){
-        ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'success','/admin/user');
-      });
+      return res.view('admins/models/new', {page: 'user'});
     }else
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
   },

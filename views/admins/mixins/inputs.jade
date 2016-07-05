@@ -1,0 +1,37 @@
+mixin select(field)
+  label(for="#{field.name}")= field.name
+  select.form-control(id="#{field.name}" name="#{field.name}")
+    each f in field.infos.enum                
+      option= f  
+
+mixin selectAjax(field)
+  label(for="#{field.name}")= field.name
+  select.form-control(id="#{field.name}" name="#{field.name}")
+  //- script(type='text/javascript').  
+  //-   $("##{field.name}").select2({
+  //-     ajax: {
+  //-       url: '/#{field.name}',
+  //-       dataType: "json",
+  //-       type: "GET",
+  //-       data: function (params) {
+  //-         var query = {
+  //-           name: 
+  //-           limit: 0,
+  //-           page: 1
+  //-         };
+  //-         // Query paramters will be ?search=[term]&page=[page]
+  //-         return query;
+  //-       },
+  //-       processResults: function (data) {
+  //-          return {
+  //-              results: $.map(data.results, function (item) {
+  //-                  return {
+  //-                      text: item.name,
+  //-                      id: item.id
+  //-                  }
+  //-              })
+  //-          };
+  //-        }
+  //-     }
+  //-   });
+    

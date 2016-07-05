@@ -17,9 +17,8 @@ module.exports.user = {
     },
     isAllowed: function(action, user){
       switch (action) {
-        // case expression:
-        //
-        //   break;
+        case 'new':
+          return true;
         default:
           return false;
       }

@@ -1,18 +1,24 @@
 module.exports.website = {
   fields:{
-    
-      name: function(user){
+
+      name: function(page, user){
         return true;
       },
-    
-    
-      users: function(user){
-        return true;
+
+
+      users: function(page, user){
+        if(page === 'index')
+          return false;
+        else
+          return true;
       },
-    
-      metadatas: function(user){
-        return true;
+
+      metadatas: function(page, user){
+        if(page === 'index')
+          return false;
+        else
+          return true;
       },
-    
+
   }
 }

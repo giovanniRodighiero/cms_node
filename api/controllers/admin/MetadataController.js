@@ -6,7 +6,7 @@ module.exports = {
     if(!auth.authorize_controller('metadata', 'find', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED, 'danger','/admin');
     var aux = {
-      page: 0,
+      page: 1,
       limit: 5
     };
     if(req.param('page'))
@@ -16,7 +16,6 @@ module.exports = {
 
     sails.models['metadata'].findCustom(aux, function(err, results){
       if(!err){
-        sails.log(results);
         return res.view('admins/models/index', {page: 'metadata', results});
       }
       else
@@ -33,7 +32,7 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/metadata');
   },
   new:function(req, res){
-    if(auth.authorize_controller('metadata', 'new', req.user)){
+    if(auth.authorize_controller('metadata', 'create', req.user)){
       return res.view('admins/models/new',{page: 'metadata'});
     }
     else

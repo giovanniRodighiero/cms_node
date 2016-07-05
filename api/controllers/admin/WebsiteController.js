@@ -5,17 +5,24 @@ function confirmation() {
 }
 module.exports = {
   find: function(req, res){
-    if(auth.authorize_controller('website', 'find', req.user)){
-      var skip = req.param('page') || 1;
-      var limit = 5;
-      Website.findCustom({skip, limit}, function(err, results){
-        if(!err)
-          return res.view('admins/models/index', {page: 'website', results});
-        else
-          res.negotiate(err);
-      })
-    }else
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin');
+    if(!auth.authorize_controller('website', 'find', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED, 'danger','/admin');
+    var aux = {
+      page: 1,
+      limit: 5
+    };
+    if(req.param('page'))
+      aux.page = req.param('page');
+    if(req.param('limit'))
+      aux.limit = req.param('limit');
+
+    sails.models['website'].findCustom(aux, function(err, results){
+      if(!err){
+        return res.view('admins/models/index', {page: 'website', results});
+      }
+      else
+        res.negotiate(err);
+    });
   },
   findOne: function(req, res){
     if(auth.authorize_controller('website', 'findone', req.user)){
