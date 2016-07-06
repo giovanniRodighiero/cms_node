@@ -44,15 +44,17 @@ module.exports = {
     var permitted = ['email','password','role','website'];
     if(auth.authorize_controller('user', 'create', req.user)){
       var item = _.pick(req.allParams(),permitted);
+      sails.log(item);
       User.create(item)
       .then(function(created){
         ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/user/new');
       })
       .catch(function(err){
-        Website.find()
-        .then(function(websites){
+        Website.findOne({id: item.website})
+        .then(function(website){
           req.addFlash('warning', 'Errore nella compilazione dei campi');
-          return res.view('admins/user/new',{page: 'user', previousData: item, err: err.invalidAttributes, websites});
+          item.website = website;
+          return res.view('admins/models/new',{page: 'user', previousData: item, err: err.invalidAttributes});
         })
         .catch(function(err){
           ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'success','/admin/user');

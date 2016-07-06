@@ -48,8 +48,15 @@ module.exports = {
         ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/metadata/new');
       })
       .catch(function(err){
-        req.addFlash('warning', 'Errore nella compilazione dei campi');
-        return res.view('admins/models/new', {page: 'metadata', previousData: item, err: err.invalidAttributes});
+        Website.findOne({id: item.website})
+        .then(function(website){
+          req.addFlash('warning', 'Errore nella compilazione dei campi');
+          item.website = website;
+          return res.view('admins/models/new',{page: 'metadata', previousData: item, err: err.invalidAttributes});
+        })
+        .catch(function(err){
+          ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'success','/admin/user');
+        });
       })
     }
   },

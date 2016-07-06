@@ -1,10 +1,58 @@
-mixin newForm(user)
+//- stampa i campi di input vuoti
+mixin printEmptyField(field)
+  if(field.infos.enum)
+    +select(field)
+  else
+    if(field.infos.type === 'boolean')
+      +checkbox(field.name, field.name, field.name, false)  
+    else     
+        if(field.association)
+          case field.association.type
+            when 'single'
+              +selectAjax(field.name, field.association.searchWith)
+        else
+          +input(field.infos.type, field.name, field.name, field.name, field.name, "")
+          
+//- stampa i campi di input precaricati con le info inserite al tentativo precedente e i relativi errori
+mixin printRetryField(field, previousData, err)
+  if(field.infos.enum)
+      label(for="#{field.name}")= field.name
+      select.form-control(id="#{field.name}" name="#{field.name}")
+        each f in field.infos.enum                
+          if(f == previousData[field.name])
+            option(selected="")= f
+          else
+            option= f     
+    else
+      if(field.infos.type === 'boolean')
+        +checkbox(field.name, field.name, field.name, previousData[field.name])  
+      else
+        if(field.association)
+          case field.association.type
+            when 'single'
+              +selectAjax(field.name, field.association.searchWith, previousData[field.name])
+              if(err[field.name])
+                each e in err[field.name]
+                  span.validation-error= i18n(e.rule)
+                  br
+        else
+          +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
+          if(err[field.name])
+            each e in err[field.name]
+              span.validation-error= i18n(e.rule)
+              br
+            
+//- stampa la form di input            
+mixin newForm(user, previousData, err)
   .row
     .col-xs-8.col-xs-offset-2
       form(method="post" action="/admin/#{page}" )
         each field in sails.config.fields_helper.fieldsInfo[page].fields
           if(sails.config.authorization.show_field(page, 'new', field.name, user))
-            - console.log('true');
+            if(!previousData)
+              +printEmptyField(field)
+            else
+              +printRetryField(field, previousData, err)
             //- if(previousData)
             //-   if(field.infos.enum)
             //-     label(for="#{field.name}")= field.name
@@ -25,19 +73,18 @@ mixin newForm(user)
             //-           br
             //- else
             
-            if(field.infos.enum)
-              +select(field)
-            else
-              if(field.infos.type === 'boolean')
-                +checkbox(field.name, field.name, field.name, false)  
-              else     
-                  if(field.association)
-                    case field.association.type
-                      when 'single'
-                        +selectAjax(field.name, field.association.searchWith)
-                  else
-                    +input(field.infos.type, field.name, field.name, field.name, field.name, "")
+            //- if(field.infos.enum)
+            //-   +select(field)
+            //- else
+            //-   if(field.infos.type === 'boolean')
+            //-     +checkbox(field.name, field.name, field.name, false)  
+            //-   else     
+            //-       if(field.association)
+            //-         case field.association.type
+            //-           when 'single'
+            //-             +selectAjax(field.name, field.association.searchWith)
+            //-       else
+            //-         +input(field.infos.type, field.name, field.name, field.name, field.name, "")
         br
         +submit-success("Crea")      
-  
   
