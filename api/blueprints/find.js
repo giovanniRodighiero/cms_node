@@ -27,14 +27,21 @@ module.exports = (req, res) => {
     limit: 5
     // sort
   };
+  var query = {};
   if(req.param('limit'))
     params.limit = parseInt(req.param('limit'));
   if(req.param('page'))
     params.page = parseInt(req.param('page'));
-  // if(actionUtil.parseSort(req))
-  //   params.sort = actionUtil.parseSort(req);
 
-  var query = Model.find().paginate({page: params.page, limit: params.limit});
+  var permitted = sails.config.fields_helper.fieldsInfo[Model.identity].searchableFields;
+  var allParams = req.allParams();
+  var filteredParams = _.pick(allParams, permitted);
+  var keys = Object.keys(filteredParams);
+  var convertedQuery = {};
+  for (var i = 0; i < keys.length; i++) {
+    convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};
+  }
+  var query = Model.find(convertedQuery).paginate({page: params.page, limit: params.limit});
   const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
   var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
 

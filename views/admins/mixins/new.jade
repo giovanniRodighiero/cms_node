@@ -1,9 +1,10 @@
-mixin newForm
+mixin newForm(user)
   .row
     .col-xs-8.col-xs-offset-2
       form(method="post" action="/admin/#{page}" )
-        each field in sails.config.fields_helper.fieldsInfo[page]
+        each field in sails.config.fields_helper.fieldsInfo[page].fields
           if(sails.config.authorization.show_field(page, 'new', field.name, user))
+            - console.log('true');
             //- if(previousData)
             //-   if(field.infos.enum)
             //-     label(for="#{field.name}")= field.name
@@ -31,9 +32,9 @@ mixin newForm
                 +checkbox(field.name, field.name, field.name, false)  
               else     
                   if(field.association)
-                    case field.association
+                    case field.association.type
                       when 'single'
-                        +selectAjax(field)
+                        +selectAjax(field.name, field.association.searchWith)
                   else
                     +input(field.infos.type, field.name, field.name, field.name, field.name, "")
         br

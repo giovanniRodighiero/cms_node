@@ -3,14 +3,14 @@ mixin tableIndex(results, user)
     table.table
       thead
         tr 
-          each field in sails.config.fields_helper.fieldsInfo[page]
+          each field in sails.config.fields_helper.fieldsInfo[page].fields
             if(sails.config.authorization.show_field(results.results[0].model, 'index', field.name, user))
               th= field.name
           th Azioni
       tbody
         each result in results.results
           tr
-            each field in sails.config.fields_helper.fieldsInfo[page]
+            each field in sails.config.fields_helper.fieldsInfo[page].fields
               if(sails.config.authorization.show_field(result.model, 'index', field.name, user))
                 th= result[field.name]
             th

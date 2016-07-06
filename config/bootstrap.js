@@ -34,9 +34,13 @@ function setFields() {
  for (var i = 0; i < models.length; i++) {
    var aux = {
      model: models[i].modelName,
-     fields: sails.config.models_structure.getFields(models[i].modelName)
+     fields: sails.config.models_structure.getFields(models[i].modelName),
+     searchableFields: models[i].searchableFields
+
    }
-   sails.config.fields_helper.fieldsInfo[aux.model] = aux.fields;
+   sails.config.fields_helper.fieldsInfo[aux.model] = {};
+   sails.config.fields_helper.fieldsInfo[aux.model].fields = aux.fields;
+   sails.config.fields_helper.fieldsInfo[aux.model].searchableFields = aux.searchableFields;
  }
 }
 var counter = 0;

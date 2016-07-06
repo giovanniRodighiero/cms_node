@@ -54,7 +54,9 @@ function prepareFields(fields, complexItem) {
     };
     field.name = complexItem.fields[i].name;
     if(complexItem.fields[i].isAssociation){
-      field.association = complexItem.fields[i].isAssociation;
+      field.association = {};
+      field.association.type = complexItem.fields[i].isAssociation.type;
+      field.association.searchWith = complexItem.fields[i].isAssociation.searchWith;
     }
     fields.push(setUpFieldsAux(field, complexItem, i));
   });

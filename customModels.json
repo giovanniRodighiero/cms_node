@@ -4,18 +4,19 @@
       "modelName":"user",
       "inheritsFrom": "user",
       "fields":[
-        {"name":"website", "isAssociation":"single" , "params":[
+        {"name":"website", "isAssociation":{"type":"single", "searchWith":"name"} , "params":[
           {"parName":"model","value":"website"},
           {"parName":"required","value":"true"}
           ]
         }
-      ]
+      ],
+      "searchableFields":["email"]
     },
     {
       "modelName":"website",
       "inheritsFrom": "website",
       "fields":[
-        {"name":"users", "isAssociation":"multiple", "params":[
+        {"name":"users", "isAssociation":{"type":"multiple", "searchWith":"email"}, "params":[
           {"parName":"collection","value":"user"},
           {"parName":"via","value":"website"}
           ]
@@ -25,18 +26,20 @@
           {"parName":"via","value":"website"}
           ]
         }
-      ]
+      ],
+      "searchableFields":["name"]
     },
     {
       "modelName":"metadata",
       "inheritsFrom": "metadata",
       "fields":[
-        {"name":"website","isAssociation":"single", "params":[
+        {"name":"website","isAssociation":{"type":"single", "searchWith":"name"}, "params":[
           {"parName":"model","value":"website"},
           {"parName":"required","value":"true"}
           ]
         }
-      ]
+      ],
+      "searchableFields":["path"]
     }
   ]
 }

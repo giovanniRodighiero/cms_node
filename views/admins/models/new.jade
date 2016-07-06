@@ -3,7 +3,7 @@ extends ../index.jade
 block page
   +navtabsCustom(page, req.user, 'new')
   h1.page-header.text-center Aggiungi un nuovo #{page} 
-  +newForm
+  +newForm(req.user)
   
    
 //-     .row

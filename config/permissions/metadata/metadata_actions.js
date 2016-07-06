@@ -17,6 +17,8 @@ module.exports.metadata = {
     },
     isAllowed: function(action, user){
       switch (action) {
+        case 'new':
+          return true;
         // case expression:
         //
         //   break;
