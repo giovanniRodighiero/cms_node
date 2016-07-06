@@ -4,6 +4,6 @@ block page
   +navtabsCustom(page, req.user, 'new')
   h1.page-header.text-center Aggiungi un nuovo #{page} 
   if(previousData)
-    +newForm(req.user, previousData, err)
+    +newForm('Crea', req.user, 'new', previousData, err)
   else
-    +newForm(req.user)
+    +newForm('Crea', req.user)

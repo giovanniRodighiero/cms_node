@@ -19,6 +19,8 @@ module.exports.user = {
       switch (action) {
         case 'new':
           return true;
+        case 'edit':
+          return true;
         default:
           return false;
       }

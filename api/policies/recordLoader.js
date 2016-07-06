@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
       .then(function(result){
         if(result){
           var aux = _.assign(result, {'model': Model.identity});
-          req.record = aux;
+          req.record = _.omit(aux, 'password');
         }else{
           ErrorService.handleError(req, res, sails.config.errors.NOT_FOUND, sails.config.errors.NOT_FOUND.message, 'danger','/admin/'+Model);
         }
@@ -28,7 +28,7 @@ module.exports = (req, res, next) => {
       .then(function(result){
         if(result){
           var aux = _.assign(result, {'model': Model.identity});
-          req.record = aux;
+          req.record = _.omit(aux, 'password');
         }else{
           ErrorService.handleError(req, res, sails.config.errors.NOT_FOUND, sails.config.errors.NOT_FOUND.message, 'danger','/admin/'+Model);
         }

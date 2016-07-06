@@ -15,8 +15,9 @@ mixin select(field, previousData)
 mixin selectAjax(fieldName, searchWith, previousData)
   label(for="#{fieldName}")= fieldName
   if(previousData)
-    select.form-control(id="#{fieldName}" name="#{fieldName}")  
-      option(required="" value="#{previousData.id}")= previousData[searchWith]
+    select.form-control(id="#{fieldName}" name="#{fieldName}")
+      - console.log(previousData.id);
+      option(selected="" value="#{previousData.id}")= previousData[searchWith]
   else
     select.form-control(id="#{fieldName}" name="#{fieldName}")
     

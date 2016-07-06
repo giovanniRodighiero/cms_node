@@ -23,11 +23,13 @@ module.exports = (req, res) => {
   for (var i = 0; i < fields.length; i++) {
     permitted.push(fields[i].name);
   }
-  values = _.pick(values, permitted);
+  var notAllowed = _.without(values, permitted);
+  var permitted = _.pull(values, notAllowed);
+  //values = _.pick(values, permitted);
 
 
   Model
-    .update(pk, values)
+    .update(pk, permitted)
     .then(function(updated){
       _.assign(updated, {'model': Model.identity});
       return res.ok(updated);

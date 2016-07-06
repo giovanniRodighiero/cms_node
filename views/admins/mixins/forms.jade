@@ -31,28 +31,42 @@ mixin printPrefilledField(field, previousData, err)
           case field.association.type
             when 'single'
               +selectAjax(field.name, field.association.searchWith, previousData[field.name])
-              if(err[field.name])
-                each e in err[field.name]
-                  span.validation-error= i18n(e.rule)
-                  br
+              if(err && err[field.name])
+                  each e in err[field.name]
+                    span.validation-error= i18n(e.rule)
+                    br
         else
           +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
-          if(err[field.name])
+          if(err && err[field.name])
             each e in err[field.name]
               span.validation-error= i18n(e.rule)
               br
             
 //- stampa la form di input            
-mixin newForm(user, previousData, err)
+mixin newForm(button, user, view, previousData, err)
   .row
     .col-xs-8.col-xs-offset-2
-      form(method="post" action="/admin/#{page}" )
+      form(method="post" action="/admin/#{page}")
         each field in sails.config.fields_helper.fieldsInfo[page].fields
-          if(sails.config.authorization.show_field(page, 'new', field.name, user))
+          if(sails.config.authorization.show_field(page, view, field.name, user))
             if(!previousData)
               +printEmptyField(field)
             else
               +printPrefilledField(field, previousData, err)
         br
-        +submit-success("Crea")      
+        +submit-success(button)  
+            
+mixin editForm(button, user, view, previousData, err)
+  .row
+    .col-xs-8.col-xs-offset-2
+      form(method="post" action="/admin/#{page}/#{previousData.id}" enctype="application/x-http-method-override") 
+        input(type="hidden" name="_method" value="PUT")
+        each field in sails.config.fields_helper.fieldsInfo[page].fields
+          if(sails.config.authorization.show_field(page, view, field.name, user))
+            if(!previousData)
+              +printEmptyField(field)
+            else
+              +printPrefilledField(field, previousData, err)
+        br
+        +submit-success(button)      
   

@@ -34,9 +34,18 @@ mixin navtabsCustom(page, user, current)
         if(sails.config.authorization.authorize_controller(page, 'find', req.user))  
           li.active(role="presentation") 
             a(href="/admin/#{page}/new") Nuovo 
+      when 'edit'        
+        li(role="presentation") 
+          a(href="/admin/#{page}") Index
+        if(sails.config.authorization.authorize_controller(page, 'find', req.user))  
+          li(role="presentation") 
+            a(href="/admin/#{page}/new") Nuovo 
+        if(sails.config.authorization.authorize_controller(page, 'edit', req.user))  
+          li.active(role="presentation") 
+            a(href="/admin/#{page}/new") Modifica 
 
 include index.jade
 include inputs.jade
-include new.jade
+include forms.jade
 //- mixins vari di jade-bootstrap + layout
 include ../../../node_modules/jade-bootstrap/_bootstrap.jade

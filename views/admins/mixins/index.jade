@@ -18,7 +18,7 @@ mixin tableIndex(results, user)
                 a.inline(href="/admin/#{page}/#{result.id}")
                   button.btn.btn-warning Dettagli
               if(sails.config.authorization.authorize_resource(result, 'update', user))                
-                a.inline(href="/admin/#{page}/#{result.id}")
+                a.inline(href="/admin/#{page}/edit/#{result.id}")
                   button.btn.btn-warning Modifica
               if(sails.config.authorization.authorize_resource(result, 'destroy', user))              
                 form.inline(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")

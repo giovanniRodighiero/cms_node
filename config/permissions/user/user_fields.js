@@ -1,8 +1,7 @@
 module.exports.user = {
   fields:{
-
       password: function(page, user){
-        if(page === 'index')
+        if(page === 'index' || page === 'edit')
           return false;
         else
           return true;
