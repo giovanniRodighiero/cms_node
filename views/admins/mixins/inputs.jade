@@ -1,12 +1,25 @@
-mixin select(field)
+mixin select(field, previousData)
   label(for="#{field.name}")= field.name
-  select.form-control(id="#{field.name}" name="#{field.name}")
-    each f in field.infos.enum                
-      option= f  
+  if(previousData)
+    select.form-control(id="#{field.name}" name="#{field.name}")  
+      each f in field.infos.enum                
+        if(f == previousData[field.name])
+          option(selected="")= f
+        else
+          option= f 
+  else
+    select.form-control(id="#{field.name}" name="#{field.name}")  
+      each f in field.infos.enum                
+        option= f 
 
-mixin selectAjax(fieldName, searchWith)
+mixin selectAjax(fieldName, searchWith, previousData)
   label(for="#{fieldName}")= fieldName
-  select.form-control(id="#{fieldName}" name="#{fieldName}")
+  if(previousData)
+    select.form-control(id="#{fieldName}" name="#{fieldName}")  
+      option(required="" value="#{previousData.id}")= previousData[searchWith]
+  else
+    select.form-control(id="#{fieldName}" name="#{fieldName}")
+    
   script(type='text/javascript').  
     $("##{fieldName}").select2({
       ajax: {
@@ -35,4 +48,6 @@ mixin selectAjax(fieldName, searchWith)
          }
       }
     });
+    $.fn.select2.defaults.set("key", "value");
+    
     
