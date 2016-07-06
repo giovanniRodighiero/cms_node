@@ -15,7 +15,6 @@ mixin selectAjax(fieldName, searchWith)
         type: "GET",
         delay: 250,
         data: function (params) {
-          console.log(params);
           var query = {
             '#{searchWith}': params.term,
             limit: 0,

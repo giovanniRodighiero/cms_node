@@ -7,7 +7,6 @@ module.exports.website = {
 
 
       users: function(page, user){
-        sails.log(page, user);
         if(page === 'index')
           return false;
         else
