@@ -45,6 +45,7 @@ module.exports.routes = {
   'get /admin/user': 'admin/UserController.find',
   'get /admin/user/new': 'admin/UserController.new',
   'get /admin/user/edit/:id': 'admin/UserController.edit',
+  'get /admin/user/:id': 'admin/UserController.findOne',
   'post /admin/user': 'admin/UserController.create',
   'put /admin/user/:id': 'admin/UserController.update',
   'delete /admin/user/:id': 'admin/UserController.destroy',

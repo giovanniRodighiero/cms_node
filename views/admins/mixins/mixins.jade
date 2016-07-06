@@ -42,7 +42,22 @@ mixin navtabsCustom(page, user, current)
             a(href="/admin/#{page}/new") Nuovo 
         if(sails.config.authorization.authorize_controller(page, 'edit', req.user))  
           li.active(role="presentation") 
-            a(href="/admin/#{page}/new") Modifica 
+            a(href="/admin/#{page}/edit/"+req.record.id) Modifica 
+        if(sails.config.authorization.authorize_controller(page, 'findone', req.user))  
+          li(role="presentation") 
+            a(href="/admin/#{page}/"+req.record.id) Dettagli 
+      when 'show'        
+        li(role="presentation") 
+          a(href="/admin/#{page}") Index
+        if(sails.config.authorization.authorize_controller(page, 'find', req.user))  
+          li(role="presentation") 
+            a(href="/admin/#{page}/new") Nuovo 
+        if(sails.config.authorization.authorize_controller(page, 'edit', req.user))  
+          li(role="presentation") 
+            a(href="/admin/#{page}/edit/"+req.record.id) Modifica 
+        if(sails.config.authorization.authorize_controller(page, 'findone', req.user))  
+          li.active(role="presentation") 
+            a(href="/admin/#{page}/"+req.record.id) Dettagli 
 
 include index.jade
 include inputs.jade

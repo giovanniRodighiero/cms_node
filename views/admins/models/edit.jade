@@ -2,5 +2,5 @@ extends ../index.jade
 
 block page
   +navtabsCustom(page, req.user, 'edit')
-  h1.page-header.text-center Modifica un nuovo #{page}
+  h1.page-header.text-center Modifica #{page}
   +editForm('Modifica', req.user, 'edit', previousData, err)

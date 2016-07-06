@@ -26,7 +26,13 @@ module.exports = {
   findOne: function(req, res){
     if(auth.authorize_controller('user', 'findone', req.user)){
       if(auth.authorize_resource(req.record,'findone', req.user)){
-        return res.view('admins/user/show', {page: 'user', result: req.record});
+        User.findOne({id: req.record.id}).populate('website')
+        .then(function(result){
+          return res.view('admins/models/show', {page: 'user', result: result});
+        })
+        .catch(function(err){
+          ErrorService.handleError(req, res, sails.config.errors.NOT_FOUND, sails.config.errors.NOT_FOUND.message, 'danger','/admin/user');
+        });
       }
       else
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
@@ -35,7 +41,7 @@ module.exports = {
   },
   new: function(req, res){
     if(auth.authorize_controller('user', 'new', req.user)){
-      return res.view('admins/models/new', {page: 'user'});
+      return res.view('admins/models/show', {page: 'user'});
     }else
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
   },
