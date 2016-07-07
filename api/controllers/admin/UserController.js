@@ -59,10 +59,9 @@ module.exports = {
       }
       permitted.push(fields[i].name);
     }
-    values = _.pick(payload, permitted);
-    sails.log(payload, labels, permitted);
+    var item = _.pick(payload, permitted);
     if(auth.authorize_controller('user', 'create', req.user)){
-      var item = _.pick(values, permitted);
+      //var item = _.pick(values, permitted);
       User.create(item)
       .then(function(created){
         ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/user/new');
@@ -83,39 +82,41 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
     if(!auth.authorize_resource(req.record,'update', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
-    Website.findOne({id: req.record.website})
-    .then(function(result){
-      req.record.website = result;
-      sails.log(req.record);
-      return res.view('admins/models/edit', {page: 'user', previousData: req.record});
-    })
-    .catch(function(err){
-      ErrorService.handleError(req, res, sails.config.errors.NOT_FOUND, sails.config.errors.NOT_FOUND, 'danger','/admin/user');
-    });
+    return res.view('admins/models/edit', {page: 'user', previousData: req.record});
   },
   update: function(req, res){
-    var permitted = ['email','role','password','website'];
+    //var permitted = ['email','role','password','website'];
     if(auth.authorize_controller('user', 'update', req.user)){
       if(auth.authorize_resource(req.record,'update', req.user)){
-        var notAllowed = _.without(req.allParams(), permitted);
-        var permitted = _.pull(req.allParams(), notAllowed);
-        User.update({id: req.record.id}, permitted)
+        var payload = req.allParams();
+        var permitted = [];
+        var labels = {};
+        var fields = sails.config.fields_helper.fieldsInfo['user'].fields;
+        for (var i = 0; i < fields.length; i++) {
+          if(fields[i].association && payload[fields[i].name]){
+            var aux = payload[fields[i].name].split(',');
+            payload[fields[i].name] = aux[0];
+            labels[fields[i].name] = aux[1];
+          }
+          permitted.push(fields[i].name);
+        }
+        // var notAllowed = _.without(payload, permitted);
+        // permitted = _.pull(payload, notAllowed);
+        var item = _.pick(payload, permitted);
+        User.update({id: req.record.id}, item)
         .then(function(updated){
           ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/user/edit/'+updated[0].id);
         })
         .catch(function(err){
-          req.addFlash('warning', 'Errore nella compilazione dei campi');
           if(auth.authorize_controller('user', 'update', req.user)){
             if(auth.authorize_resource(req.record,'update', req.user)){
-              Website.findOne({id: permitted.website})
-              .then(function(result){
-                permitted.website = result;
-                sails.log(req.record);
-                return res.view('admins/models/edit', {page: 'user', previousData: permitted, err: err.invalidAttributes});
-              })
-              .catch(function(err){
-                ErrorService.handleError(req, res, sails.config.errors.NOT_FOUND, sails.config.errors.NOT_FOUND, 'danger','/admin/user');
-              });
+              req.addFlash('warning', 'Errore nella compilazione dei campi');
+              for (var i = 0; i < Object.keys(labels).length; i++) {
+                 var old = item[Object.keys(labels)[i]];
+                 var aux = {};
+                item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
+              }
+              return res.view('admins/models/edit',{page: 'user', previousData: item, err: err.invalidAttributes});
             }
             else
               ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');

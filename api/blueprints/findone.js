@@ -37,9 +37,12 @@ module.exports = (req, res) => {
   //     return res.ok(myResult);
   //   })
   //   .catch(res.negotiate);
-
-  if(sails.config.authorization.authorize_resource(req.record, 'findone', req.user))
+  sails.log('dentro bleuprint');
+  if(sails.config.authorization.authorize_resource(req.record, 'findone', req.user)){
+    sails.log(req.record);
     return res.ok(req.record);
+
+  }
   else{
     return res.unauthorized();
   }

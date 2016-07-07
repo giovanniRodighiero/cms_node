@@ -32,7 +32,9 @@ module.exports = {
           unique:true,
 
       },
-
+      description: {
+        type: 'string'
+      },
 
       website: {
 

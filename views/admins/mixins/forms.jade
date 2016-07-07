@@ -36,7 +36,10 @@ mixin printPrefilledField(field, previousData, err)
                     span.validation-error= i18n(e.rule)
                     br
         else
-          +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
+          if(previousData[field.name])
+            +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
+          else
+            +input(field.infos.type, field.name, field.name, field.name, field.name, "")
           if(err && err[field.name])
             each e in err[field.name]
               span.validation-error= i18n(e.rule)
@@ -59,7 +62,7 @@ mixin newForm(button, user, view, previousData, err)
 mixin editForm(button, user, view, previousData, err)
   .row
     .col-xs-8.col-xs-offset-2
-      form(method="post" action="/admin/#{page}/#{previousData.id}" enctype="application/x-http-method-override") 
+      form(method="post" action="/admin/#{page}/#{req.record.id}" enctype="application/x-http-method-override") 
         input(type="hidden" name="_method" value="PUT")
         each field in sails.config.fields_helper.fieldsInfo[page].fields
           if(sails.config.authorization.show_field(page, view, field.name, user))

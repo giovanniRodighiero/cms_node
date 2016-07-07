@@ -19,6 +19,9 @@ module.exports.user = {
       website: function(page, user){
         return true;
       },
+      description: function(page, user){
+        return true;
+      },
 
   }
 }

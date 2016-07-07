@@ -11,6 +11,9 @@ block page
             when 'single'
               each fieldInner in sails.config.fields_helper.fieldsInfo[field.name].fields 
                 if(!fieldInner.association)
-                  p #{result[field.name][fieldInner.name]}
+                  if(result[field.name])
+                    p #{result[field.name][fieldInner.name]}
+                  else
+                    p non definito
         else
           p= result[field.name]

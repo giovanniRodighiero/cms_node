@@ -8,6 +8,10 @@
           {"parName":"model","value":"website"},
           {"parName":"required","value":"true"}
           ]
+        },
+        {"name":"description", "params":[
+          {"parName":"type","value":"string"}
+          ]
         }
       ],
       "searchableFields":["email"]
