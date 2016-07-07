@@ -41,28 +41,40 @@ module.exports = {
   },
   new: function(req, res){
     if(auth.authorize_controller('user', 'new', req.user)){
-      return res.view('admins/models/show', {page: 'user'});
+      return res.view('admins/models/new', {page: 'user'});
     }else
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
   },
   create: function(req, res){
-    var permitted = ['email','password','role','website'];
+    //var permitted = ['email','password','role','website'];
+    var payload = req.allParams();
+    var permitted = [];
+    var labels = {};
+    var fields = sails.config.fields_helper.fieldsInfo['user'].fields;
+    for (var i = 0; i < fields.length; i++) {
+      if(fields[i].association){
+        var aux = payload[fields[i].name].split(',');
+        payload[fields[i].name] = aux[0];
+        labels[fields[i].name] = aux[1];
+      }
+      permitted.push(fields[i].name);
+    }
+    values = _.pick(payload, permitted);
+    sails.log(payload, labels, permitted);
     if(auth.authorize_controller('user', 'create', req.user)){
-      var item = _.pick(req.allParams(),permitted);
+      var item = _.pick(values, permitted);
       User.create(item)
       .then(function(created){
         ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/user/new');
       })
       .catch(function(err){
-        Website.findOne({id: item.website})
-        .then(function(website){
-          req.addFlash('warning', 'Errore nella compilazione dei campi');
-          item.website = website;
-          return res.view('admins/models/new',{page: 'user', previousData: item, err: err.invalidAttributes});
-        })
-        .catch(function(err){
-          ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'success','/admin/user');
-        });
+        req.addFlash('warning', 'Errore nella compilazione dei campi');
+        for (var i = 0; i < Object.keys(labels).length; i++) {
+           var old = item[Object.keys(labels)[i]];
+           var aux = {};
+          item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
+        }
+        return res.view('admins/models/new',{page: 'user', previousData: item, err: err.invalidAttributes});
       })
     }
   },

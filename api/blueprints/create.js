@@ -15,7 +15,7 @@ module.exports = (req, res) => {
   const Model = actionUtil.parseModel(req);
   var values = actionUtil.parseValues(req);
   var permitted = [];
-  var fields = sails.config.fields_helper.fieldsInfo[Model.identity];
+  var fields = sails.config.fields_helper.fieldsInfo[Model.identity].fields;
   for (var i = 0; i < fields.length; i++) {
     permitted.push(fields[i].name);
   }

@@ -14,9 +14,9 @@ mixin select(field, previousData)
 
 mixin selectAjax(fieldName, searchWith, previousData)
   label(for="#{fieldName}")= fieldName
+  - console.log(previousData);
   if(previousData)
     select.form-control(id="#{fieldName}" name="#{fieldName}")
-      - console.log(previousData.id);
       option(selected="" value="#{previousData.id}")= previousData[searchWith]
   else
     select.form-control(id="#{fieldName}" name="#{fieldName}")
@@ -42,7 +42,7 @@ mixin selectAjax(fieldName, searchWith, previousData)
                results: $.map(data.data.results, function (item) {
                    return {
                        text: item['#{searchWith}'],
-                       id: item.id
+                       id: item.id+','+item['#{searchWith}']
                    }
                })
            };

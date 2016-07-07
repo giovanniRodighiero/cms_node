@@ -31,13 +31,13 @@ mixin navtabsCustom(page, user, current)
       when 'new'        
         li(role="presentation") 
           a(href="/admin/#{page}") Index
-        if(sails.config.authorization.authorize_controller(page, 'find', req.user))  
+        if(sails.config.authorization.authorize_controller(page, 'new', req.user))  
           li.active(role="presentation") 
             a(href="/admin/#{page}/new") Nuovo 
       when 'edit'        
         li(role="presentation") 
           a(href="/admin/#{page}") Index
-        if(sails.config.authorization.authorize_controller(page, 'find', req.user))  
+        if(sails.config.authorization.authorize_controller(page, 'new', req.user))  
           li(role="presentation") 
             a(href="/admin/#{page}/new") Nuovo 
         if(sails.config.authorization.authorize_controller(page, 'edit', req.user))  
@@ -49,7 +49,7 @@ mixin navtabsCustom(page, user, current)
       when 'show'        
         li(role="presentation") 
           a(href="/admin/#{page}") Index
-        if(sails.config.authorization.authorize_controller(page, 'find', req.user))  
+        if(sails.config.authorization.authorize_controller(page, 'new', req.user))  
           li(role="presentation") 
             a(href="/admin/#{page}/new") Nuovo 
         if(sails.config.authorization.authorize_controller(page, 'edit', req.user))  
