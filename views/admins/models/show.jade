@@ -11,7 +11,8 @@ block page
             when 'single'
               each fieldInner in sails.config.fields_helper.fieldsInfo[field.name].fields 
                 if(!fieldInner.association)
-                  if(req.record[field.name][fieldInner.name])
+                  - console.log(req.record);
+                  if(req.record[field.name] && req.record[field.name][fieldInner.name])
                     p #{req.record[field.name][fieldInner.name]}
                   else
                     p non definito

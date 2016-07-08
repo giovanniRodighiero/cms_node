@@ -64,7 +64,7 @@ module.exports = {
     var fields = sails.config.fields_helper.fieldsInfo['metadata'].fields;
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.models[metadata].create(item)
+    sails.models['metadata'].create(item)
     .then(function(created){
       ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/metadata/new');
     })
@@ -93,7 +93,7 @@ module.exports = {
     var fields = sails.config.fields_helper.fieldsInfo['metadata'].fields;
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.models[metadata].update({id: req.record.id}, item)
+    sails.models['metadata'].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/metadata/edit/'+updated[0].id);
     })
@@ -112,7 +112,7 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/metadata');
     if(!auth.authorize_resource(req.record,'destroy', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/metadata');
-    sails.models[metadata].destroy({id: req.record.id})
+    sails.models['metadata'].destroy({id: req.record.id})
     .then(function(){
       ErrorService.handleError(req, res, sails.config.errors.DESTROYED, sails.config.errors.DESTROYED.message, 'success','/admin/metadata');
     })

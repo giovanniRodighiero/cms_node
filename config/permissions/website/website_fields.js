@@ -1,16 +1,16 @@
 module.exports.website = {
   fields:{
     
-      name: function(user){
+      name: function(page, user){
         return true;
       },
     
     
-      users: function(user){
+      users: function(page, user){
         return true;
       },
     
-      metadatas: function(user){
+      metadatas: function(page, user){
         return true;
       },
     

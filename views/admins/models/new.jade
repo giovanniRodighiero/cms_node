@@ -6,4 +6,4 @@ block page
   if(previousData)
     +newForm('Crea', req.user, 'new', previousData, err)
   else
-    +newForm('Crea', req.user)
+    +newForm('Crea',req.user, 'new')
