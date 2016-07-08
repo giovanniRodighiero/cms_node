@@ -6,14 +6,23 @@ block page
   each field in sails.config.fields_helper.fieldsInfo[page].fields
     if(sails.config.authorization.show_field(req.record.model, 'show', field.name, req.user))
       +panel-default(field.name)   
-        if(field.association)
+        if(field.association && req.record[field.name])
           case field.association.type
             when 'single'
               each fieldInner in sails.config.fields_helper.fieldsInfo[field.name].fields 
                 if(!fieldInner.association)
-                  if(result[field.name])
-                    p #{result[field.name][fieldInner.name]}
+                  if(req.record[field.name][fieldInner.name])
+                    p #{req.record[field.name][fieldInner.name]}
                   else
                     p non definito
+            when 'multiple'
+              each item in req.record[field.name]
+                - console.log(item);              
+                each fieldInner in sails.config.fields_helper.fieldsInfo[item.name].fields 
+                  if(!fieldInner.association)
+                    if(item[fieldInner.name])
+                      p #{item[fieldInner.name]}
+                    else
+                      p non definito
         else
-          p= result[field.name]
+          p= req.record[field.name]

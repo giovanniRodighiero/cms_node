@@ -24,10 +24,10 @@ module.exports = (req, res) => {
   // const where = actionUtil.parseCriteria(req);// off
   var params = {
     page: 1,
-    limit: 5
+    limit: 5,
+    query: {}
     // sort
   };
-  var query = {};
   if(req.param('limit'))
     params.limit = parseInt(req.param('limit'));
   if(req.param('page'))
@@ -41,24 +41,16 @@ module.exports = (req, res) => {
   for (var i = 0; i < keys.length; i++) {
     convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};
   }
-  var query = Model.find(convertedQuery).paginate({page: params.page, limit: params.limit});
-  const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
+  params.query = convertedQuery;
+  // var query = Model.find(convertedQuery);
+  // const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
   var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
 
-  findQuery
-    .then(function(records){
-      for (var i = 0; i < records.length; i++) {
-        _.assign(records[i], {'model': Model.identity});
-      }
-			var myResult = {
-				results: _.omit(records, 'password'),
-        limit: params.limit,
-        pageIndex: params.page,
-        totPages: totPages
-			};
-      return res.ok(myResult);
-    })
-    .catch(function(err){
+
+  Model.findCustom(params, function(err, results){
+    if(err)
       return res.negotiate(err);
+    else
+      return res.json(results);
     });
   };

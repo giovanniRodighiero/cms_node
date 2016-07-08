@@ -110,7 +110,7 @@ module.exports = {
 
     /************************** Models ******************************/
     './api/models/:modelName.js': {template: 'models.template.js'},
-    './api/controllers/:controllerName.js': {template: 'controllers.template.js'},
+    './api/controllers/admin/:controllerName.js': {template: 'controllers.template.js'},
 
 
 

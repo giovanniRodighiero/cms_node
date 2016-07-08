@@ -19,9 +19,8 @@ module.exports.website = {
       switch (action) {
         case 'new':
           return true;
-        // case expression:
-        //
-        //   break;
+        case 'edit':
+          return true;
         default:
           return false;
       }

@@ -1,8 +1,36 @@
 "use strict";
+
+function setUpPermitted(payloadO, fields) {
+  var result = {
+    permitted: [],
+    labels: {},
+    payload: payloadO
+  };
+  for (var i = 0; i < fields.length; i++) {
+    if(fields[i].association && payloadO[fields[i].name]){
+      var aux = payloadO[fields[i].name].split(',');
+      result.payload[fields[i].name] = aux[0];
+      result.labels[fields[i].name] = aux[1];
+    }
+    result.permitted.push(fields[i].name);
+  }
+  return result;
+};
+function setUpLabel(labels, item) {
+  for (var i = 0; i < Object.keys(labels).length; i++) {
+     var old = item[Object.keys(labels)[i]];
+     var aux = {};
+    item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
+  }
+  return item;
+};
+var auth = sails.config.authorization;
 module.exports = {
   find: function(req, res){
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'find', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED, 'danger','/admin');
     var aux = {
-      page: 0,
+      page: 1,
       limit: 5
     };
     if(req.param('page'))
@@ -11,10 +39,85 @@ module.exports = {
       aux.limit = req.param('limit');
 
     sails.models['<%=modelNameLow%>'].findCustom(aux, function(err, results){
-      if(err)
-        return res.negotiate(err);
+      if(!err)
+        return res.view('admins/models/index', {page: '<%=modelNameLow%>', results});
       else
-        return res.json(results);
+        res.negotiate(err);
     });
+  },
+  findOne: function(req, res){
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'findone', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    if(!auth.authorize_resource(req.record,'findone', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    return res.view('admins/models/show', {page: '<%=modelNameLow%>'});
+  },
+  new: function(req, res){
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'new', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/<%=modelNameLow%>');
+    return res.view('admins/models/new', {page: '<%=modelNameLow%>'});
+  },
+  create: function(req, res){
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'create', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/<%=modelNameLow%>');
+    var payload = req.allParams();
+    var fields = sails.config.fields_helper.fieldsInfo['<%=modelNameLow%>'].fields;
+    var result = setUpPermitted(payload, fields);
+    var item = _.pick(result.payload, result.permitted);
+    sails.models['<%=modelNameLow%>'].create(item)
+    .then(function(created){
+      ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/<%=modelNameLow%>/new');
+    })
+    .catch(function(err){
+      if(!auth.authorize_controller('<%=modelNameLow%>', 'create', req.user))
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/<%=modelNameLow%>');
+      req.addFlash('warning', 'Errore nella compilazione dei campi');
+      item = setUpLabel(result.labels, item);
+      return res.view('admins/models/new',{page: '<%=modelNameLow%>', previousData: item, err: err.invalidAttributes});
+    })
+  },
+  edit: function(req, res){
+    if(!auth.authorize_controller('<%=modelNameLow%>','update', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    if(!auth.authorize_resource(req.record,'update', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    return res.view('admins/models/edit', {page: '<%=modelNameLow%>', previousData: req.record});
+  },
+  update: function(req, res){
+    //var permitted = ['email','role','password','website'];
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'update', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    if(!auth.authorize_resource(req.record,'update', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    var payload = req.allParams();
+    var fields = sails.config.fields_helper.fieldsInfo['<%=modelNameLow%>'].fields;
+    var result = setUpPermitted(payload, fields);
+    var item = _.pick(result.payload, result.permitted);
+    sails.models['<%=modelNameLow%>'].update({id: req.record.id}, item)
+    .then(function(updated){
+      ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/<%=modelNameLow%>/edit/'+updated[0].id);
+    })
+    .catch(function(err){
+      if(!auth.authorize_controller('<%=modelNameLow%>', 'update', req.user))
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+      if(!auth.authorize_resource(req.record,'update', req.user))
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+      req.addFlash('warning', 'Errore nella compilazione dei campi');
+      item = setUpLabel(result.labels, item);
+      return res.view('admins/models/edit',{page: '<%=modelNameLow%>', previousData: item, err: err.invalidAttributes});
+    })
+  },
+  destroy: function(req, res){
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'destroy', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    if(!auth.authorize_resource(req.record,'destroy', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
+    sails.models['<%=modelNameLow%>'].destroy({id: req.record.id})
+    .then(function(){
+      ErrorService.handleError(req, res, sails.config.errors.DESTROYED, sails.config.errors.DESTROYED.message, 'success','/admin/<%=modelNameLow%>');
+    })
+    .catch(function(err){
+      ErrorService.handleError(req, res, err, err.message , 'danger','/admin/<%=modelNameLow%>');
+    })
   }
 };

@@ -17,9 +17,10 @@ module.exports.<%=customModel.modelName%> = {
     },
     isAllowed: function(action, user){
       switch (action) {
-        // case expression:
-        //
-        //   break;
+        case 'new':
+          return true;
+        case 'edit':
+          return true;
         default:
           return false;
       }
