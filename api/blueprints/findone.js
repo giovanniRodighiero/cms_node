@@ -13,11 +13,14 @@ const populateAliases = (model, alias) => model.populate(alias);
  * An API call to find and return a single model instance from the data adapter using the specified id.
  */
 module.exports = (req, res) => {
-  if(! sails.config.authorization.authorize_controller(req.options.controller, 'findone', req.user)){
+  if(! sails.config.authorization.authorize_controller(req.options.controller, 'findone', req.user))
     return res.unauthorized();
-  }
 
-  _.set(req.options, 'criteria.blacklist', ['fields', 'populate', 'limit', 'skip', 'page', 'sort']);
+  if(!sails.config.authorization.authorize_resource(req.record, 'findone', req.user))
+    return res.unauthorized();
+  return res.ok(req.record);
+
+  //_.set(req.options, 'criteria.blacklist', ['fields', 'populate', 'limit', 'skip', 'page', 'sort']);
   // const fields = req.param('fields') ? req.param('fields').replace(/ /g, '').split(',') : [];// off
   // const populate = req.param('populate') ? req.param('populate').replace(/ /g, '').split(',') : [];// off
   // const Model = actionUtil.parseModel(req);
@@ -37,13 +40,5 @@ module.exports = (req, res) => {
   //     return res.ok(myResult);
   //   })
   //   .catch(res.negotiate);
-  sails.log('dentro bleuprint');
-  if(sails.config.authorization.authorize_resource(req.record, 'findone', req.user)){
-    sails.log(req.record);
-    return res.ok(req.record);
 
-  }
-  else{
-    return res.unauthorized();
-  }
 };

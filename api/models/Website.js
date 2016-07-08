@@ -48,7 +48,7 @@ module.exports = {
     var limit =  opts.limit;
     var totPages = Math.ceil(sails.config.fields_helper.modelCount['website']/opts.limit);
     //sails.log('dentro find custom');
-    sails.models['website'].find().paginate({page: pageIndex, limit: limit})
+    sails.models['website'].find(opts.query).paginate({page: pageIndex, limit: limit})
     .then(function(results){
       var customResults = [];
       for (var i = 0; i < results.length; i++) {

@@ -58,8 +58,5 @@ module.exports.policies = {
   MetadataController:{
     'findByLoc': true,
     'findOneWithLoc': true
-  },
-  WebsiteController:{
-    'find': true
   }
 };
