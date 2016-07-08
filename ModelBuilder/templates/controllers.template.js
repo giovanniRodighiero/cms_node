@@ -23,7 +23,7 @@ function setUpLabel(labels, item) {
     item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
   }
   return item;
-}
+};
 
 module.exports = {
   find: function(req, res){
@@ -58,22 +58,23 @@ module.exports = {
     return res.view('admins/models/new', {page: '<%=modelNameLow%>'});
   },
   create: function(req, res){
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'create', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/<%=modelNameLow%>');
     var payload = req.allParams();
-    sails.log(payload);
     var fields = sails.config.fields_helper.fieldsInfo['<%=modelNameLow%>'].fields;
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    if(auth.authorize_controller('<%=modelNameLow%>', 'create', req.user)){
-      sails.models[<%=modelNameLow%>].create(item)
-      .then(function(created){
-        ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/<%=modelNameLow%>/new');
-      })
-      .catch(function(err){
-        req.addFlash('warning', 'Errore nella compilazione dei campi');
-        item = setUpLabel(result.labels, item);
-        return res.view('admins/models/new',{page: '<%=modelNameLow%>', previousData: item, err: err.invalidAttributes});
-      })
-    }
+    sails.models[<%=modelNameLow%>].create(item)
+    .then(function(created){
+      ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/<%=modelNameLow%>/new');
+    })
+    .catch(function(err){
+      if(!auth.authorize_controller('<%=modelNameLow%>', 'create', req.user))
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/<%=modelNameLow%>');
+      req.addFlash('warning', 'Errore nella compilazione dei campi');
+      item = setUpLabel(result.labels, item);
+      return res.view('admins/models/new',{page: '<%=modelNameLow%>', previousData: item, err: err.invalidAttributes});
+    })
   },
   edit: function(req, res){
     if(!auth.authorize_controller('<%=modelNameLow%>','update', req.user))
@@ -86,33 +87,33 @@ module.exports = {
     //var permitted = ['email','role','password','website'];
     if(!auth.authorize_controller('<%=modelNameLow%>', 'update', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
-    if(auth.authorize_resource(req.record,'update', req.user))
+    if(!auth.authorize_resource(req.record,'update', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
     var payload = req.allParams();
     var fields = sails.config.fields_helper.fieldsInfo['<%=modelNameLow%>'].fields;
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    User.update({id: req.record.id}, item)
+    sails.models[<%=modelNameLow%>].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/<%=modelNameLow%>/edit/'+updated[0].id);
     })
     .catch(function(err){
-      if(auth.authorize_controller('<%=modelNameLow%>', 'update', req.user))
+      if(!auth.authorize_controller('<%=modelNameLow%>', 'update', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
-      if(auth.authorize_resource(req.record,'update', req.user))
+      if(!auth.authorize_resource(req.record,'update', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
-        req.addFlash('warning', 'Errore nella compilazione dei campi');
-        item = setUpLabel(result.labels, item);
-        return res.view('admins/models/edit',{page: '<%=modelNameLow%>', previousData: item, err: err.invalidAttributes});
+      req.addFlash('warning', 'Errore nella compilazione dei campi');
+      item = setUpLabel(result.labels, item);
+      return res.view('admins/models/edit',{page: '<%=modelNameLow%>', previousData: item, err: err.invalidAttributes});
       }
     })
   },
   destroy: function(req, res){
-    if(auth.authorize_controller('<%=modelNameLow%>', 'destroy', req.user))
+    if(!auth.authorize_controller('<%=modelNameLow%>', 'destroy', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
-    if(auth.authorize_resource(req.record,'destroy', req.user))
+    if(!auth.authorize_resource(req.record,'destroy', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
-    User.destroy({id: req.record.id})
+    sails.models[<%=modelNameLow%>].destroy({id: req.record.id})
     .then(function(){
       ErrorService.handleError(req, res, sails.config.errors.DESTROYED, sails.config.errors.DESTROYED.message, 'success','/admin/<%=modelNameLow%>');
     })
