@@ -39,7 +39,7 @@ mixin selectAjax(fieldName, searchWith, previousData)
         },
         processResults: function (data) {
            return {
-               results: $.map(data.data.results, function (item) {
+               results: $.map(data.results, function (item) {
                    return {
                        text: item['#{searchWith}'],
                        id: item.id+','+item['#{searchWith}']

@@ -1,10 +1,7 @@
 module.exports.website = {
   resources:{
     find: function(record, user){
-      if(record.id < 4)
-        return false;
-      else
-        return true;
+      return true;
     },
     findone: function(record, user){
       return true;

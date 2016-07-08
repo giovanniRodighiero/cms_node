@@ -64,7 +64,7 @@ module.exports = {
     var limit =  opts.limit;
     var totPages = Math.ceil(sails.config.fields_helper.modelCount['metadata']/opts.limit);
 
-    sails.models['metadata'].find().paginate({page: pageIndex, limit: limit})
+    sails.models['metadata'].find(opts.query).paginate({page: pageIndex, limit: limit})
     .then(function(results){
       var customResults = [];
       for (var i = 0; i < results.length; i++) {

@@ -2,48 +2,52 @@
 module.exports = {
   attributes: {
     // base model fields
-
+    
       password: {
-
+        
           type:"string",
-
+        
           required:true,
-
+        
       },
-
+    
       role: {
-
+        
           type:"string",
-
+        
           enum:"['admin','superAdmin']",
-
+        
           required:true,
-
+        
           defaultsTo:"admin",
-
+        
       },
-
+    
       email: {
-
+        
           type:"email",
-
+        
           required:true,
-
+        
           unique:true,
-
+        
       },
-      description: {
-        type: 'string'
-      },
-
+    
+    
       website: {
-
+        
           model:"website",
-
+        
           required:true,
-
+        
       },
-
+    
+      description: {
+        
+          type:"string",
+        
+      },
+    
   },
 
   afterCreate(destroyedRecords, next){
@@ -58,7 +62,7 @@ module.exports = {
       next();
     })
   },
-
+  
     toJSON() {
       let obj = this.toObject();
       delete obj.password;
@@ -87,7 +91,7 @@ module.exports = {
       })
       .catch(next);
   },
-
+  
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
@@ -100,7 +104,7 @@ module.exports = {
         _.assign(results[i], {'model': 'user'});
       }
       var myResult = {
-        results: _.omit(results, 'password'),
+        results: results,
         pageIndex: pageIndex,
         totPages: totPages
       }

@@ -24,7 +24,7 @@ function setUpLabel(labels, item) {
   }
   return item;
 };
-
+var auth = sails.config.authorization;
 module.exports = {
   find: function(req, res){
     if(!auth.authorize_controller('<%=modelNameLow%>', 'find', req.user))
@@ -64,7 +64,7 @@ module.exports = {
     var fields = sails.config.fields_helper.fieldsInfo['<%=modelNameLow%>'].fields;
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.models[<%=modelNameLow%>].create(item)
+    sails.models['<%=modelNameLow%>'].create(item)
     .then(function(created){
       ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/<%=modelNameLow%>/new');
     })
@@ -93,7 +93,7 @@ module.exports = {
     var fields = sails.config.fields_helper.fieldsInfo['<%=modelNameLow%>'].fields;
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.models[<%=modelNameLow%>].update({id: req.record.id}, item)
+    sails.models['<%=modelNameLow%>'].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/<%=modelNameLow%>/edit/'+updated[0].id);
     })
@@ -105,7 +105,6 @@ module.exports = {
       req.addFlash('warning', 'Errore nella compilazione dei campi');
       item = setUpLabel(result.labels, item);
       return res.view('admins/models/edit',{page: '<%=modelNameLow%>', previousData: item, err: err.invalidAttributes});
-      }
     })
   },
   destroy: function(req, res){
@@ -113,7 +112,7 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
     if(!auth.authorize_resource(req.record,'destroy', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/<%=modelNameLow%>');
-    sails.models[<%=modelNameLow%>].destroy({id: req.record.id})
+    sails.models['<%=modelNameLow%>'].destroy({id: req.record.id})
     .then(function(){
       ErrorService.handleError(req, res, sails.config.errors.DESTROYED, sails.config.errors.DESTROYED.message, 'success','/admin/<%=modelNameLow%>');
     })

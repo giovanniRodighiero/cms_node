@@ -1,27 +1,26 @@
 module.exports.user = {
   fields:{
-      password: function(page, user){
-        if(page === 'index' || page === 'edit' || page === 'show')
-          return false;
-        else
-          return true;
-      },
-
-      role: function(page, user){
+    
+      password: function(user){
         return true;
       },
-
-      email: function(page, user){
+    
+      role: function(user){
         return true;
       },
-
-
-      website: function(page, user){
+    
+      email: function(user){
         return true;
       },
-      description: function(page, user){
+    
+    
+      website: function(user){
         return true;
       },
-
+    
+      description: function(user){
+        return true;
+      },
+    
   }
 }
