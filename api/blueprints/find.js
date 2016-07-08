@@ -41,11 +41,11 @@ module.exports = (req, res) => {
   for (var i = 0; i < keys.length; i++) {
     convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};
   }
-  var query = Model.find(convertedQuery).paginate({page: params.page, limit: params.limit});
-  const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
+   var query = Model.find(convertedQuery).paginate({page: params.page, limit: params.limit});
+  // const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
   var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
 
-  findQuery
+  query
     .then(function(records){
       for (var i = 0; i < records.length; i++) {
         _.assign(records[i], {'model': Model.identity});

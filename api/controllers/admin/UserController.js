@@ -1,7 +1,30 @@
 var auth = sails.config.authorization;
 var _ = require('lodash');
 var usersNumber;
-
+function setUpPermitted(payloadO, fields) {
+  var result = {
+    permitted: [],
+    labels: {},
+    payload: payloadO
+  };
+  for (var i = 0; i < fields.length; i++) {
+    if(fields[i].association && payloadO[fields[i].name]){
+      var aux = payloadO[fields[i].name].split(',');
+      result.payload[fields[i].name] = aux[0];
+      result.labels[fields[i].name] = aux[1];
+    }
+    result.permitted.push(fields[i].name);
+  }
+  return result;
+};
+function setUpLabel(labels, item) {
+  for (var i = 0; i < Object.keys(labels).length; i++) {
+     var old = item[Object.keys(labels)[i]];
+     var aux = {};
+    item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
+  }
+  return item;
+}
 module.exports = {
   find: function(req, res){
     if(!auth.authorize_controller('user', 'find', req.user))
@@ -26,13 +49,7 @@ module.exports = {
   findOne: function(req, res){
     if(auth.authorize_controller('user', 'findone', req.user)){
       if(auth.authorize_resource(req.record,'findone', req.user)){
-        User.findOne({id: req.record.id}).populate('website')
-        .then(function(result){
-          return res.view('admins/models/show', {page: 'user', result: result});
-        })
-        .catch(function(err){
-          ErrorService.handleError(req, res, sails.config.errors.NOT_FOUND, sails.config.errors.NOT_FOUND.message, 'danger','/admin/user');
-        });
+        return res.view('admins/models/show', {page: 'user'});
       }
       else
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
@@ -48,18 +65,11 @@ module.exports = {
   create: function(req, res){
     //var permitted = ['email','password','role','website'];
     var payload = req.allParams();
-    var permitted = [];
-    var labels = {};
     var fields = sails.config.fields_helper.fieldsInfo['user'].fields;
-    for (var i = 0; i < fields.length; i++) {
-      if(fields[i].association){
-        var aux = payload[fields[i].name].split(',');
-        payload[fields[i].name] = aux[0];
-        labels[fields[i].name] = aux[1];
-      }
-      permitted.push(fields[i].name);
-    }
-    var item = _.pick(payload, permitted);
+
+    var result = setUpPermitted(payload, fields);
+
+    var item = _.pick(result.payload, result.permitted);
     if(auth.authorize_controller('user', 'create', req.user)){
       //var item = _.pick(values, permitted);
       User.create(item)
@@ -68,11 +78,7 @@ module.exports = {
       })
       .catch(function(err){
         req.addFlash('warning', 'Errore nella compilazione dei campi');
-        for (var i = 0; i < Object.keys(labels).length; i++) {
-           var old = item[Object.keys(labels)[i]];
-           var aux = {};
-          item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
-        }
+        item = setUpLabel(result.labels, item);
         return res.view('admins/models/new',{page: 'user', previousData: item, err: err.invalidAttributes});
       })
     }
@@ -89,20 +95,12 @@ module.exports = {
     if(auth.authorize_controller('user', 'update', req.user)){
       if(auth.authorize_resource(req.record,'update', req.user)){
         var payload = req.allParams();
-        var permitted = [];
-        var labels = {};
         var fields = sails.config.fields_helper.fieldsInfo['user'].fields;
-        for (var i = 0; i < fields.length; i++) {
-          if(fields[i].association && payload[fields[i].name]){
-            var aux = payload[fields[i].name].split(',');
-            payload[fields[i].name] = aux[0];
-            labels[fields[i].name] = aux[1];
-          }
-          permitted.push(fields[i].name);
-        }
-        // var notAllowed = _.without(payload, permitted);
-        // permitted = _.pull(payload, notAllowed);
-        var item = _.pick(payload, permitted);
+
+        var result = setUpPermitted(payload, fields);
+
+        var item = _.pick(result.payload, result.permitted);
+        //sails.log(payload,permitted);
         User.update({id: req.record.id}, item)
         .then(function(updated){
           ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/user/edit/'+updated[0].id);
@@ -111,11 +109,7 @@ module.exports = {
           if(auth.authorize_controller('user', 'update', req.user)){
             if(auth.authorize_resource(req.record,'update', req.user)){
               req.addFlash('warning', 'Errore nella compilazione dei campi');
-              for (var i = 0; i < Object.keys(labels).length; i++) {
-                 var old = item[Object.keys(labels)[i]];
-                 var aux = {};
-                item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
-              }
+              item = setUpLabel(result.labels, item);
               return res.view('admins/models/edit',{page: 'user', previousData: item, err: err.invalidAttributes});
             }
             else
