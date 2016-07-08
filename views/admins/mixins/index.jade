@@ -4,14 +4,14 @@ mixin tableIndex(results, user)
       thead
         tr 
           each field in sails.config.fields_helper.fieldsInfo[page].fields
-            if(sails.config.authorization.show_field(results.results[0].model, 'index', field.name, user))
+            if(sails.config.authorization.show_field(results.results[0].model, 'index',results.results[0].model, field.name, user))
               th= field.name
           th Azioni
       tbody
         each result in results.results
           tr
             each field in sails.config.fields_helper.fieldsInfo[page].fields
-              if(sails.config.authorization.show_field(result.model, 'index', field.name, user))
+              if(sails.config.authorization.show_field(result.model, 'index',results.results[0].model, field.name, user))
                 th= result[field.name]
             th
               if(sails.config.authorization.authorize_resource(result, 'findone', user))                

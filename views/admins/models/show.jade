@@ -4,7 +4,7 @@ block page
   +navtabsCustom(page, req.user, 'show')
   h1.page-header.text-center Dettagli #{page}
   each field in sails.config.fields_helper.fieldsInfo[page].fields
-    if(sails.config.authorization.show_field(req.record.model, 'show', field.name, req.user))
+    if(sails.config.authorization.show_field(req.record.model,'show', req.record.model, field.name, req.user))
       +panel-default(field.name)   
         if(field.association && req.record[field.name])
           case field.association.type
@@ -17,12 +17,11 @@ block page
                     p non definito
             when 'multiple'
               each item in req.record[field.name]
-                - console.log(item);              
-                each fieldInner in sails.config.fields_helper.fieldsInfo[item.name].fields 
-                  if(!fieldInner.association)
+                each fieldInner in sails.config.fields_helper.fieldsInfo[item.model].fields 
+                  if(!fieldInner.association && sails.config.authorization.show_field(item.model, 'show', req.record.model, fieldInner.name, req.user))
                     if(item[fieldInner.name])
-                      p #{item[fieldInner.name]}
+                      p #{fieldInner.name}: #{item[fieldInner.name]}
                     else
-                      p non definito
+                      p #{fieldInner.name}: non definito
         else
           p= req.record[field.name]

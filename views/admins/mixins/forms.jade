@@ -51,7 +51,7 @@ mixin newForm(button, user, view, previousData, err)
     .col-xs-8.col-xs-offset-2
       form(method="post" action="/admin/#{page}")
         each field in sails.config.fields_helper.fieldsInfo[page].fields
-          if(sails.config.authorization.show_field(page, view, field.name, user))
+          if(sails.config.authorization.show_field(page, view, page, field.name, user))
             if(!previousData)
               +printEmptyField(field)
             else
@@ -65,7 +65,7 @@ mixin editForm(button, user, view, previousData, err)
       form(method="post" action="/admin/#{page}/#{req.record.id}" enctype="application/x-http-method-override") 
         input(type="hidden" name="_method" value="PUT")
         each field in sails.config.fields_helper.fieldsInfo[page].fields
-          if(sails.config.authorization.show_field(page, view, field.name, user))
+          if(sails.config.authorization.show_field(page, view, page, field.name, user))
             if(!previousData)
               +printEmptyField(field)
             else
