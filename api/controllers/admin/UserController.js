@@ -3,25 +3,33 @@
 function setUpPermitted(payloadO, fields) {
   var result = {
     permitted: [],
-    labels: {},
+    labels: [],
     payload: payloadO
   };
   for (var i = 0; i < fields.length; i++) {
     if(fields[i].association && payloadO[fields[i].name]){
       var aux = payloadO[fields[i].name].split(',');
       result.payload[fields[i].name] = aux[0];
-      result.labels[fields[i].name] = aux[1];
+      var hash = {};
+      hash[fields[i].name] = aux[1];
+      result.labels.push(hash);
     }
     result.permitted.push(fields[i].name);
   }
+  console.log('result.labels');
+  console.log(result.labels);
   return result;
 };
 function setUpLabel(labels, item) {
-  for (var i = 0; i < Object.keys(labels).length; i++) {
-     var old = item[Object.keys(labels)[i]];
-     var aux = {};
-    item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
+  for (var j = 0; j < labels.length; j++) {//scorro l'array di labels 
+    for (var i = 0; i < Object.keys(labels[j]).length; i++) {
+       var old = item[Object.keys(labels[j])[i]];
+       var aux = {};
+      item[Object.keys(labels[j])[i]] = _.assign(aux, { id: item[Object.keys(labels[j])[i]], name :labels[j][Object.keys(labels[j])[i]]});
+    }
   }
+  console.log('item');
+  console.log(item);
   return item;
 };
 var auth = sails.config.authorization;
@@ -73,6 +81,10 @@ module.exports = {
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
       item = setUpLabel(result.labels, item);
+      sails.log('result.labels');
+      sails.log(result.labels);
+      sails.log('item');
+      sails.log(item);
       return res.view('admins/models/new',{page: 'user', previousData: item, err: err.invalidAttributes});
     })
   },

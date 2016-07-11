@@ -1,5 +1,18 @@
 "use strict";
-
+function forceArray(payload, fields) {
+  for (var i = 0; i < fields.length; i++) {
+    var array = [];
+    if(fields[i].association && payload[fields[i].name]){
+      if(fields[i].association.type === 'multiple'){
+        if(!Array.isArray(payload[fields[i].name])){
+          array.push(payload[fields[i].name]);
+          payload[fields[i].name] = array;
+        }
+      }
+    }
+  }
+  return payload;
+}
 function setUpPermitted(payloadO, fields) {
   var result = {
     permitted: [],
@@ -8,19 +21,36 @@ function setUpPermitted(payloadO, fields) {
   };
   for (var i = 0; i < fields.length; i++) {
     if(fields[i].association && payloadO[fields[i].name]){
-      var aux = payloadO[fields[i].name].split(',');
-      result.payload[fields[i].name] = aux[0];
-      result.labels[fields[i].name] = aux[1];
+      if(fields[i].association.type === 'multiple'){
+        var oldPayload = payloadO[fields[i].name];
+        result.labels[fields[i].name] = [];
+        result.payload[fields[i].name] = [];
+        for (var j = 0; j < oldPayload.length; j++) {
+          var aux = oldPayload[j].split(',');
+          result.payload[fields[i].name].push(aux[0]);
+          result.labels[fields[i].name].push(aux[1]);
+        }
+      }
     }
     result.permitted.push(fields[i].name);
   }
   return result;
 };
-function setUpLabel(labels, item) {
+function setUpLabel(labels, item, fields) {// scorro l'array di labels
   for (var i = 0; i < Object.keys(labels).length; i++) {
-     var old = item[Object.keys(labels)[i]];
-     var aux = {};
-    item[Object.keys(labels)[i]] = _.assign(aux, { id: item[Object.keys(labels)[i]], name :labels[Object.keys(labels)[i]]});
+    var oldEntry = item[Object.keys(labels)[i]];
+    var newData = [];
+    for (var j = 0; j < oldEntry.length; j++) {
+      var aux = {};
+      aux.id = oldEntry[j];
+      for (var k = 0; k < fields.length; k++) {
+        if(fields[k].name == Object.keys(labels)[i]){
+          aux[fields[k].association.searchWith] = labels[Object.keys(labels)[i]][j];
+        }
+      }
+      newData.push(aux);
+    }
+    item[Object.keys(labels)[i]] = newData;
   }
   return item;
 };
@@ -62,8 +92,12 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/website');
     var payload = req.allParams();
     var fields = sails.config.fields_helper.fieldsInfo['website'].fields;
+    payload = forceArray(payload, fields);
+
     var result = setUpPermitted(payload, fields);
+
     var item = _.pick(result.payload, result.permitted);
+
     sails.models['website'].create(item)
     .then(function(created){
       ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/website/new');
@@ -72,7 +106,7 @@ module.exports = {
       if(!auth.authorize_controller('website', 'create', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/website');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
-      item = setUpLabel(result.labels, item);
+      item = setUpLabel(result.labels, item, fields);
       return res.view('admins/models/new',{page: 'website', previousData: item, err: err.invalidAttributes});
     })
   },
@@ -90,9 +124,12 @@ module.exports = {
     if(!auth.authorize_resource(req.record,'update', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
     var payload = req.allParams();
+
     var fields = sails.config.fields_helper.fieldsInfo['website'].fields;
+    payload = forceArray(payload, fields);
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
+
     sails.models['website'].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/website/edit/'+updated[0].id);
@@ -103,7 +140,9 @@ module.exports = {
       if(!auth.authorize_resource(req.record,'update', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
-      item = setUpLabel(result.labels, item);
+      item = setUpLabel(result.labels, item, fields);
+      sails.log('item');
+      sails.log(item);
       return res.view('admins/models/edit',{page: 'website', previousData: item, err: err.invalidAttributes});
     })
   },
