@@ -16,12 +16,13 @@ block page
                   else
                     p non definito
             when 'multiple'
-              each item in req.record[field.name]
-                each fieldInner in sails.config.fields_helper.fieldsInfo[item.model].fields 
-                  if(!fieldInner.association && sails.config.authorization.show_field(item.model, 'show', req.record.model, fieldInner.name, req.user))
-                    if(item[fieldInner.name])
-                      p #{fieldInner.name}: #{item[fieldInner.name]}
-                    else
-                      p #{fieldInner.name}: non definito
+              if(req.record[field.name])
+                each item in req.record[field.name]
+                  each fieldInner in sails.config.fields_helper.fieldsInfo[item.model].fields 
+                    if(!fieldInner.association && sails.config.authorization.show_field(item.model, 'show', req.record.model, fieldInner.name, req.user))
+                      if(item[fieldInner.name])
+                        p #{fieldInner.name}: #{item[fieldInner.name]}
+                      else
+                        p #{fieldInner.name}: non definito
         else
           p= req.record[field.name]

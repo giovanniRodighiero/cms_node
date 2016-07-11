@@ -12,25 +12,24 @@ mixin select(field, previousData)
       each f in field.infos.enum                
         option= f 
 
-mixin selectAjax(fieldName, searchWith, previousData)
-  label(for="#{fieldName}")= fieldName
-  - console.log(previousData);
+mixin selectAjaxSingle(field, previousData)
+  label(for="#{field.name}")= field.name
   if(previousData)
-    select.form-control(id="#{fieldName}" name="#{fieldName}")
-      option(selected="" value="#{previousData.id},#{previousData[searchWith]}")= previousData[searchWith]
+    select.form-control(id="#{field.name}" name="#{field.name}")
+      option(selected="" value="#{previousData.id},#{previousData[field.association.searchWith]}")= previousData[field.association.searchWith]
   else
-    select.form-control(id="#{fieldName}" name="#{fieldName}")
-    
+    select.form-control(id="#{field.name}" name="#{field.name}")
+  - var path = field.infos.collection || field.infos.model;
   script(type='text/javascript').  
-    $("##{fieldName}").select2({
+    $("##{field.name}").select2({
       ajax: {
-        url: '/#{fieldName}',
+        url: '/#{path}',
         dataType: "json",
         type: "GET",
         delay: 250,
         data: function (params) {
           var query = {
-            '#{searchWith}': params.term,
+            '#{field.association.searchWith}': params.term,
             limit: 0,
             page: 1
           };
@@ -41,14 +40,53 @@ mixin selectAjax(fieldName, searchWith, previousData)
            return {
                results: $.map(data.results, function (item) {
                    return {
-                       text: item['#{searchWith}'],
-                       id: item.id+','+item['#{searchWith}']
+                       text: item['#{field.association.searchWith}'],
+                       id: item.id+','+item['#{field.association.searchWith}']
+                   }
+               })
+           };
+         }
+      }
+    });    
+    
+mixin selectAjaxMultiple(field, previousData)
+  label(for="#{field.name}")= field.name
+  if(previousData)
+    select.form-control(id="#{field.name}" name="#{field.name}" multiple="multiple")
+      each item in previousData
+        option(selected="" value="#{item.id},#{item[field.association.searchWith]}")= item[field.association.searchWith]
+  else
+    select.form-control(id="#{field.name}" name="#{field.name}" multiple="multiple")
+  - var path = field.infos.collection || field.infos.model;
+  script(type='text/javascript').  
+    $("##{field.name}").select2({
+      ajax: {
+        url: '/#{path}',
+        dataType: "json",
+        type: "GET",
+        delay: 250,
+        data: function (params) {
+          var query = {
+            '#{field.association.searchWith}': params.term,
+            limit: 0,
+            page: 1
+          };
+          // Query paramters will be ?search=[term]&page=[page]
+          return query;
+        },
+        processResults: function (data) {
+           return {
+               results: $.map(data.results, function (item) {
+                   return {
+                       text: item['#{field.association.searchWith}'],
+                       id: item.id+','+item['#{field.association.searchWith}']
                    }
                })
            };
          }
       }
     });
+
     //$.fn.select2.defaults.set("key", "value");
     
     
