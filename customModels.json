@@ -25,7 +25,7 @@
           {"parName":"via","value":"website"}
           ]
         },
-        {"name":"metadatas","isAssociation":"multiple", "params":[
+        {"name":"metadatas", "isAssociation":{"type":"multiple", "searchWith":"path"}, "params":[
           {"parName":"collection","value":"metadata"},
           {"parName":"via","value":"website"}
           ]
