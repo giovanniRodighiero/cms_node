@@ -53,7 +53,7 @@ module.exports = (req, res, next) => {
               modelIdentity = associations[i].model;
             if(associations[i].collection)
               modelIdentity = associations[i].collection;
-            for (var j = 0; j < result[associations[j].alias].length; j++) {
+            for (var j = 0; j < result[associations[i].alias].length; j++) {
               result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
             }
           }
