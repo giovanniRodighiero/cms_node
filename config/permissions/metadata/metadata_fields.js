@@ -1,28 +1,28 @@
 module.exports.metadata = {
   fields:{
     
-      path: function(page, user){
+      path: function(page, associatedModel , user){
         return true;
       },
     
-      meta_title: function(page, user){
+      meta_title: function(page, associatedModel , user){
         return true;
       },
     
-      meta_descr: function(page, user){
+      meta_descr: function(page, associatedModel , user){
         return true;
       },
     
-      published: function(page, user){
+      published: function(page, associatedModel , user){
         return true;
       },
     
-      locale: function(page, user){
+      locale: function(page, associatedModel , user){
         return true;
       },
     
     
-      website: function(page, user){
+      website: function(page, associatedModel , user){
         return true;
       },
     

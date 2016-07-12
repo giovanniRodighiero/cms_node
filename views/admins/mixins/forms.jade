@@ -7,9 +7,12 @@ mixin printEmptyField(field)
       +checkbox(field.name, field.name, field.name, false)  
     else     
         if(field.association)
+          - console.log(field);
           case field.association.type
             when 'single'
-              +selectAjax(field.name, field.association.searchWith)
+              +selectAjaxSingle(field)
+            when 'multiple'
+              +selectAjaxMultiple(field)              
         else
           +input(field.infos.type, field.name, field.name, field.name, field.name, "")
           
@@ -23,27 +26,33 @@ mixin printPrefilledField(field, previousData, err)
             option(selected="")= f
           else
             option= f     
+  else
+    if(field.infos.type === 'boolean')
+      +checkbox(field.name, field.name, field.name, previousData[field.name])  
     else
-      if(field.infos.type === 'boolean')
-        +checkbox(field.name, field.name, field.name, previousData[field.name])  
+      if(field.association)
+        case field.association.type
+          when 'single'
+            +selectAjaxSingle(field, previousData[field.name])
+            if(err && err[field.name])
+                each e in err[field.name]
+                  span.validation-error= i18n(e.rule)
+                  br
+          when 'multiple'
+            +selectAjaxMultiple(field, previousData[field.name])
+            if(err && err[field.name])
+                each e in err[field.name]
+                  span.validation-error= i18n(e.rule)
+                  br
       else
-        if(field.association)
-          case field.association.type
-            when 'single'
-              +selectAjax(field.name, field.association.searchWith, previousData[field.name])
-              if(err && err[field.name])
-                  each e in err[field.name]
-                    span.validation-error= i18n(e.rule)
-                    br
+        if(previousData[field.name])
+          +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
         else
-          if(previousData[field.name])
-            +input(field.infos.type, field.name, field.name, field.name, field.name, previousData[field.name])
-          else
-            +input(field.infos.type, field.name, field.name, field.name, field.name, "")
-          if(err && err[field.name])
-            each e in err[field.name]
-              span.validation-error= i18n(e.rule)
-              br
+          +input(field.infos.type, field.name, field.name, field.name, field.name, "")
+        if(err && err[field.name])
+          each e in err[field.name]
+            span.validation-error= i18n(e.rule)
+            br
             
 //- stampa la form di input            
 mixin newForm(button, user, view, previousData, err)
@@ -51,7 +60,8 @@ mixin newForm(button, user, view, previousData, err)
     .col-xs-8.col-xs-offset-2
       form(method="post" action="/admin/#{page}")
         each field in sails.config.fields_helper.fieldsInfo[page].fields
-          if(sails.config.authorization.show_field(page, view, field.name, user))
+          if(sails.config.authorization.show_field(page, view, page, field.name, user))
+          - console.log(field.name);
             if(!previousData)
               +printEmptyField(field)
             else
@@ -65,7 +75,7 @@ mixin editForm(button, user, view, previousData, err)
       form(method="post" action="/admin/#{page}/#{req.record.id}" enctype="application/x-http-method-override") 
         input(type="hidden" name="_method" value="PUT")
         each field in sails.config.fields_helper.fieldsInfo[page].fields
-          if(sails.config.authorization.show_field(page, view, field.name, user))
+          if(sails.config.authorization.show_field(page, view, page, field.name, user))
             if(!previousData)
               +printEmptyField(field)
             else

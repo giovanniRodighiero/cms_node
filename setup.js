@@ -20,10 +20,19 @@ function injectRoutes(modelsFile, filePath) {
 
       partial = partial.concat('\n /******************* start '+models[i].modelName.toString()+'**********************/ \n');
       partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.find\',\n');// index
-      partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'/edit/:id\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.edit\',\n');// show
+
+      partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'/edit/:id\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.edit\',\n');// edit
+
+
+
+      partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'/new\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.new\',\n');// new
+
       partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'/:id\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.findOne\',\n');// show
-      partial = partial.concat('\t \'post /admin/'+models[i].modelName.toString()+'\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.add\',\n');// create
-      partial = partial.concat('\t \'put /admin/'+models[i].modelName.toString()+'/:id\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.edit\',\n');// edit
+
+      partial = partial.concat('\t \'post /admin/'+models[i].modelName.toString()+'\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.create\',\n');// create
+
+      partial = partial.concat('\t \'put /admin/'+models[i].modelName.toString()+'/:id\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.update\',\n');// edit
+
       partial = partial.concat('\t \'delete /admin/'+models[i].modelName.toString()+'/:id\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.destroy\',\n');// delete
       partial = partial.concat('\n /******************* end '+models[i].modelName.toString()+'**********************/ \n');
       text = text.concat(partial);

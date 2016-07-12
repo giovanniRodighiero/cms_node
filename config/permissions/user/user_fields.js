@@ -1,24 +1,24 @@
 module.exports.user = {
   fields:{
 
-      password: function(page, user){
-        return (page === 'new');
+      password: function(page, associatedModel , user){
+        return (page === 'new' || page === 'account');
       },
 
-      role: function(page, user){
+      role: function(page, associatedModel , user){
         return true;
       },
 
-      email: function(page, user){
+      email: function(page, associatedModel , user){
         return true;
       },
 
 
-      website: function(page, user){
+      website: function(page, associatedModel , user){
         return true;
       },
 
-      description: function(page, user){
+      description: function(page, associatedModel , user){
         return true;
       },
 
