@@ -4,12 +4,12 @@ function forceArray(payload, fields) {
   for (var i = 0; i < fields.length; i++) {
     var array = [];
     if(fields[i].association && payload[fields[i].name]){
-      if(fields[i].association.type === 'multiple'){
+    //  if(fields[i].association.type === 'multiple'){
         if(!Array.isArray(payload[fields[i].name])){
           array.push(payload[fields[i].name]);
           payload[fields[i].name] = array;
         }
-      }
+  //    }
     }
   }
   return payload;
@@ -31,25 +31,46 @@ function setUpPermitted(payloadO, fields) {
           result.payload[fields[i].name].push(aux[0]);
           result.labels[fields[i].name].push(aux[1]);
         }
+      }else{
+        sails.log('dentro  setUpPermitted');
+        sails.log(payloadO[fields[i].name]);
+        var oldPayload = payloadO[fields[i].name];
+        var aux = oldPayload[0].split(',');
+        result.payload[fields[i].name] = aux[0];
+        result.labels[fields[i].name] = aux[1];
       }
     }
     result.permitted.push(fields[i].name);
   }
   return result;
 };
-function setUpLabel(labels, item, fields) {// scorro l'array di labels
-  for (var i = 0; i < Object.keys(labels).length; i++) {
+function setUpLabel(labels, item, fields) {
+  sails.log('item dentro label');
+  sails.log(item);
+  for (var i = 0; i < Object.keys(labels).length; i++) {// scorro ogni chiave dell'oggetto labels
     var oldEntry = item[Object.keys(labels)[i]];
-    var newData = [];
-    for (var j = 0; j < oldEntry.length; j++) {
+    if(Array.isArray(oldEntry)){
+      var newData = [];
+      for (var j = 0; j < oldEntry.length; j++) {
+        var aux = {};
+        aux.id = oldEntry[j];
+        for (var k = 0; k < fields.length; k++) {
+          if(fields[k].name == Object.keys(labels)[i]){
+            aux[fields[k].association.searchWith] = labels[Object.keys(labels)[i]][j];
+          }
+        }
+        newData.push(aux);
+      }
+    }else{
+      var newData;
       var aux = {};
-      aux.id = oldEntry[j];
+      aux.id = oldEntry;
       for (var k = 0; k < fields.length; k++) {
         if(fields[k].name == Object.keys(labels)[i]){
-          aux[fields[k].association.searchWith] = labels[Object.keys(labels)[i]][j];
+          aux[fields[k].association.searchWith] = labels[Object.keys(labels)[i]];
         }
       }
-      newData.push(aux);
+      newData = aux;
     }
     item[Object.keys(labels)[i]] = newData;
   }

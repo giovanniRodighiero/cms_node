@@ -76,7 +76,6 @@ function setUpLabel(labels, item, fields) {
   }
   return item;
 };
-
 var auth = sails.config.authorization;
 module.exports = {
   find: function(req, res){
@@ -119,7 +118,6 @@ module.exports = {
 
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.log(item);
     sails.models['website'].create(item)
     .then(function(created){
       ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/website/new');
@@ -151,7 +149,6 @@ module.exports = {
 
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.log(result.permitted);
     sails.models['website'].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/website/edit/'+updated[0].id);
@@ -161,10 +158,8 @@ module.exports = {
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
       if(!auth.authorize_resource(req.record,'update', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
-      console.log(err);
       req.addFlash('warning', 'Errore nella compilazione dei campi');
       item = setUpLabel(result.labels, item, fields);
-
       return res.view('admins/models/edit',{page: 'website', previousData: item, err: err.invalidAttributes});
     })
   },

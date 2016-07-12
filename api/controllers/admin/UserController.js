@@ -118,8 +118,6 @@ module.exports = {
 
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    // sails.log('item before');
-    // sails.log(item);
     sails.models['user'].create(item)
     .then(function(created){
       ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/user/new');
@@ -128,13 +126,7 @@ module.exports = {
       if(!auth.authorize_controller('user', 'create', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
-      sails.log('item before');
-      sails.log(item);
-      sails.log('labels');
-      sails.log(result.labels);
       item = setUpLabel(result.labels, item, fields);
-      sails.log('item after');
-      sails.log(item);
       return res.view('admins/models/new',{page: 'user', previousData: item, err: err.invalidAttributes});
     })
   },
@@ -143,7 +135,10 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
     if(!auth.authorize_resource(req.record,'update', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
-    return res.view('admins/models/edit', {page: 'user', previousData: req.record});
+    if(req.record.id === req.user.id)
+      return res.view('admins/models/account', {page: 'user', previousData: req.record});
+    else
+      return res.view('admins/models/edit', {page: 'user', previousData: req.record});
   },
   update: function(req, res){
     //var permitted = ['email','role','password','website'];
@@ -154,14 +149,9 @@ module.exports = {
     var payload = req.allParams();
     var fields = sails.config.fields_helper.fieldsInfo['user'].fields;
     payload = forceArray(payload, fields);
-    sails.log('payload');
-    sails.log(payload);
+
     var result = setUpPermitted(payload, fields);
-    sails.log('result');
-    sails.log(result);
     var item = _.pick(result.payload, result.permitted);
-    sails.log('item');
-    sails.log(item);
     sails.models['user'].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/user/edit/'+updated[0].id);
@@ -172,13 +162,7 @@ module.exports = {
       if(!auth.authorize_resource(req.record,'update', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
-      sails.log('item before');
-      sails.log(item);
-      sails.log('payload');
-      sails.log(payload);
       item = setUpLabel(result.labels, item, fields);
-      sails.log('catch');
-      sails.log(item);
       return res.view('admins/models/edit',{page: 'user', previousData: item, err: err.invalidAttributes});
     })
   },

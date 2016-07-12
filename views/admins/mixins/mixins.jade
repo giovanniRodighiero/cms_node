@@ -3,7 +3,7 @@ mixin navCustom(user)
   nav
     +navbar("CMS metadati","dropdown_menu")
       +nav_item("/admin") Dashboard
-      +nav_item("/admin/account/"+user.id)= user.email
+      +nav_item("/admin/user/edit/"+user.id)= user.email
       +nav_item("/signout") Log out
       
 //- menù laterale      

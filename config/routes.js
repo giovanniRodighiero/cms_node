@@ -42,7 +42,7 @@ module.exports.routes = {
   'get /signout':'AuthController.signout',
   'get /admin': 'AdminController.index',
 
-
+  
  /******************* start user**********************/ 
 	 'get /admin/user': 'admin/UserController.find',
 	 'get /admin/user/edit/:id': 'admin/UserController.edit',
@@ -75,106 +75,8 @@ module.exports.routes = {
 	 'delete /admin/metadata/:id': 'admin/MetadataController.destroy',
 
  /******************* end metadata**********************/ 
+// INJECT ROUTES 
 
- /******************* start user**********************/ 
-	 'get /admin/user': 'admin/UserController.find',
-	 'get /admin/user/edit/:id': 'admin/UserController.edit',
-	 'get /admin/user/new': 'admin/UserController.new',
-	 'get /admin/user/:id': 'admin/UserController.findOne',
-	 'post /admin/user': 'admin/UserController.create',
-	 'put /admin/user/:id': 'admin/UserController.update',
-	 'delete /admin/user/:id': 'admin/UserController.destroy',
-
- /******************* end user**********************/ 
-
- /******************* start website**********************/ 
-	 'get /admin/website': 'admin/WebsiteController.find',
-	 'get /admin/website/edit/:id': 'admin/WebsiteController.edit',
-	 'get /admin/website/new': 'admin/WebsiteController.new',
-	 'get /admin/website/:id': 'admin/WebsiteController.findOne',
-	 'post /admin/website': 'admin/WebsiteController.create',
-	 'put /admin/website/:id': 'admin/WebsiteController.update',
-	 'delete /admin/website/:id': 'admin/WebsiteController.destroy',
-
- /******************* end website**********************/ 
-
- /******************* start metadata**********************/ 
-	 'get /admin/metadata': 'admin/MetadataController.find',
-	 'get /admin/metadata/edit/:id': 'admin/MetadataController.edit',
-	 'get /admin/metadata/new': 'admin/MetadataController.new',
-	 'get /admin/metadata/:id': 'admin/MetadataController.findOne',
-	 'post /admin/metadata': 'admin/MetadataController.create',
-	 'put /admin/metadata/:id': 'admin/MetadataController.update',
-	 'delete /admin/metadata/:id': 'admin/MetadataController.destroy',
-
- /******************* end metadata**********************/ 
-
- /******************* start user**********************/ 
-	 'get /admin/user': 'admin/UserController.find',
-	 'get /admin/user/edit/:id': 'admin/UserController.edit',
-	 'get /admin/user/new': 'admin/UserController.new',
-	 'get /admin/user/:id': 'admin/UserController.findOne',
-	 'post /admin/user': 'admin/UserController.create',
-	 'put /admin/user/:id': 'admin/UserController.update',
-	 'delete /admin/user/:id': 'admin/UserController.destroy',
-
- /******************* end user**********************/ 
-
- /******************* start website**********************/ 
-	 'get /admin/website': 'admin/WebsiteController.find',
-	 'get /admin/website/edit/:id': 'admin/WebsiteController.edit',
-	 'get /admin/website/new': 'admin/WebsiteController.new',
-	 'get /admin/website/:id': 'admin/WebsiteController.findOne',
-	 'post /admin/website': 'admin/WebsiteController.create',
-	 'put /admin/website/:id': 'admin/WebsiteController.update',
-	 'delete /admin/website/:id': 'admin/WebsiteController.destroy',
-
- /******************* end website**********************/ 
-
- /******************* start metadata**********************/ 
-	 'get /admin/metadata': 'admin/MetadataController.find',
-	 'get /admin/metadata/edit/:id': 'admin/MetadataController.edit',
-	 'get /admin/metadata/new': 'admin/MetadataController.new',
-	 'get /admin/metadata/:id': 'admin/MetadataController.findOne',
-	 'post /admin/metadata': 'admin/MetadataController.create',
-	 'put /admin/metadata/:id': 'admin/MetadataController.update',
-	 'delete /admin/metadata/:id': 'admin/MetadataController.destroy',
-
- /******************* end metadata**********************/ 
-
- /******************* start user**********************/ 
-	 'get /admin/user': 'admin/UserController.find',
-	 'get /admin/user/edit/:id': 'admin/UserController.edit',
-	 'get /admin/user/new': 'admin/UserController.new',
-	 'get /admin/user/:id': 'admin/UserController.findOne',
-	 'post /admin/user': 'admin/UserController.create',
-	 'put /admin/user/:id': 'admin/UserController.update',
-	 'delete /admin/user/:id': 'admin/UserController.destroy',
-
- /******************* end user**********************/ 
-
- /******************* start website**********************/ 
-	 'get /admin/website': 'admin/WebsiteController.find',
-	 'get /admin/website/edit/:id': 'admin/WebsiteController.edit',
-	 'get /admin/website/new': 'admin/WebsiteController.new',
-	 'get /admin/website/:id': 'admin/WebsiteController.findOne',
-	 'post /admin/website': 'admin/WebsiteController.create',
-	 'put /admin/website/:id': 'admin/WebsiteController.update',
-	 'delete /admin/website/:id': 'admin/WebsiteController.destroy',
-
- /******************* end website**********************/ 
-
- /******************* start metadata**********************/ 
-	 'get /admin/metadata': 'admin/MetadataController.find',
-	 'get /admin/metadata/edit/:id': 'admin/MetadataController.edit',
-	 'get /admin/metadata/new': 'admin/MetadataController.new',
-	 'get /admin/metadata/:id': 'admin/MetadataController.findOne',
-	 'post /admin/metadata': 'admin/MetadataController.create',
-	 'put /admin/metadata/:id': 'admin/MetadataController.update',
-	 'delete /admin/metadata/:id': 'admin/MetadataController.destroy',
-
- /******************* end metadata**********************/ 
-// INJECT ROUTES
 
 
   /***************************************************************************

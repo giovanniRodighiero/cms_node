@@ -1,32 +1,35 @@
 mixin tableIndex(results, user)
-  .table-responsive
-    table.table
-      thead
-        tr 
-          each field in sails.config.fields_helper.fieldsInfo[page].fields
-            if(sails.config.authorization.show_field(results.results[0].model, 'index',results.results[0].model, field.name, user))
-              th= field.name
-          th Azioni
-      tbody
-        each result in results.results
-          tr
+  if(! results.results.length > 0)
+    h3.text-center Nessun record presente
+  else
+    .table-responsive
+      table.table
+        thead
+          tr 
             each field in sails.config.fields_helper.fieldsInfo[page].fields
-              if(sails.config.authorization.show_field(result.model, 'index',results.results[0].model, field.name, user))
-                th= result[field.name]
-            th
-              if(sails.config.authorization.authorize_resource(result, 'findone', user))                
-                a.inline(href="/admin/#{page}/#{result.id}")
-                  button.btn.btn-warning Dettagli
-              if(sails.config.authorization.authorize_resource(result, 'update', user))                
-                a.inline(href="/admin/#{page}/edit/#{result.id}")
-                  button.btn.btn-warning Modifica
-              if(sails.config.authorization.authorize_resource(result, 'destroy', user))              
-                form.inline(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
-                  input(type="hidden" name="_method" value="DELETE")
-                  button.btn.btn-danger(type="submit") Elimina
+              if(sails.config.authorization.show_field(results.results[0].model, 'index',results.results[0].model, field.name, user))
+                th= field.name
+            th Azioni
+        tbody
+          each result in results.results
+            tr
+              each field in sails.config.fields_helper.fieldsInfo[page].fields
+                if(sails.config.authorization.show_field(result.model, 'index',results.results[0].model, field.name, user))
+                  th= result[field.name]
+              th
+                if(sails.config.authorization.authorize_resource(result, 'findone', user))                
+                  a.inline(href="/admin/#{page}/#{result.id}")
+                    button.btn.btn-warning Dettagli
+                if(sails.config.authorization.authorize_resource(result, 'update', user))                
+                  a.inline(href="/admin/#{page}/edit/#{result.id}")
+                    button.btn.btn-warning Modifica
+                if(sails.config.authorization.authorize_resource(result, 'destroy', user))              
+                  form.inline(method="post" action="/admin/#{page}/#{result.id}" onsubmit="return confirm('Sei sicuro di voler eliminare?');")
+                    input(type="hidden" name="_method" value="DELETE")
+                    button.btn.btn-danger(type="submit") Elimina
 
 mixin pagination(results)
-  if(results.totPages > 1 )
+  if(results.totPages > 1 && results.length > 0)
     div
       ul.pagination
         if(results.pageIndex > 1)      

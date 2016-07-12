@@ -2,7 +2,7 @@ module.exports.user = {
   fields:{
 
       password: function(page, associatedModel , user){
-        return (page === 'new');
+        return (page === 'new' || page === 'account');
       },
 
       role: function(page, associatedModel , user){

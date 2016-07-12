@@ -34,6 +34,7 @@ module.exports = (req, res, next) => {
         return next();
       })
       .catch(function(err){
+        sails.log(err);
         ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'danger','/admin/'+Model);
       })
     }else{
