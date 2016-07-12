@@ -13,6 +13,10 @@ mixin select(field, previousData)
         option= f 
 
 mixin selectAjaxSingle(field, previousData)
+  - console.log(previousData);
+  - if(Array.isArray(previousData)) previousData = previousData[0];
+  - console.log('previousData');
+  - console.log(previousData);
   label(for="#{field.name}")= field.name
   if(previousData)
     select.form-control(id="#{field.name}" name="#{field.name}")

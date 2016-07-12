@@ -18,7 +18,6 @@ mixin printEmptyField(field)
           
 //- stampa i campi di input precaricati con le info inserite al tentativo precedente e i relativi errori
 mixin printPrefilledField(field, previousData, err)
-  - console.log(previousData);
   if(field.infos.enum)
       label(for="#{field.name}")= field.name
       select.form-control(id="#{field.name}" name="#{field.name}")

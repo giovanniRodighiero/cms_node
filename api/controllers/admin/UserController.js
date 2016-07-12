@@ -1,35 +1,79 @@
 "use strict";
 
+function forceArray(payload, fields) {
+  for (var i = 0; i < fields.length; i++) {
+    var array = [];
+    if(fields[i].association && payload[fields[i].name]){
+    //  if(fields[i].association.type === 'multiple'){
+        if(!Array.isArray(payload[fields[i].name])){
+          array.push(payload[fields[i].name]);
+          payload[fields[i].name] = array;
+        }
+  //    }
+    }
+  }
+  return payload;
+}
 function setUpPermitted(payloadO, fields) {
   var result = {
     permitted: [],
-    labels: [],
+    labels: {},
     payload: payloadO
   };
   for (var i = 0; i < fields.length; i++) {
     if(fields[i].association && payloadO[fields[i].name]){
-      var aux = payloadO[fields[i].name].split(',');
-      result.payload[fields[i].name] = aux[0];
-      var hash = {};
-      hash[fields[i].name] = aux[1];
-      result.labels.push(hash);
+      if(fields[i].association.type === 'multiple'){
+        var oldPayload = payloadO[fields[i].name];
+        result.labels[fields[i].name] = [];
+        result.payload[fields[i].name] = [];
+        for (var j = 0; j < oldPayload.length; j++) {
+          var aux = oldPayload[j].split(',');
+          result.payload[fields[i].name].push(aux[0]);
+          result.labels[fields[i].name].push(aux[1]);
+        }
+      }else{
+        sails.log('dentro  setUpPermitted');
+        sails.log(payloadO[fields[i].name]);
+        var oldPayload = payloadO[fields[i].name];
+        var aux = oldPayload[0].split(',');
+        result.payload[fields[i].name] = aux[0];
+        result.labels[fields[i].name] = aux[1];
+      }
     }
     result.permitted.push(fields[i].name);
   }
-  console.log('result.labels');
-  console.log(result.labels);
   return result;
 };
-function setUpLabel(labels, item) {
-  for (var j = 0; j < labels.length; j++) {//scorro l'array di labels 
-    for (var i = 0; i < Object.keys(labels[j]).length; i++) {
-       var old = item[Object.keys(labels[j])[i]];
-       var aux = {};
-      item[Object.keys(labels[j])[i]] = _.assign(aux, { id: item[Object.keys(labels[j])[i]], name :labels[j][Object.keys(labels[j])[i]]});
+function setUpLabel(labels, item, fields) {
+  sails.log('item dentro label');
+  sails.log(item);
+  for (var i = 0; i < Object.keys(labels).length; i++) {// scorro ogni chiave dell'oggetto labels
+    var oldEntry = item[Object.keys(labels)[i]];
+    if(Array.isArray(oldEntry)){
+      var newData = [];
+      for (var j = 0; j < oldEntry.length; j++) {
+        var aux = {};
+        aux.id = oldEntry[j];
+        for (var k = 0; k < fields.length; k++) {
+          if(fields[k].name == Object.keys(labels)[i]){
+            aux[fields[k].association.searchWith] = labels[Object.keys(labels)[i]][j];
+          }
+        }
+        newData.push(aux);
+      }
+    }else{
+      var newData;
+      var aux = {};
+      aux.id = oldEntry;
+      for (var k = 0; k < fields.length; k++) {
+        if(fields[k].name == Object.keys(labels)[i]){
+          aux[fields[k].association.searchWith] = labels[Object.keys(labels)[i]];
+        }
+      }
+      newData = aux;
     }
+    item[Object.keys(labels)[i]] = newData;
   }
-  console.log('item');
-  console.log(item);
   return item;
 };
 var auth = sails.config.authorization;
@@ -70,8 +114,12 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
     var payload = req.allParams();
     var fields = sails.config.fields_helper.fieldsInfo['user'].fields;
+    payload = forceArray(payload, fields);
+
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
+    // sails.log('item before');
+    // sails.log(item);
     sails.models['user'].create(item)
     .then(function(created){
       ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/user/new');
@@ -80,10 +128,12 @@ module.exports = {
       if(!auth.authorize_controller('user', 'create', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/user');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
-      item = setUpLabel(result.labels, item);
-      sails.log('result.labels');
+      sails.log('item before');
+      sails.log(item);
+      sails.log('labels');
       sails.log(result.labels);
-      sails.log('item');
+      item = setUpLabel(result.labels, item, fields);
+      sails.log('item after');
       sails.log(item);
       return res.view('admins/models/new',{page: 'user', previousData: item, err: err.invalidAttributes});
     })
@@ -103,8 +153,15 @@ module.exports = {
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
     var payload = req.allParams();
     var fields = sails.config.fields_helper.fieldsInfo['user'].fields;
+    payload = forceArray(payload, fields);
+    sails.log('payload');
+    sails.log(payload);
     var result = setUpPermitted(payload, fields);
+    sails.log('result');
+    sails.log(result);
     var item = _.pick(result.payload, result.permitted);
+    sails.log('item');
+    sails.log(item);
     sails.models['user'].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/user/edit/'+updated[0].id);
@@ -115,7 +172,13 @@ module.exports = {
       if(!auth.authorize_resource(req.record,'update', req.user))
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/user');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
-      item = setUpLabel(result.labels, item);
+      sails.log('item before');
+      sails.log(item);
+      sails.log('payload');
+      sails.log(payload);
+      item = setUpLabel(result.labels, item, fields);
+      sails.log('catch');
+      sails.log(item);
       return res.view('admins/models/edit',{page: 'user', previousData: item, err: err.invalidAttributes});
     })
   },
