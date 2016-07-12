@@ -19,7 +19,7 @@ mixin tableIndex(results, user)
               th
                 if(sails.config.authorization.authorize_resource(result, 'findone', user))                
                   a.inline(href="/admin/#{page}/#{result.id}")
-                    button.btn.btn-warning Dettagli
+                    button.btn.btn-info Dettagli
                 if(sails.config.authorization.authorize_resource(result, 'update', user))                
                   a.inline(href="/admin/#{page}/edit/#{result.id}")
                     button.btn.btn-warning Modifica

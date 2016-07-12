@@ -118,6 +118,9 @@ module.exports = {
 
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
+    if(req.user.role === 'admin')
+      item.website = req.user.website;
+    sails.log(item);
     sails.models['metadata'].create(item)
     .then(function(created){
       ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/metadata/new');
@@ -149,6 +152,8 @@ module.exports = {
 
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
+    if(req.user.role === 'admin')
+      item.website = req.user.website;
     sails.models['metadata'].update({id: req.record.id}, item)
     .then(function(updated){
       ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/metadata/edit/'+updated[0].id);
@@ -160,6 +165,7 @@ module.exports = {
         ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/metadata');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
       item = setUpLabel(result.labels, item, fields);
+      sails.log(err);
       return res.view('admins/models/edit',{page: 'metadata', previousData: item, err: err.invalidAttributes});
     })
   },

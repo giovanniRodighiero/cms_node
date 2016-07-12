@@ -4,7 +4,7 @@ mixin printEmptyField(field)
     +select(field)
   else
     if(field.infos.type === 'boolean')
-      +checkbox(field.name, field.name, field.name, false)  
+      +checkbox(field.name, field.name, field.name, true)  
     else     
         if(field.association)
           - console.log(field);
@@ -28,7 +28,7 @@ mixin printPrefilledField(field, previousData, err)
             option= f     
   else
     if(field.infos.type === 'boolean')
-      +checkbox(field.name, field.name, field.name, previousData[field.name])  
+      +checkbox(field.name, field.name, field.name, true)  
     else
       if(field.association)
         case field.association.type
@@ -61,7 +61,6 @@ mixin newForm(button, user, view, previousData, err)
       form(method="post" action="/admin/#{page}")
         each field in sails.config.fields_helper.fieldsInfo[page].fields
           if(sails.config.authorization.show_field(page, view, page, field.name, user))
-          - console.log(field.name);
             if(!previousData)
               +printEmptyField(field)
             else

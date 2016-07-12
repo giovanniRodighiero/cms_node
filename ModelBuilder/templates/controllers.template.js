@@ -1,19 +1,24 @@
 "use strict";
-
+// trasformo il payload delle associazioni in un array quando non lo è (-> one-to-many)
 function forceArray(payload, fields) {
-  for (var i = 0; i < fields.length; i++) {
+  for (var i = 0; i < fields.length; i++) {//scorro gli attributi del modello in questione
     var array = [];
-    if(fields[i].association && payload[fields[i].name]){
-    //  if(fields[i].association.type === 'multiple'){
-        if(!Array.isArray(payload[fields[i].name])){
-          array.push(payload[fields[i].name]);
-          payload[fields[i].name] = array;
-        }
-  //    }
+    if(fields[i].association && payload[fields[i].name]){// se è un associazione e ho del contenuto corrispondnete nel payload
+      if(!Array.isArray(payload[fields[i].name])){// se non è un array lo trasformo
+        array.push(payload[fields[i].name]);
+        payload[fields[i].name] = array;
+      }
     }
   }
   return payload;
 }
+/*
+setUpPermitted(payload Originale, attributi del modello in questione).
+Serve a definire:
+  - gli attributi del modello che si possono inserire per creazione o modifica;
+  - le labels corrispondenti agli id scelti nelle varie dropdowns usate per popolare le relazioni;
+  - prepara il payload modificando quello originale che per trasmettere anche la label, passa un valore nel formato idDellaScelta,labelDellaScelta.
+*/
 function setUpPermitted(payloadO, fields) {
   var result = {
     permitted: [],

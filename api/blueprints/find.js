@@ -42,6 +42,7 @@ module.exports = (req, res) => {
     convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};
   }
   params.query = convertedQuery;
+  //params.published
   // var query = Model.find(convertedQuery);
   // const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
   var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);

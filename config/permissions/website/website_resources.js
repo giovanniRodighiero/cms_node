@@ -4,7 +4,7 @@ module.exports.website = {
       return true;
     },
     findone: function(record, user){
-      return true;
+      return (record.id === user.website);
     },
     create: function(record, user){
       return true;
