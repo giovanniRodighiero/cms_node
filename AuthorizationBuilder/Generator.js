@@ -65,7 +65,7 @@ module.exports = {
     scope.modelName = scope.customModel.modelName;
 
     scope.modelNameLow = scope.modelName.toString();
-    scope.defaultModel = JSON.parse(defaultModelsFile).defaults[scope.modelNameLow];
+    scope.defaultModel = JSON.parse(defaultModelsFile).defaults[scope.customModel.inheritsFrom.toString()];
 
     scope.fileAction = scope.modelName+'_actions.js';
     scope.fileRescource = scope.modelName+'_resources.js';

@@ -80,7 +80,7 @@ module.exports = {
 //      scope.base = JSON.parse(modelsFile).defaults[baseModel];
     // faccio l'uppercase del nome
     scope.modelNameLow = scope.customModel.modelName.toString();
-    scope.defaultModel = JSON.parse(defaultModels).defaults[scope.modelNameLow];
+    scope.defaultModel = JSON.parse(defaultModels).defaults[scope.customModel.inheritsFrom.toString()];
 
     scope.modelName = scope.modelNameLow.substr(0, 1).toUpperCase() + scope.modelNameLow.substr(1);
     scope.controllerName = scope.modelName+'Controller';
