@@ -2,7 +2,6 @@
   "generators": {
     "modules": {
       "ModelBuilder":"/Users/grodighiero/Documents/sailsTests/cms/ModelBuilder",
-      "UserBuilder":"/Users/grodighiero/Documents/sailsTests/cms/UserBuilder",
       "AuthorizationBuilder":"/Users/grodighiero/Documents/sailsTests/cms/AuthorizationBuilder"
     }
   }
