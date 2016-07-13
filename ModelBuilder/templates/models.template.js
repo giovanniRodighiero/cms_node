@@ -16,6 +16,14 @@ module.exports = {
         <% } %>
       },
     <% } %>
+    toJSON: function() {
+      for (var key in this.object) {
+        if (typeof this.object[key] === 'function') {
+          delete this.object[key];
+        }
+      }
+      return this;
+    }
   },
 
   afterCreate(destroyedRecords, next){

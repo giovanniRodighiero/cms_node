@@ -18,6 +18,7 @@ module.exports = (req, res) => {
 
   if(!sails.config.authorization.authorize_resource(req.record, 'findone', req.user))
     return res.unauthorized();
+  //sails.log(req.record.toJSON());
   return res.ok(req.record);
 
   //_.set(req.options, 'criteria.blacklist', ['fields', 'populate', 'limit', 'skip', 'page', 'sort']);
