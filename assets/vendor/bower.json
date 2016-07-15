@@ -1,0 +1,21 @@
+{
+  "name": "vendor",
+  "authors": [
+    "grodighiero <giovanni.rodighiero@develon.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.7",
+    "ng-admin": "^0.9.1"
+  }
+}

@@ -58,5 +58,8 @@ module.exports.policies = {
   MetadataController:{
     'findByLoc': true,
     'findOneWithLoc': true
+  },
+  UserController:{
+    'find':true
   }
 };

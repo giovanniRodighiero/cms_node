@@ -15,7 +15,7 @@ const populateAlias = (model, alias) => model.populate(alias);
  */
 module.exports = (req, res) => {
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'find', req.user))
-    return res.unauthorized();
+    return res.forbidden();
   // blakclist dei parametri accettati
   _.set(req.options, 'criteria.blacklist', ['fields', 'populate', 'limit', 'skip', 'page', 'sort']);
   // const fields = req.param('fields') ? req.param('fields').replace(/ /g, '').split(',') : [];// off
@@ -52,6 +52,6 @@ module.exports = (req, res) => {
     if(err)
       return res.negotiate(err);
     else
-      return res.json(results);
+      return res.ok(results);
     });
   };
