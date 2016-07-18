@@ -1,21 +1,21 @@
 module.exports.user = {
   actions:{
     find: (function(user){
-      return false;
+      return true;
     }),
     findone: (function(user){
       return true;
     }),
-    create: function(user){
+    create: (function(user){
       return true;
-    },
-    update: function(user){
+    }),
+    update: (function(user){
       return true;
-    },
-    destroy: function(user){
+    }),
+    destroy: (function(user){
       return true;
-    },
-    isAllowed: function(action, user){
+    }),
+    isAllowed: (function(action, user){
       switch (action) {
         case 'new':
           return true;
@@ -24,6 +24,6 @@ module.exports.user = {
         default:
           return false;
       }
-    }
+    })
   }
 }
