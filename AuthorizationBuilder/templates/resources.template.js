@@ -1,19 +1,19 @@
 module.exports.<%=customModel.modelName%> = {
   resources:{
-    find: function(record, user){
+    find: (function(record, user){
       return true;
-    },
-    findone: function(record, user){
+    }),
+    findone: (function(record, user){
       return true;
-    },
-    create: function(record, user){
+    }),
+    create: (function(record, user){
       return true;
-    },
-    update: function(record, user){
+    }),
+    update: (function(record, user){
       return true;
-    },
-    destroy: function(record, user){
+    }),
+    destroy: (function(record, user){
       return true;
-    }
+    })
   }
 }
