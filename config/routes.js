@@ -37,12 +37,17 @@ module.exports.routes = {
     view: 'home'
   },
   '/':{
+    view: 'layout_angular_login'
+  },
+  '/restAdmin':{
     view: 'layout_angular'
   },
   'post /signin':'AuthController.signin',
   'get /signout':'AuthController.signout',
   'get /admin/index': 'AdminController.index',
+
   'get /infos': 'AdminController.getInfos',
+  'get /permittedModels': 'AdminController.permittedModels',
 
 // INJECT ROUTES
 

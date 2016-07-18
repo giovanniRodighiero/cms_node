@@ -1,12 +1,15 @@
 <div class="row">
-  <div class="col-sm-6 col-sm-offset-3">
+  <div class="col-sm-6 col-xs-10 col-sm-offset-3 col-xs-offset-2">
     <form class="" ng-submit="submit()">
       <label  for="email">username</label>
-      <input class="form-control" id="email" type="email" name="email" ng-model="login.email">
+      <input class="form-control" id="email" type="email" name="email" ng-value="login.email" ng-model="login.email" required="">
       <br>
       <label for="password">password</label>
-      <input class="form-control" id="password" type="password" name="password" ng-model="login.password">
+      <input class="form-control" id="password" type="password" name="password" ng-model="login.password" requried="">
       <button class"btn btn-standard" type="submit" name="button">Login</button>
+      <p ng-show="error">
+        Credenziali errate.
+      </p>
     </form>
   </div>
 </div>

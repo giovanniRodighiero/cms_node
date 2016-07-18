@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "angular": "^1.5.7",
-    "ng-admin": "^0.9.1"
+    "ng-admin": "^0.9.1",
+    "angular-cookies": "^1.5.7"
   }
 }

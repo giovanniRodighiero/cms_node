@@ -1,15 +1,18 @@
 (function(){
   "use strict";
-  var myApp = angular.module('interceptors', ['ng-admin']);
-  myApp.config(['RestangularProvider', function(RestangularProvider){
-    RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+  var interceptors = angular.module('interceptors', ['ng-admin','ngCookies']);
+  interceptors.run(['Restangular','$cookies', function(Restangular, $cookies){
+    Restangular.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
       // your code here
-      if(url === '/signin' || url === '/infos')
+      console.log('dentro interceptors '+url);
+      if(url === '/signin' || url === '/permittedModels')
         return data.data;
       else
         return data.data.results;
     });
-    RestangularProvider.setErrorInterceptor(function(response, deferred, responseHandler) {
+    Restangular.setDefaultHeaders({authorization: 'JWT '+$cookies.get('cms-token')});
+
+    Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
       return true;
     });
   }]);
