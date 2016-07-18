@@ -14,10 +14,10 @@ const populateAliases = (model, alias) => model.populate(alias);
  */
 module.exports = (req, res) => {
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'findone', req.user))
-    return res.unauthorized();
+    return res.forbidden();
 
   if(!sails.config.authorization.authorize_resource(req.record, 'findone', req.user))
-    return res.unauthorized();
+    return res.forbidden();
   //sails.log(req.record.toJSON());
   return res.ok(req.record);
 

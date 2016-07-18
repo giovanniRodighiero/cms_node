@@ -11,7 +11,7 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
  */
 module.exports = (req, res) => {
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'create', req.user))
-    return res.unauthorized();
+    return res.forbidden();
   const Model = actionUtil.parseModel(req);
   var values = actionUtil.parseValues(req);
   var permitted = [];

@@ -1,11 +1,11 @@
 module.exports.user = {
   actions:{
-    find: function(user){
+    find: (function(user){
+      return false;
+    }),
+    findone: (function(user){
       return true;
-    },
-    findone: function(user){
-      return true;
-    },
+    }),
     create: function(user){
       return true;
     },
