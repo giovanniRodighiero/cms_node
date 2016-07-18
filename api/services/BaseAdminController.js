@@ -1,24 +1,15 @@
 "use strict";
 
+var serialize = require('serialize-javascript');
 function Base() {
 	var auth = sails.config.authorization;
   // homepage admin
   this.index = function(r, res){
 		return res.view('admins/index', {page:'index'});
   },
-  // user page
-  this.user = function(req, res){
-		if(auth.authorize_controller('user', 'find', req.user)){
-			User.find()
-			.then(function(results){
-				return res.view('admins/user/index', {page: 'user', results});
-			})
-			.catch(function(err){
-				return res.negotiate(err);
-			})
-		}else
-			return res.view('401');
-  }
+  this.getInfos = function(req, res){
+		return res.json({data: serialize(sails.config.user.actions.find)});
+	}
 }
 
 module.exports = Base;

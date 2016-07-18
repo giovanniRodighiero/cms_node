@@ -55,6 +55,9 @@ module.exports.policies = {
   AuthController:{
     'signin': true
   },
+  AdminController:{
+    'getInfos':true
+  },
   MetadataController:{
     'findByLoc': true,
     'findOneWithLoc': true

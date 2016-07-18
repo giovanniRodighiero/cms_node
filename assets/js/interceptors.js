@@ -4,14 +4,12 @@
   myApp.config(['RestangularProvider', function(RestangularProvider){
     RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
       // your code here
-      console.log('dentro interceptors',data, url);
-      if(url === '/signin')
+      if(url === '/signin' || url === '/infos')
         return data.data;
       else
         return data.data.results;
     });
     RestangularProvider.setErrorInterceptor(function(response, deferred, responseHandler) {
-      console.log(response);
       return true;
     });
   }]);
