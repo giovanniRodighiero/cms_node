@@ -24,7 +24,21 @@ module.exports = (req, res, next) => {
               modelIdentity = associations[i].model;
             if(associations[i].collection)
               modelIdentity = associations[i].collection;
-            _.assign(result[associations[i].alias], {'model': modelIdentity});
+            //_.assign(result[associations[i].alias], {'model': modelIdentity});
+            if(associations[i].type === 'collection'){
+              var ids = [];
+              for (var j = 0; j < result[associations[i].alias].length; j++) {
+                // result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+                ids.push(_.pick(result[associations[i].alias][j],['id']).id);
+              }
+              result[associations[i].alias] = ids;
+            }else {
+            //  _.assign(result[associations[i].alias], {'model': modelIdentity});
+              for (var j = 0; j < result[associations[i].alias].length; j++) {
+                result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+              }
+            }
+
           }
           var aux = _.assign(result, {'model': Model.identity});
           req.record = _.omit(aux, 'password');
@@ -34,7 +48,6 @@ module.exports = (req, res, next) => {
         return next();
       })
       .catch(function(err){
-        sails.log(err);
         ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'danger','/admin/'+Model);
       })
     }else{

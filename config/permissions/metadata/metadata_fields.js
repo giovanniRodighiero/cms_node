@@ -22,7 +22,7 @@ module.exports.metadata = {
       }),
     
     
-      website: (function(page, associatedModel , user){
+      websites: (function(page, associatedModel , user){
         return true;
       }),
     

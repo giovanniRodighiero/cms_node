@@ -29,7 +29,7 @@ module.exports = {
         
           collection:"metadata",
         
-          via:"website",
+          via:"websites",
         
       },
     

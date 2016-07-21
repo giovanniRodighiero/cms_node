@@ -7,52 +7,52 @@ const populateAliases = (model, alias) => model.populate(alias);
 module.exports = {
   attributes: {
     // base model fields
-
+    
       password: {
-
+        
           type:"string",
-
+        
           required:true,
-
+        
       },
-
+    
       role: {
-
+        
           type:"string",
-
+        
           enum:"['admin','superAdmin']",
-
+        
           required:true,
-
+        
           defaultsTo:"admin",
-
+        
       },
-
+    
       email: {
-
+        
           type:"email",
-
+        
           required:true,
-
+        
           unique:true,
-
+        
       },
-
-
+    
+    
       website: {
-
+        
           model:"website",
-
+        
           required:true,
-
+        
       },
-
+    
       description: {
-
+        
           type:"string",
-
+        
       },
-
+    
     toJSON: function() {
       for (var key in this.object) {
         if (typeof this.object[key] === 'function') {
@@ -75,7 +75,7 @@ module.exports = {
       next();
     })
   },
-
+  
     toJSON() {
       let obj = this.toObject();
       delete obj.password;
@@ -104,7 +104,7 @@ module.exports = {
       })
       .catch(next);
   },
-
+  
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;

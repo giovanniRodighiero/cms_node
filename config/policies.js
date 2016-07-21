@@ -58,8 +58,7 @@ module.exports.policies = {
   AdminController:{
     'getInfos':true
   },
-  MetadataController:{
-    'findByLoc': true,
-    'findOneWithLoc': true
+  UserController:{
+    'create': true
   }
 };

@@ -41,11 +41,11 @@ module.exports = {
       },
     
     
-      website: {
+      websites: {
         
-          model:"website",
+          collection:"website",
         
-          required:true,
+          via:"metadatas",
         
       },
     

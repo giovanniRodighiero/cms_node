@@ -32,7 +32,11 @@ function Base() {
 	},
   this.permittedModels = function(req, res){
 		var permittedModels = {};
-		var models = Object.keys(sails.models);
+		var originalModels = sails.config.models_structure.getModels();
+		var models = [];
+		for (var i = 0; i < originalModels.models.length; i++) {
+			models.push(originalModels.models[i].modelName);
+		}
 		for (var i = 0; i < models.length; i++) {
 			permittedModels[models[i]] = {
 				actions: [], // has to be like ['show', 'edit', 'delete']

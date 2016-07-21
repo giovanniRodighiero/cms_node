@@ -27,7 +27,7 @@
         },
         {"name":"metadatas", "isAssociation":{"type":"multiple", "searchWith":"path"}, "params":[
           {"parName":"collection","value":"metadata"},
-          {"parName":"via","value":"website"}
+          {"parName":"via","value":"websites"}
           ]
         }
       ],
@@ -37,9 +37,9 @@
       "modelName":"metadata",
       "inheritsFrom": "metadata",
       "fields":[
-        {"name":"website","isAssociation":{"type":"single", "searchWith":"name"}, "params":[
-          {"parName":"model","value":"website"},
-          {"parName":"required","value":"true"}
+        {"name":"websites","isAssociation":{"type":"multiple", "searchWith":"name"}, "params":[
+          {"parName":"collection","value":"website"},
+          {"parName":"via","value":"metadatas"}
           ]
         }
       ],

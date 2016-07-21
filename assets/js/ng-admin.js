@@ -71,10 +71,11 @@
           .targetField(nga.field(modelField.association.searchWith));
       }
       else if (modelField.association.type === 'multiple') {
-        return nga.field(modelField.name, 'referenced_list')
+        return nga.field(modelField.name, 'reference_many')
           .targetEntity(entities[findEntity(modelField.infos.collection, entities)])
-          .targetReferenceField(modelField.infos.via)
-          .targetFields([nga.field(modelField.association.searchWith)])
+          // .targetReferenceField(modelField.infos.via)
+          // .targetFields([nga.field(modelField.association.searchWith)])
+          .targetField(nga.field(modelField.association.searchWith))
           .remoteComplete(true);
       }
     }else{
