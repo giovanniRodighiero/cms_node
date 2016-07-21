@@ -39,12 +39,38 @@
     if(modelField.association){
       if(modelField.association.type === 'single'){
         console.log('index', findEntity(modelField.infos.model, entities));
-        return nga.field(modelField.name, 'reference')
-          .targetEntity(entities[findEntity(modelField.infos.model, entities)])
-          .targetField(nga.field(modelField.association.searchWith))
+        if(modelField.name === 'metadata'){
+          var website = nga.entity('website');
+          return nga.fieldd('website', 'reference').targetEntity(website).targetField(nga.field('name'));
+
+        }
+        else
+          return nga.field(modelField.name, 'reference')
+            .targetEntity(entities[findEntity(modelField.infos.model, entities)])
+            .targetField(nga.field(modelField.association.searchWith));
       }
-    }else {
-      return nga.field(modelField.name);
+      // else if (modelField.association.type === 'multiple') {
+      //   console.log(modelField.infos);
+      //   return nga.field(modelField.name, 'reference_list')
+      //     .targetEntity(entities[findEntity(modelField.infos.collection, entities)])
+      //     .targetReferenceField(modelField.infos.via)
+      //     .targetFields([nga.field(modelField.association.searchWith)]);
+      // }
+    }else{
+      console.log(modelField.infos.type);
+      switch (modelField.infos.type) {
+        // case 'boolean':
+        //   var aux = nga.field(modelField.name, modelField.infos.type).choices([
+        //     { value: null, label: 'not yet decided' },
+        //     { value: true, label: 'visibile' },
+        //     { value: false, label: 'non visibile' }
+        //     ]);
+        //     console.log(aux);
+        //     return aux;
+        //   break;
+        default:
+          return nga.field(modelField.name);
+      }
     }
   }
 
@@ -64,7 +90,6 @@
 
         var field = setFieldNameType(fieldsInfos.fields[keys[i]][j], entities, nga);
         console.log(field);
-      //  var field = setFieldNameType('id', 'string');
         if(field)
           fields[keys[i]].push(field);
       }
@@ -72,14 +97,14 @@
       //fields.push(nga.field(fieldsInfos[keys[i]].name));
       var actions = fieldsInfos.actions;
       var index = fieldsInfos.actions.indexOf('list');
-      console.log(actions, index);
 
       if(index != -1)
         actions.splice(index, 1);
-      console.log(actions);
+      model.creationView().fields(fields[keys[i]]);
       model.listView().fields(fields[keys[i]]);
       model.listView().listActions(actions);
       model.editionView().fields(fields[keys[i]]);
+      model.showView().fields(fields[keys[i]]);
     }
     //model.listView().listActions(['show','edit','delete']);
     //model.showView().fields(fields);
@@ -88,8 +113,10 @@
   }
   myApp.config(['$urlRouterProvider','NgAdminConfigurationProvider', function($urlRouterProvider, NgAdminConfigurationProvider){
     var nga = NgAdminConfigurationProvider;
-    var admin = nga.application('My First Admin')
-    .baseApiUrl('http://localhost:1337/'); // main API endpoint
+    var admin = nga.application('My First Admin');
+    admin.baseApiUrl('http://localhost:1337/'); // main API endpoint
+    // admin.header(header);
+    console.log('log');
     var models = Object.keys(permitted);
     var entities = [];
     for (var i = 0; i < models.length; i++) {
@@ -103,6 +130,43 @@
       console.log('aggiunta entity');
       admin.addEntity(model);
     }
+    // var website = nga.entity('website');
+    // var metadata = nga.entity('metadata');
+    // website.listView().listActions(['edit','show']);
+    //
+    // website.editionView().fields([
+    //   nga.field('name'),
+    //   nga.field('metadatas', 'referenced_list')
+    //     .targetEntity(metadata)
+    //     .targetReferenceField('website')
+    //     .targetFields([
+    //         nga.field('path').label('path')
+    //     ])
+    //     .validation({ required: true })
+    //       .remoteComplete(true, {
+    //           refreshDelay: 200,
+    //           searchQuery: search => ({ q: search })
+    //       })
+    // ]);
+    // website.showView().fields(website.editionView().fields());
+    // website.listView().fields(website.editionView().fields());
+    // metadata.listView().listActions(['edit','show']);
+    //
+    // metadata.editionView().fields([
+    //   nga.field('website','reference')
+    //     .targetEntity(website)
+    //     .targetField(nga.field('name'))
+    //     .validation({ required: true }),
+    //   nga.field('path')
+    //
+    // ]);
+    // metadata.listView().fields([
+    //   nga.field('website.name'),
+    //   nga.field('path')
+    // ]);
+    // metadata.showView().fields(metadata.listView().fields());
+    // admin.addEntity(website);
+    // admin.addEntity(metadata);
     nga.configure(admin);
     console.log(nga);
     //console.log(UserService.getUser());

@@ -6,10 +6,18 @@
       if(url === '/signin' || url === '/permittedModels')
         return data.data;
       else{
-        if(operation === 'get')
+        console.log(operation, url);
+        if(operation === 'get'){
+          console.log('************ get ***********');
+          console.log(data.data);
           return data.data;
-        else
+
+        }
+        else{
+          console.log('********* list *******');
+          console.log(Array.isArray(data.data.results));
           return data.data.results;
+        }
       }
     });
     Restangular.setDefaultHeaders({authorization: 'JWT '+$cookies.get('cms-token')});
