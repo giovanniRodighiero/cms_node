@@ -6,20 +6,25 @@
       if(url === '/signin' || url === '/permittedModels')
         return data.data;
       else{
-        console.log(operation, url);
         if(operation === 'get'){
-          console.log('************ get ***********');
-          console.log(data.data);
           return data.data;
-
         }
         else{
-          console.log('********* list *******');
-          console.log(Array.isArray(data.data.results));
+          response.totalCount = data.data.totalCount;
           return data.data.results;
         }
       }
     });
+    Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
+        if (operation == 'getList') {
+            params.page = params._page;
+            params.limit = params._perPage;
+            delete params._page;
+            delete params._perPage;
+        }
+        return { params: params };
+    });
+
     Restangular.setDefaultHeaders({authorization: 'JWT '+$cookies.get('cms-token')});
 
     Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {

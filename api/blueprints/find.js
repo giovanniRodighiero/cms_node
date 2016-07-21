@@ -47,7 +47,7 @@ module.exports = (req, res) => {
   // const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
   var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
 
-
+  res.set('X-Total-Count',sails.config.fields_helper.modelCount[Model.identity]);
   Model.findCustom(params, function(err, results){
     if(err)
       return res.negotiate(err);

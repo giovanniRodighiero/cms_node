@@ -1,7 +1,7 @@
 module.exports.user = {
   actions:{
     find: (function(user){
-      return (user.role === 'superAdmin');
+      return true;
     }),
     findone: (function(user){
       return true;

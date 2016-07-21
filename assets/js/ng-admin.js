@@ -35,42 +35,64 @@
     }
     return -1;
   }
-  function setFieldNameType(modelField, entities, nga) {// return nga.field(name, type)
+  function setNormalFields(modelField, entities, nga) {
+    if(modelField.infos.enum){
+      var choices = [];
+      var original = eval(modelField.infos.enum);
+      for (var i = 0; i < original.length; i++) {
+        choices[i] = {};
+        choices[i]['value'] = original[i];
+        choices[i]['label'] = original[i];
+      }
+      console.log(choices);
+      var aux = nga.field(modelField.name, 'choice').choices(choices);
+      return aux;
+    }else{
+      switch (modelField.infos.type) {
+        case 'boolean':
+          var aux = nga.field(modelField.name, modelField.infos.type).choices([
+            { value: null, label: 'null' },
+            { value: true, label: 'true' },
+            { value: false, label: 'false' }
+            ]);
+            return aux;
+          break;
+        default:
+          var aux = nga.field(modelField.name, modelField.infos.type);
+          return aux;
+      }
+    }
+  }
+  function setFieldsAssociationWrite(modelField, entities, nga) {// return nga.field(name, type)
     if(modelField.association){
       if(modelField.association.type === 'single'){
-        console.log('index', findEntity(modelField.infos.model, entities));
-        if(modelField.name === 'metadata'){
-          var website = nga.entity('website');
-          return nga.fieldd('website', 'reference').targetEntity(website).targetField(nga.field('name'));
-
-        }
-        else
-          return nga.field(modelField.name, 'reference')
-            .targetEntity(entities[findEntity(modelField.infos.model, entities)])
-            .targetField(nga.field(modelField.association.searchWith));
+        return nga.field(modelField.name, 'reference')
+          .targetEntity(entities[findEntity(modelField.infos.model, entities)])
+          .targetField(nga.field(modelField.association.searchWith));
       }
-      // else if (modelField.association.type === 'multiple') {
-      //   console.log(modelField.infos);
-      //   return nga.field(modelField.name, 'reference_list')
-      //     .targetEntity(entities[findEntity(modelField.infos.collection, entities)])
-      //     .targetReferenceField(modelField.infos.via)
-      //     .targetFields([nga.field(modelField.association.searchWith)]);
-      // }
+      else if (modelField.association.type === 'multiple') {
+        return nga.field(modelField.name, 'referenced_list')
+          .targetEntity(entities[findEntity(modelField.infos.collection, entities)])
+          .targetReferenceField(modelField.infos.via)
+          .targetFields([nga.field(modelField.association.searchWith)])
+          .remoteComplete(true);
+      }
     }else{
-      console.log(modelField.infos.type);
-      switch (modelField.infos.type) {
-        // case 'boolean':
-        //   var aux = nga.field(modelField.name, modelField.infos.type).choices([
-        //     { value: null, label: 'not yet decided' },
-        //     { value: true, label: 'visibile' },
-        //     { value: false, label: 'non visibile' }
-        //     ]);
-        //     console.log(aux);
-        //     return aux;
-        //   break;
-        default:
-          return nga.field(modelField.name);
+      return setNormalFields(modelField, entities, nga);
+    }
+  }
+  function setFieldsAssociationRead(modelField, entities, nga) {// return nga.field(name, type)
+    if(modelField.association){
+      var fieldName = modelField.name+'.'+modelField.association.searchWith;
+      if(modelField.association.type === 'single'){
+        return nga.field(fieldName).label(modelField.name)
       }
+      else if (modelField.association.type === 'multiple') {
+        return nga.field(modelField.name, 'embedded_list')
+          .targetFields([nga.field(modelField.association.searchWith)])
+      }
+    }else{
+      return setNormalFields(modelField, entities, nga);
     }
   }
 
@@ -79,33 +101,32 @@
     var fields = {};
     var keys = Object.keys(fieldsInfos.fields);
     for (var i = 0; i < keys.length; i++) {
-      fields[keys[i]] = [];
+      fields[keys[i]] = {
+        writeFields: [],
+        readFields: []
+      };
       for (var j = 0; j < fieldsInfos.fields[keys[i]].length; j++) {
-        // var type ;
-        // if(fieldsInfos.fields[keys[i]][j].infos.type)
-        //   type = fieldsInfos.fields[keys[i]][j].infos.type;
-        // else
-        //   type = 'string';
-        // fields[keys[i]].push(nga.field(fieldsInfos.fields[keys[i]][j].name, type));
-
-        var field = setFieldNameType(fieldsInfos.fields[keys[i]][j], entities, nga);
-        console.log(field);
-        if(field)
-          fields[keys[i]].push(field);
+        var writeField = setFieldsAssociationWrite(fieldsInfos.fields[keys[i]][j], entities, nga);
+        var readField = setFieldsAssociationRead(fieldsInfos.fields[keys[i]][j], entities, nga);
+        fields[keys[i]].writeFields.push(writeField);
+        fields[keys[i]].readFields.push(readField);
       }
-      console.log(fields[keys[i]]);
-      //fields.push(nga.field(fieldsInfos[keys[i]].name));
+      fields[keys[i]].readFields.push(nga.field('createdAt', 'datetime'));
+      fields[keys[i]].readFields.push(nga.field('updatedAt', 'datetime'));
+
       var actions = fieldsInfos.actions;
       var index = fieldsInfos.actions.indexOf('list');
 
       if(index != -1)
         actions.splice(index, 1);
-      model.creationView().fields(fields[keys[i]]);
-      model.listView().fields(fields[keys[i]]);
+
       model.listView().listActions(actions);
-      model.editionView().fields(fields[keys[i]]);
-      model.showView().fields(fields[keys[i]]);
+
     }
+    model.creationView().fields(fields['create'].writeFields);
+    model.listView().fields(fields['find'].readFields).perPage(3);
+    model.editionView().fields(fields['edit'].writeFields);
+    model.showView().fields(fields['findone'].readFields);
     //model.listView().listActions(['show','edit','delete']);
     //model.showView().fields(fields);
     //model.editionView().fields(fields);

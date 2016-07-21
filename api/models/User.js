@@ -1,53 +1,58 @@
 "use strict";
+var _ = require('lodash');
+const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
+const takeAliases = _.partial(_.map, _, item => item.alias);
+const populateAliases = (model, alias) => model.populate(alias);
+
 module.exports = {
   attributes: {
     // base model fields
-    
+
       password: {
-        
+
           type:"string",
-        
+
           required:true,
-        
+
       },
-    
+
       role: {
-        
+
           type:"string",
-        
+
           enum:"['admin','superAdmin']",
-        
+
           required:true,
-        
+
           defaultsTo:"admin",
-        
+
       },
-    
+
       email: {
-        
+
           type:"email",
-        
+
           required:true,
-        
+
           unique:true,
-        
+
       },
-    
-    
+
+
       website: {
-        
+
           model:"website",
-        
+
           required:true,
-        
+
       },
-    
+
       description: {
-        
+
           type:"string",
-        
+
       },
-    
+
     toJSON: function() {
       for (var key in this.object) {
         if (typeof this.object[key] === 'function') {
@@ -70,7 +75,7 @@ module.exports = {
       next();
     })
   },
-  
+
     toJSON() {
       let obj = this.toObject();
       delete obj.password;
@@ -99,13 +104,16 @@ module.exports = {
       })
       .catch(next);
   },
-  
+
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
     var totPages = Math.ceil(sails.config.fields_helper.modelCount['user']/opts.limit);
+    var query = sails.models['user'].find(opts.query).paginate({page: pageIndex, limit: limit});
+    const findQuery = _.reduce(takeAliases(sails.models['user'].associations), populateAliases, query);
 
-    sails.models['user'].find(opts.query).paginate({page: pageIndex, limit: limit})
+  //  sails.models['user'].find(opts.query).paginate({page: pageIndex, limit: limit})
+    findQuery
     .then(function(results){
       var customResults = [];
       for (var i = 0; i < results.length; i++) {
