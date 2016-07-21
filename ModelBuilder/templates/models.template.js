@@ -1,4 +1,9 @@
 "use strict";
+var _ = require('lodash');
+const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
+const takeAliases = _.partial(_.map, _, item => item.alias);
+const populateAliases = (model, alias) => model.populate(alias);
+
 module.exports = {
   attributes: {
     // base model fields
@@ -72,8 +77,11 @@ module.exports = {
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
     var totPages = Math.ceil(sails.config.fields_helper.modelCount['<%=modelNameLow%>']/opts.limit);
+    var query = sails.models['<%=modelNameLow%>'].find(opts.query).paginate({page: pageIndex, limit: limit});
+    const findQuery = _.reduce(takeAliases(sails.models['<%=modelNameLow%>'].associations), populateAliases, query);
 
-    sails.models['<%=modelNameLow%>'].find(opts.query).paginate({page: pageIndex, limit: limit})
+  //  sails.models['<%=modelNameLow%>'].find(opts.query).paginate({page: pageIndex, limit: limit})
+    findQuery
     .then(function(results){
       var customResults = [];
       for (var i = 0; i < results.length; i++) {
