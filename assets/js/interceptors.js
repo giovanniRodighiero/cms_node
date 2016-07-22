@@ -3,16 +3,12 @@
   var interceptors = angular.module('interceptors', ['ng-admin','ngCookies','services']);
   interceptors.run(['Restangular','$cookies', 'NgAdminConfiguration', 'AuthService', function(Restangular, $cookies, NgAdminConfiguration, AuthService){
     Restangular.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
-      if(url === '/signin' || url === '/permittedModels')
-        return data.data;
+      if(operation === 'getList'){
+        response.totalCount = data.data.totalCount;
+        return data.data.results;
+      }
       else{
-        if(operation === 'get'){
-          return data.data;
-        }
-        else{
-          response.totalCount = data.data.totalCount;
-          return data.data.results;
-        }
+        return data.data;
       }
     });
     Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {

@@ -11,7 +11,6 @@
 
     return $http.get("/permittedModels",{headers: {'authorization': 'JWT '+$cookies.get('cms-token')}}).then(function (response) {
         permitted = response.data.data;
-        console.log(permitted);
     }, function (errorResponse) {
       if(errorResponse.status === 401){
         $window.location.href = '/';
@@ -28,7 +27,6 @@
   loadInfoNeededBeforeBootstrap().then(bootstrapApplication);
 
   function findEntity(name, entities) {
-    console.log(name, entities);
     for (var i = 0; i < entities.length; i++) {
       if(entities[i]._name === name)
         return i;
@@ -44,7 +42,6 @@
         choices[i]['value'] = original[i];
         choices[i]['label'] = original[i];
       }
-      console.log(choices);
       var aux = nga.field(modelField.name, 'choice').choices(choices);
       return aux;
     }else{
@@ -98,7 +95,6 @@
   }
 
   function setFieldsIndex(fieldsInfos, model, entities, nga) {
-    console.log(fieldsInfos);
     var fields = {};
     var keys = Object.keys(fieldsInfos.fields);
     for (var i = 0; i < keys.length; i++) {
@@ -108,6 +104,9 @@
       };
       for (var j = 0; j < fieldsInfos.fields[keys[i]].length; j++) {
         var writeField = setFieldsAssociationWrite(fieldsInfos.fields[keys[i]][j], entities, nga);
+        if(fieldsInfos.fields[keys[i]][j].infos.required){
+          writeField = writeField.validation({required: true});
+        }
         var readField = setFieldsAssociationRead(fieldsInfos.fields[keys[i]][j], entities, nga);
         fields[keys[i]].writeFields.push(writeField);
         fields[keys[i]].readFields.push(readField);
@@ -138,7 +137,6 @@
     var admin = nga.application('My First Admin');
     admin.baseApiUrl('http://localhost:1337/'); // main API endpoint
     // admin.header(header);
-    console.log('log');
     var models = Object.keys(permitted);
     var entities = [];
     for (var i = 0; i < models.length; i++) {
@@ -146,10 +144,8 @@
         entities.push(nga.entity(models[i]));
       }
     }
-    console.log(permitted[entities[0]._name], entities[0]._name, entities);
     for (var i = 0; i < entities.length; i++) {
       var model = setFieldsIndex(permitted[entities[i]._name], entities[i], entities, nga);
-      console.log('aggiunta entity');
       admin.addEntity(model);
     }
     // var website = nga.entity('website');
@@ -190,7 +186,6 @@
     // admin.addEntity(website);
     // admin.addEntity(metadata);
     nga.configure(admin);
-    console.log(nga);
     //console.log(UserService.getUser());
   }]);
 
