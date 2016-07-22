@@ -77,5 +77,5 @@ makeModels(modelsFile, 'sails generate ModelBuilder ');
 console.log('Fine ridefinizione modelli');
 makePermissions();
 console.log('Fine definizione file permessi');
-injectRoutes(modelsFile, 'config/routes.js');
-console.log('Fine injecting delle rotte');
+//injectRoutes(modelsFile, 'config/routes.js');
+//console.log('Fine injecting delle rotte');

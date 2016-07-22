@@ -23,39 +23,19 @@
           }
         ]
       },
-      "website":{
+      "assets":{
         "fields":[
-          {"name":"name", "params":[
-            {"parName":"type","value":"string"},
-            {"parName":"required","value":"true"}
-              ]
-            }
-          ]
-        },
-      "metadata":{
-        "fields":[
-          {"name":"path", "params":[
+          {"name":"url", "params":[
             {"parName":"type","value":"string"},
             {"parName":"required","value":"true"}
             ]
           },
-          {"name":"meta_title", "params":[
-            {"parName":"type","value":"string"}
-              ]
-            },
-          {"name":"meta_descr", "params":[
-            {"parName":"type","value":"string"}
-              ]
-            },
-          {"name":"published", "params":[
-            {"parName":"type","value":"boolean"}
-              ]
-            },
-          {"name":"locale", "params":[
-            {"parName":"type","value":"string"}
-              ]
-            }
-          ]
-        }
+          {"name":"name", "params":[
+            {"parName":"type","value":"string"},
+            {"parName":"required","value":"true"}
+            ]
+          }
+        ]
+      }
     }
 }

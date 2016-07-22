@@ -4,9 +4,8 @@
       "modelName":"user",
       "inheritsFrom": "user",
       "fields":[
-        {"name":"website", "isAssociation":{"type":"single", "searchWith":"name"} , "params":[
-          {"parName":"model","value":"website"},
-          {"parName":"required","value":"true"}
+        {"name":"avatar", "isAssociation":{"type":"single", "searchWith":"name"} , "params":[
+          {"parName":"model","value":"image"}
           ]
         },
         {"name":"description", "params":[
@@ -17,33 +16,10 @@
       "searchableFields":["email"]
     },
     {
-      "modelName":"website",
-      "inheritsFrom": "website",
-      "fields":[
-        {"name":"users", "isAssociation":{"type":"multiple", "searchWith":"email"}, "params":[
-          {"parName":"collection","value":"user"},
-          {"parName":"via","value":"website"}
-          ]
-        },
-        {"name":"metadatas", "isAssociation":{"type":"multiple", "searchWith":"path"}, "params":[
-          {"parName":"collection","value":"metadata"},
-          {"parName":"via","value":"websites"}
-          ]
-        }
-      ],
+      "modelName":"image",
+      "inheritsFrom": "assets",
+      "fields":[],
       "searchableFields":["name"]
-    },
-    {
-      "modelName":"metadata",
-      "inheritsFrom": "metadata",
-      "fields":[
-        {"name":"websites","isAssociation":{"type":"multiple", "searchWith":"name"}, "params":[
-          {"parName":"collection","value":"website"},
-          {"parName":"via","value":"metadatas"}
-          ]
-        }
-      ],
-      "searchableFields":["path"]
     }
   ]
 }
