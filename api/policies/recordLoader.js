@@ -18,6 +18,8 @@ module.exports = (req, res, next) => {
       findQuery
       .then(function(result){
         if(result){
+          if(!associations)
+            continue;
           for (var i = 0; i < associations.length; i++) {
             var modelIdentity = '';
             if(associations[i].model)
@@ -38,7 +40,6 @@ module.exports = (req, res, next) => {
                 result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
               }
             }
-
           }
           var aux = _.assign(result, {'model': Model.identity});
           req.record = _.omit(aux, 'password');
@@ -59,9 +60,9 @@ module.exports = (req, res, next) => {
       findQuery
       .then(function(result){
         if(result){
+          if(!associations)
+            continue;
           for (var i = 0; i < associations.length; i++) {
-            if(!associations[i])
-              continue;
             var modelIdentity = '';
             if(associations[i].model)
               modelIdentity = associations[i].model;

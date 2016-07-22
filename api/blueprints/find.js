@@ -22,18 +22,22 @@ module.exports = (req, res) => {
   // const populate = req.param('populate') ? req.param('populate').replace(/ /g, '').split(',') : [];// off
   const Model = actionUtil.parseModel(req);
   // const where = actionUtil.parseCriteria(req);// off
+  var permitted = sails.config.fields_helper.fieldsInfo[Model.identity].searchableFields;
+  permitted.push('createdAt');
+  permitted.push('updatedAt');
   var params = {
     page: 1,
     limit: 5,
     query: {}
-    // sort
   };
   if(req.param('limit'))
     params.limit = parseInt(req.param('limit'));
   if(req.param('page'))
     params.page = parseInt(req.param('page'));
-
-  var permitted = sails.config.fields_helper.fieldsInfo[Model.identity].searchableFields;
+  if(req.param('_sortField') && req.param('_sortDir') && (permitted.indexOf(req.param('_sortField'))) != -1 ){
+    params.sortField = req.param('_sortField');
+    params.sortDir = req.param('_sortDir');
+  }
   var allParams = req.allParams();
   var filteredParams = _.pick(allParams, permitted);
   var keys = Object.keys(filteredParams);
@@ -49,8 +53,9 @@ module.exports = (req, res) => {
 
   res.set('X-Total-Count',sails.config.fields_helper.modelCount[Model.identity]);
   Model.findCustom(params, function(err, results){
-    if(err)
+    if(err){
       return res.negotiate(err);
+    }
     else
       return res.ok(results);
     });

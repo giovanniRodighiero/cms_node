@@ -3,36 +3,43 @@ var _ = require('lodash');
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const takeAliases = _.partial(_.map, _, item => item.alias);
 const populateAliases = (model, alias) => model.populate(alias);
-
+function isAssociation(fieldName) {
+  var assoc = sails.models['website'].associations;
+  for (var i = 0; i < assoc.length; i++) {
+    if(assoc[i].alias === fieldName)
+      return true;
+  }
+  return false;
+}
 module.exports = {
   attributes: {
     // base model fields
-    
+
       name: {
-        
+
           type:"string",
-        
+
           required:true,
-        
+
       },
-    
-    
+
+
       users: {
-        
+
           collection:"user",
-        
+
           via:"website",
-        
+
       },
-    
+
       metadatas: {
-        
+
           collection:"metadata",
-        
+
           via:"websites",
-        
+
       },
-    
+
     toJSON: function() {
       for (var key in this.object) {
         if (typeof this.object[key] === 'function') {
@@ -55,12 +62,18 @@ module.exports = {
       next();
     })
   },
-  
+
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
     var totPages = Math.ceil(sails.config.fields_helper.modelCount['website']/opts.limit);
-    var query = sails.models['website'].find(opts.query).paginate({page: pageIndex, limit: limit});
+    if(opts.sortField && opts.sortDir && !isAssociation(opts.sortField)){
+      var order = opts.sortField+' '+opts.sortDir;
+      opts.query.sort = order;
+    }
+    opts.query.skip = (pageIndex - 1) * limit;
+    opts.query.limit = limit;
+    var query = sails.models['website'].find(opts.query);
     const findQuery = _.reduce(takeAliases(sails.models['website'].associations), populateAliases, query);
 
   //  sails.models['website'].find(opts.query).paginate({page: pageIndex, limit: limit})
