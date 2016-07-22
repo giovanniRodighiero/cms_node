@@ -84,7 +84,7 @@ function setUpLabel(labels, item, fields) {
 var auth = sails.config.authorization;
 module.exports = {
   find: function(req, res){
-    if(!auth.authorize_controller('website', 'find', req.user))
+    if(!auth.authorize_controller('image', 'find', req.user))
       ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED, 'danger','/admin');
     var aux = {
       page: 1,
@@ -95,90 +95,90 @@ module.exports = {
     if(req.param('limit'))
       aux.limit = req.param('limit');
 
-    sails.models['website'].findCustom(aux, function(err, results){
+    sails.models['image'].findCustom(aux, function(err, results){
       if(!err)
-        return res.view('admins/models/index', {page: 'website', results});
+        return res.view('admins/models/index', {page: 'image', results});
       else
         res.negotiate(err);
     });
   },
   findOne: function(req, res){
-    if(!auth.authorize_controller('website', 'findone', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
+    if(!auth.authorize_controller('image', 'findone', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
     if(!auth.authorize_resource(req.record,'findone', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
-    return res.view('admins/models/show', {page: 'website'});
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
+    return res.view('admins/models/show', {page: 'image'});
   },
   new: function(req, res){
-    if(!auth.authorize_controller('website', 'new', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/website');
-    return res.view('admins/models/new', {page: 'website'});
+    if(!auth.authorize_controller('image', 'new', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/image');
+    return res.view('admins/models/new', {page: 'image'});
   },
   create: function(req, res){
-    if(!auth.authorize_controller('website', 'create', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/website');
+    if(!auth.authorize_controller('image', 'create', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/image');
     var payload = req.allParams();
-    var fields = sails.config.fields_helper.fieldsInfo['website'].fields;
+    var fields = sails.config.fields_helper.fieldsInfo['image'].fields;
     payload = forceArray(payload, fields);
 
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.models['website'].create(item)
+    sails.models['image'].create(item)
     .then(function(created){
-      ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/website/new');
+      ErrorService.handleError(req, res, sails.config.errors.CREATED,sails.config.errors.CREATED.message , 'success','/admin/image/new');
     })
     .catch(function(err){
-      if(!auth.authorize_controller('website', 'create', req.user))
-        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/website');
+      if(!auth.authorize_controller('image', 'create', req.user))
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, sails.config.errors.UNAUTHORIZED.message, 'success','/admin/image');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
       item = setUpLabel(result.labels, item, fields);
-      return res.view('admins/models/new',{page: 'website', previousData: item, err: err.invalidAttributes});
+      return res.view('admins/models/new',{page: 'image', previousData: item, err: err.invalidAttributes});
     })
   },
   edit: function(req, res){
-    if(!auth.authorize_controller('website','update', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
+    if(!auth.authorize_controller('image','update', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
     if(!auth.authorize_resource(req.record,'update', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
-    return res.view('admins/models/edit', {page: 'website', previousData: req.record});
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
+    return res.view('admins/models/edit', {page: 'image', previousData: req.record});
   },
   update: function(req, res){
     //var permitted = ['email','role','password','website'];
-    if(!auth.authorize_controller('website', 'update', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
+    if(!auth.authorize_controller('image', 'update', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
     if(!auth.authorize_resource(req.record,'update', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
     var payload = req.allParams();
-    var fields = sails.config.fields_helper.fieldsInfo['website'].fields;
+    var fields = sails.config.fields_helper.fieldsInfo['image'].fields;
     payload = forceArray(payload, fields);
 
     var result = setUpPermitted(payload, fields);
     var item = _.pick(result.payload, result.permitted);
-    sails.models['website'].update({id: req.record.id}, item)
+    sails.models['image'].update({id: req.record.id}, item)
     .then(function(updated){
-      ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/website/edit/'+updated[0].id);
+      ErrorService.handleError(req, res, sails.config.errors.UPDATED,sails.config.errors.UPDATED.message , 'success','/admin/image/edit/'+updated[0].id);
     })
     .catch(function(err){
-      if(!auth.authorize_controller('website', 'update', req.user))
-        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
+      if(!auth.authorize_controller('image', 'update', req.user))
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
       if(!auth.authorize_resource(req.record,'update', req.user))
-        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
+        ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
       req.addFlash('warning', 'Errore nella compilazione dei campi');
       item = setUpLabel(result.labels, item, fields);
-      return res.view('admins/models/edit',{page: 'website', previousData: item, err: err.invalidAttributes});
+      return res.view('admins/models/edit',{page: 'image', previousData: item, err: err.invalidAttributes});
     })
   },
   destroy: function(req, res){
-    if(!auth.authorize_controller('website', 'destroy', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
+    if(!auth.authorize_controller('image', 'destroy', req.user))
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
     if(!auth.authorize_resource(req.record,'destroy', req.user))
-      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/website');
-    sails.models['website'].destroy({id: req.record.id})
+      ErrorService.handleError(req, res, sails.config.errors.UNAUTHORIZED, 'non sei autorizzato', 'danger','/admin/image');
+    sails.models['image'].destroy({id: req.record.id})
     .then(function(){
-      ErrorService.handleError(req, res, sails.config.errors.DESTROYED, sails.config.errors.DESTROYED.message, 'success','/admin/website');
+      ErrorService.handleError(req, res, sails.config.errors.DESTROYED, sails.config.errors.DESTROYED.message, 'success','/admin/image');
     })
     .catch(function(err){
-      ErrorService.handleError(req, res, err, err.message , 'danger','/admin/website');
+      ErrorService.handleError(req, res, err, err.message , 'danger','/admin/image');
     })
   }
 };

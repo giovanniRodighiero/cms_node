@@ -12,32 +12,32 @@ module.exports = (req, res, next) => {
     if(sails.models[Model]){
       Model = sails.models[Model];
       var associations = Model.associations;
-
+      sails.log(associations);
       var query = Model.findOne({id: req.param('id')});
       const findQuery = _.reduce(takeAliases(Model.associations), populateAliases, query);
       findQuery
       .then(function(result){
         if(result){
-          if(!associations)
-            continue;
-          for (var i = 0; i < associations.length; i++) {
-            var modelIdentity = '';
-            if(associations[i].model)
-              modelIdentity = associations[i].model;
-            if(associations[i].collection)
-              modelIdentity = associations[i].collection;
-            //_.assign(result[associations[i].alias], {'model': modelIdentity});
-            if(associations[i].type === 'collection'){
-              var ids = [];
-              for (var j = 0; j < result[associations[i].alias].length; j++) {
-                // result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
-                ids.push(_.pick(result[associations[i].alias][j],['id']).id);
-              }
-              result[associations[i].alias] = ids;
-            }else {
-            //  _.assign(result[associations[i].alias], {'model': modelIdentity});
-              for (var j = 0; j < result[associations[i].alias].length; j++) {
-                result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+          if(associations){
+            for (var i = 0; i < associations.length; i++) {
+              var modelIdentity = '';
+              if(associations[i].model)
+                modelIdentity = associations[i].model;
+              if(associations[i].collection)
+                modelIdentity = associations[i].collection;
+              //_.assign(result[associations[i].alias], {'model': modelIdentity});
+              if(associations[i].type === 'collection'){
+                var ids = [];
+                for (var j = 0; j < result[associations[i].alias].length; j++) {
+                  // result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+                  ids.push(_.pick(result[associations[i].alias][j],['id']).id);
+                }
+                result[associations[i].alias] = ids;
+              }else {
+              //  _.assign(result[associations[i].alias], {'model': modelIdentity});
+                for (var j = 0; j < result[associations[i].alias].length; j++) {
+                  result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+                }
               }
             }
           }
@@ -60,16 +60,16 @@ module.exports = (req, res, next) => {
       findQuery
       .then(function(result){
         if(result){
-          if(!associations)
-            continue;
-          for (var i = 0; i < associations.length; i++) {
-            var modelIdentity = '';
-            if(associations[i].model)
-              modelIdentity = associations[i].model;
-            if(associations[i].collection)
-              modelIdentity = associations[i].collection;
-            for (var j = 0; j < result[associations[i].alias].length; j++) {
-              result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+          if(associations){
+            for (var i = 0; i < associations.length; i++) {
+              var modelIdentity = '';
+              if(associations[i].model)
+                modelIdentity = associations[i].model;
+              if(associations[i].collection)
+                modelIdentity = associations[i].collection;
+              for (var j = 0; j < result[associations[i].alias].length; j++) {
+                result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+              }
             }
           }
           var aux = _.assign(result, {'model': Model.identity});

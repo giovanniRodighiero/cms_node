@@ -45,7 +45,7 @@ module.exports.connections = {
     host: 'localhost',
     user: 'root', //optional
     password: '', //optional
-    database: 'testMany' //optional
+    database: 'sito' //optional
   },
 
   /***************************************************************************

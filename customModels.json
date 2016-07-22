@@ -20,6 +20,17 @@
       "inheritsFrom": "assets",
       "fields":[],
       "searchableFields":["name"]
+    },
+    {
+      "modelName":"alone",
+      "inheritsFrom": "empty",
+      "fields":[
+        {"name":"name", "params":[
+          {"parName":"type","value":"string"}
+          ]
+        }
+      ],
+      "searchableFields":["name"]
     }
   ]
 }

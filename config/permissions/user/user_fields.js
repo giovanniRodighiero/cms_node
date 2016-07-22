@@ -14,7 +14,7 @@ module.exports.user = {
       }),
     
     
-      website: (function(page, associatedModel , user){
+      avatar: (function(page, associatedModel , user){
         return true;
       }),
     
