@@ -26,7 +26,9 @@
       "inheritsFrom": "empty",
       "fields":[
         {"name":"name", "params":[
-          {"parName":"type","value":"string"}
+          {"parName":"type","value":"string"},
+          {"parName":"minLength","value":"4"},
+          {"parName":"required","value":"true"}
           ]
         }
       ],

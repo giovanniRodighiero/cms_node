@@ -3,6 +3,10 @@
   var myApp = angular.module('myApp', ['ng-admin','interceptors','services']);
   var permitted;
 
+/*
+  ****************** app bootstrap ********************
+*/
+  //inject needed modules and get the infos to build the config correctly
   function loadInfoNeededBeforeBootstrap() {
     var initInjector = angular.injector(['ngCookies']);
     var $http = initInjector.get("$http");
@@ -18,14 +22,18 @@
     });
   };
 
+  //MANUAL BOOTSTRAP
   function bootstrapApplication() {
     angular.element(document).ready(function () {
         angular.bootstrap(document, ['myApp']);
     });
   }
-
+  // get infos and bootstrap the app
   loadInfoNeededBeforeBootstrap().then(bootstrapApplication);
-
+/*
+ ********************************  utility functions ***********************
+*/
+  // return the index of one entity item from the existing previously added to config
   function findEntity(name, entities) {
     for (var i = 0; i < entities.length; i++) {
       if(entities[i]._name === name)
@@ -33,6 +41,7 @@
     }
     return -1;
   }
+  // set normal fields, normal means no associations-fields
   function setNormalFields(modelField, entities, nga) {
     if(modelField.infos.enum){
       var choices = [];
@@ -60,6 +69,7 @@
       }
     }
   }
+  // set the associations-fields in write context
   function setFieldsAssociationWrite(modelField, entities, nga) {// return nga.field(name, type)
     if(modelField.association){
       if(modelField.association.type === 'single'){
@@ -79,6 +89,7 @@
       return setNormalFields(modelField, entities, nga);
     }
   }
+  // set the associations-fields in read context
   function setFieldsAssociationRead(modelField, entities, nga) {// return nga.field(name, type)
     if(modelField.association){
       var fieldName = modelField.name+'.'+modelField.association.searchWith;
@@ -93,7 +104,52 @@
       return setNormalFields(modelField, entities, nga);
     }
   }
+  // add client side validation to a field
+ function setClientSideValidation(writeField, infos) {
+  var validation = {};
+  if(infos.required)
+    validation.required = true;
+  if(infos.minLength)
+    validation.minlength = infos.minLength;
+  if(infos.maxlenght)
+    validation.maxlenght = infos.maxlenght;
+  writeField.validation(validation);
+  return writeField;
+ }
+ function addErrors(error, form, progression, notification) {
+   var elemento = angular.element( document.querySelector( '#create-view' ) );
+   var previousErros = angular.element( document.querySelector( '#errors' ) );
+   if(previousErros)
+     previousErros.remove();
+   var stringa = '<div id="errors">';
+   var errorData = Object.keys(error.data.data);
+   for (var i = 0; i < errorData.length; i++) {
+       var list = '<ul>';
+     for (var j = 0; j < error.data.data[errorData[i]].length; j++) {
+       list = list + '<strong>' + error.data.data[errorData[i]][j].value + '</strong>';
+       list = list + '<li>' + error.data.data[errorData[i]][j].rule + '</li>';
+       list = list + '<li>' + error.data.data[errorData[i]][j].message + '</li>';
+     }
+     list = list + '</ul> <br>';
+   }
+   stringa = stringa + list + '</div>';
+   elemento.prepend(stringa);
 
+    progression.done();
+    notification.log(`Some values are invalid, see details in the form`, { addnCls: 'humane-flatty-error' });
+   return false;
+ }
+ // handle server side validation appending an html block to the original template
+ function setServerSideValidation(model) {
+   model.creationView().onSubmitError(['error', 'form', 'progression', 'notification', function(error, form, progression, notification) {
+     return addErrors(error, form, progression, notification);
+  }]);
+   model.editionView().onSubmitError(['error', 'form', 'progression', 'notification', function(error, form, progression, notification) {
+     return addErrors(error, form, progression, notification);
+  }]);
+  return model;
+ }
+  // starter function for setting up fields
   function setFieldsIndex(fieldsInfos, model, entities, nga) {
     var fields = {};
     var keys = Object.keys(fieldsInfos.fields);
@@ -104,9 +160,7 @@
       };
       for (var j = 0; j < fieldsInfos.fields[keys[i]].length; j++) {
         var writeField = setFieldsAssociationWrite(fieldsInfos.fields[keys[i]][j], entities, nga);
-        if(fieldsInfos.fields[keys[i]][j].infos.required){
-          writeField = writeField.validation({required: true});
-        }
+        writeField = setClientSideValidation(writeField, fieldsInfos.fields[keys[i]][j].infos);
         var readField = setFieldsAssociationRead(fieldsInfos.fields[keys[i]][j], entities, nga);
         fields[keys[i]].writeFields.push(writeField);
         fields[keys[i]].readFields.push(readField);
@@ -127,6 +181,8 @@
     model.listView().fields(fields['find'].readFields).perPage(3);
     model.editionView().fields(fields['edit'].writeFields);
     model.showView().fields(fields['findone'].readFields);
+    model = setServerSideValidation(model);
+
     //model.listView().listActions(['show','edit','delete']);
     //model.showView().fields(fields);
     //model.editionView().fields(fields);

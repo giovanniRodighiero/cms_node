@@ -24,13 +24,22 @@
     Restangular.setDefaultHeaders({authorization: 'JWT '+$cookies.get('cms-token')});
 
     Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
-      if(response.status === 401){
-        console.log('response', response);
-        AuthService.redirectLogin();
-      }else{
-        console.log('response', response);
+      console.log(responseHandler);
+      switch (response.status) {
+        case 401:
+          AuthService.redirectLogin();
+          break;
+        default:
+
       }
       return true;
+      // if(response.status === 401){
+      //   console.log('response', response);
+      //   AuthService.redirectLogin();
+      // }else{
+      //   console.log('response', response);
+      // }
+      // return true;
     });
   }]);
 

@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
       findQuery
       .then(function(result){
         if(result){
+          sails.log(result);
           if(associations){
             for (var i = 0; i < associations.length; i++) {
               var modelIdentity = '';
@@ -35,8 +36,10 @@ module.exports = (req, res, next) => {
                 result[associations[i].alias] = ids;
               }else {
               //  _.assign(result[associations[i].alias], {'model': modelIdentity});
-                for (var j = 0; j < result[associations[i].alias].length; j++) {
-                  result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+                if(result[associations[i].alias]){
+                  for (var j = 0; j < result[associations[i].alias].length; j++) {
+                    result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+                  }
                 }
               }
             }
@@ -67,9 +70,11 @@ module.exports = (req, res, next) => {
                 modelIdentity = associations[i].model;
               if(associations[i].collection)
                 modelIdentity = associations[i].collection;
-              for (var j = 0; j < result[associations[i].alias].length; j++) {
-                result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
-              }
+                if(result[associations[i].alias]){
+                  for (var j = 0; j < result[associations[i].alias].length; j++) {
+                    result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+                  }
+                }
             }
           }
           var aux = _.assign(result, {'model': Model.identity});
