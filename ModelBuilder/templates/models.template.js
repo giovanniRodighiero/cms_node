@@ -3,7 +3,14 @@ var _ = require('lodash');
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const takeAliases = _.partial(_.map, _, item => item.alias);
 const populateAliases = (model, alias) => model.populate(alias);
-
+function isAssociation(fieldName) {
+  var assoc = sails.models['<%=modelNameLow%>'].associations;
+  for (var i = 0; i < assoc.length; i++) {
+    if(assoc[i].alias === fieldName)
+      return true;
+  }
+  return false;
+}
 module.exports = {
   attributes: {
     // base model fields
@@ -77,7 +84,13 @@ module.exports = {
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
     var totPages = Math.ceil(sails.config.fields_helper.modelCount['<%=modelNameLow%>']/opts.limit);
-    var query = sails.models['<%=modelNameLow%>'].find(opts.query).paginate({page: pageIndex, limit: limit});
+    if(opts.sortField && opts.sortDir && !isAssociation(opts.sortField)){
+      var order = opts.sortField+' '+opts.sortDir;
+      opts.query.sort = order;
+    }
+    opts.query.skip = (pageIndex - 1) * limit;
+    opts.query.limit = limit;
+    var query = sails.models['<%=modelNameLow%>'].find(opts.query);
     const findQuery = _.reduce(takeAliases(sails.models['<%=modelNameLow%>'].associations), populateAliases, query);
 
   //  sails.models['<%=modelNameLow%>'].find(opts.query).paginate({page: pageIndex, limit: limit})
