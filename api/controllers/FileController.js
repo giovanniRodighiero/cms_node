@@ -4,11 +4,16 @@
  * @description :: Server-side logic for managing users
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-
+function getName(fd) {
+  var splitted = fd.split('/');
+  return splitted[splitted.length - 1];
+}
 module.exports = {
   uploadFile: function (req, res) {
 
     req.file('file').upload({
+      dirname: '../../assets/uploads/images',
+      saveAs: Date.now()+'.jpg',
       // don't allow the total upload size to exceed ~10MB
       maxBytes: 10000000
     },function whenDone(err, uploadedFiles) {
@@ -22,7 +27,7 @@ module.exports = {
       }
       sails.log(uploadedFiles);
       var payload = {
-        picture_name: uploadedFiles[0].filename
+        picture_name: 'uploads/images/'+getName(uploadedFiles[0].fd)
       }
       sails.log('response', payload);
       return res.ok(payload);

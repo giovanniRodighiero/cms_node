@@ -43,8 +43,6 @@
   }
   // set normal fields, normal means no associations-fields
   function setNormalFields(modelField, entities, nga) {
-    if(modelField.file)
-      return nga.field(modelField.name, 'file').uploadInformation({ 'url': '/uploadFile', 'apifilename': 'picture_name' });
     if(modelField.infos.enum){
       var choices = [];
       var original = eval(modelField.infos.enum);
@@ -88,6 +86,8 @@
           .remoteComplete(true);
       }
     }else{
+      if(modelField.file)
+        return nga.field(modelField.name, 'file').uploadInformation({ 'url': '/uploadFile', 'apifilename': 'picture_name' });
       return setNormalFields(modelField, entities, nga);
     }
   }
@@ -103,6 +103,8 @@
           .targetFields([nga.field(modelField.association.searchWith)])
       }
     }else{
+      if(modelField.file)
+        return nga.field(modelField.name, 'template').template('<img src="{{ entry.values.url }}" height="100px" width="100px" />');
       return setNormalFields(modelField, entities, nga);
     }
   }

@@ -12,13 +12,11 @@ module.exports = (req, res, next) => {
     if(sails.models[Model]){
       Model = sails.models[Model];
       var associations = Model.associations;
-      sails.log(associations);
       var query = Model.findOne({id: req.param('id')});
       const findQuery = _.reduce(takeAliases(Model.associations), populateAliases, query);
       findQuery
       .then(function(result){
         if(result){
-          sails.log(result);
           if(associations){
             for (var i = 0; i < associations.length; i++) {
               var modelIdentity = '';
