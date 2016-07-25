@@ -24,8 +24,12 @@ module.exports = (req, res) => {
     .create(values)
     .then(function(created){
       _.assign(created, {'model': Model.identity});
-      if(AssetsService.hasAsset(Model.identity))
-        AssetsService.createCuts(created.url, 50, 50);
+      if(AssetsService.hasAsset(Model.identity)){
+        var cuts = sails.config.services.assets.cuts;
+        for (var i = 0; i < cuts.length; i++) {
+          AssetsService.createCuts(created.url, cuts[i].name ,cuts[i].width, cuts[i].height);
+        }
+      }
       return res.created(created);
     })
     .catch(function(err){

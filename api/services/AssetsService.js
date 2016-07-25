@@ -22,13 +22,14 @@ module.exports = {
     }
     return false;
   },
-  createCuts: function(url, width, height) {
+  createCuts: function(url, prefix, width, height) {
     jimp.read('assets/'+url, function (err, img) {
     if (err) throw err;
-    var infos = AssetsService.getAssetInfos(url,'.');
-    console.log(infos);
+    var infos = AssetsService.getAssetInfos(url, '.');
+    var aux = AssetsService.getAssetInfos(infos.name, '/');
+    console.log('assets/uploads/images/'+aux.name+'/'+prefix+'_'+aux.ext+'.'+infos.ext);
     img.resize(width, height)            // resize
-      .write('assets/'+infos.name+'_mySize.png'); // save
+      .write('assets/uploads/images/'+aux.name+'/'+prefix+'_'+aux.ext+'.'+infos.ext); // save
 });
   }
 }

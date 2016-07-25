@@ -26,13 +26,19 @@ module.exports = (req, res) => {
   var notAllowed = _.without(values, permitted);
   var permitted = _.pull(values, notAllowed);
   //values = _.pick(values, permitted);
+
   Model
     .update(pk, permitted)
     .then(function(updated){
       _.assign(updated, {'model': Model.identity});
       if(AssetsService.hasAsset(Model.identity)){
-        var infos = AssetsService.getAssetInfos(destroyed[0].url, '/');
+        var infos = AssetsService.getAssetInfos(req.record.url, '/');
         AssetsService.deleteAssets(infos.name);
+        var cuts = sails.config.services.assets.cuts;
+        console.log(updated);
+        for (var i = 0; i < cuts.length; i++) {
+          AssetsService.createCuts(updated[0].url, cuts[i].name ,cuts[i].width, cuts[i].height);
+        }
       }
       return res.ok(updated);
     })
