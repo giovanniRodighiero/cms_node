@@ -30,8 +30,10 @@ module.exports = (req, res) => {
     .update(pk, permitted)
     .then(function(updated){
       _.assign(updated, {'model': Model.identity});
-      if(AssetsService.hasAsset(Model.identity))
-        AssetsService.deleteAssets(req.record.url);
+      if(AssetsService.hasAsset(Model.identity)){
+        var infos = AssetsService.getAssetInfos(destroyed[0].url, '/');
+        AssetsService.deleteAssets(infos.name);
+      }
       return res.ok(updated);
     })
     .catch(function(err){

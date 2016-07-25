@@ -1,7 +1,6 @@
 "use strict";
 
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
-var fs = require('fs');
 /**
  * Destroy One Record
  * DELETE /:model/:id
@@ -20,8 +19,10 @@ module.exports = (req, res) => {
   Model
     .destroy(pk)
     .then(function(destroyed){
-      if(AssetsService.hasAsset(Model.identity))
-        AssetsService.deleteAssets(destroyed[0].url);
+      if(AssetsService.hasAsset(Model.identity)){
+        var infos = AssetsService.getAssetInfos(destroyed[0].url, '/');
+        AssetsService.deleteAssets(infos.name);
+      }
       return res.ok(destroyed);
     })
     .catch(function(err){

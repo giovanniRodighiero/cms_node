@@ -20,11 +20,12 @@ module.exports = (req, res) => {
     permitted.push(fields[i].name);
   }
   values = _.pick(values, permitted);
-
   Model
     .create(values)
     .then(function(created){
       _.assign(created, {'model': Model.identity});
+      if(AssetsService.hasAsset(Model.identity))
+        AssetsService.createCuts(created.url, 50, 50);
       return res.created(created);
     })
     .catch(function(err){
