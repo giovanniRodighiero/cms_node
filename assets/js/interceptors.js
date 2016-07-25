@@ -1,7 +1,29 @@
 (function(){
   "use strict";
   var interceptors = angular.module('interceptors', ['ng-admin','ngCookies','services']);
+  interceptors.config(['$httpProvider', function($httpProvider){
+    $httpProvider.interceptors.push(['$q','$injector', function($q, $injector){
+      return {
+       'request': function(config) {
+         var $cookies = $injector.get('$cookies');
+           console.log(config);
+           config.headers['authorization'] = 'JWT '+$cookies.get('cms-token');
+           return config;
+        },
+
+        'response': function(response) {
+          console.log(response);
+          if(response.config.url === '/uploadFile'){
+            var payload = response.data.data;
+            response.data['picture_name'] = payload.picture_name;
+          }
+          return response;
+        }
+      };
+    }]);
+  }]);
   interceptors.run(['Restangular','$cookies', 'NgAdminConfiguration', 'AuthService', function(Restangular, $cookies, NgAdminConfiguration, AuthService){
+
     Restangular.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
       if(operation === 'getList'){
         response.totalCount = data.data.totalCount;
@@ -12,13 +34,16 @@
       }
     });
     Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
-        if (operation == 'getList') {
-            params.page = params._page;
-            params.limit = params._perPage;
-            delete params._page;
-            delete params._perPage;
-        }
-        return { params: params };
+      // if(url === 'http://localhost:1337/user')
+      //   element['mioHeader'] = 3;
+      console.log(url, element);
+      if (operation == 'getList') {
+          params.page = params._page;
+          params.limit = params._perPage;
+          delete params._page;
+          delete params._perPage;
+      }
+      return { params: params };
     });
 
     Restangular.setDefaultHeaders({authorization: 'JWT '+$cookies.get('cms-token')});

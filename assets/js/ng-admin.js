@@ -43,6 +43,8 @@
   }
   // set normal fields, normal means no associations-fields
   function setNormalFields(modelField, entities, nga) {
+    if(modelField.file)
+      return nga.field(modelField.name, 'file').uploadInformation({ 'url': '/uploadFile', 'apifilename': 'picture_name' });
     if(modelField.infos.enum){
       var choices = [];
       var original = eval(modelField.infos.enum);
@@ -117,11 +119,11 @@
   return writeField;
  }
  function addErrors(error, form, progression, notification) {
-   var elemento = angular.element( document.querySelector( '#create-view' ) );
-   var previousErros = angular.element( document.querySelector( '#errors' ) );
-   if(previousErros)
-     previousErros.remove();
-   var stringa = '<div id="errors">';
+   var element = angular.element( document.querySelector( '#create-view' ) );
+   var previousErrors = angular.element( document.querySelector( '#errors' ) );
+   if(previousErrors)
+     previousErrors.remove();
+   var html = '<div id="errors">';
    var errorData = Object.keys(error.data.data);
    for (var i = 0; i < errorData.length; i++) {
        var list = '<ul>';
@@ -132,8 +134,8 @@
      }
      list = list + '</ul> <br>';
    }
-   stringa = stringa + list + '</div>';
-   elemento.prepend(stringa);
+   html = html + list + '</div>';
+   element.prepend(stringa);
 
     progression.done();
     notification.log(`Some values are invalid, see details in the form`, { addnCls: 'humane-flatty-error' });
@@ -173,14 +175,21 @@
 
       if(index != -1)
         actions.splice(index, 1);
-
       model.listView().listActions(actions);
-
     }
     model.creationView().fields(fields['create'].writeFields);
     model.listView().fields(fields['find'].readFields).perPage(3);
-    model.editionView().fields(fields['edit'].writeFields);
+
+    // var editFieldsImage = fields['edit'].writeFields;
+    // console.log(editFieldsImage);
+    //
+    // if(model._name === 'image')
+    //   model.editionView().fields(editFieldsImage);
+    // else
+      model.editionView().fields(fields['edit'].writeFields);
+
     model.showView().fields(fields['findone'].readFields);
+    console.log('modelname', model);
     model = setServerSideValidation(model);
 
     //model.listView().listActions(['show','edit','delete']);
@@ -204,91 +213,15 @@
       var model = setFieldsIndex(permitted[entities[i]._name], entities[i], entities, nga);
       admin.addEntity(model);
     }
-    // var website = nga.entity('website');
-    // var metadata = nga.entity('metadata');
-    // website.listView().listActions(['edit','show']);
-    //
-    // website.editionView().fields([
-    //   nga.field('name'),
-    //   nga.field('metadatas', 'referenced_list')
-    //     .targetEntity(metadata)
-    //     .targetReferenceField('website')
-    //     .targetFields([
-    //         nga.field('path').label('path')
-    //     ])
-    //     .validation({ required: true })
-    //       .remoteComplete(true, {
-    //           refreshDelay: 200,
-    //           searchQuery: search => ({ q: search })
-    //       })
-    // ]);
-    // website.showView().fields(website.editionView().fields());
-    // website.listView().fields(website.editionView().fields());
-    // metadata.listView().listActions(['edit','show']);
-    //
-    // metadata.editionView().fields([
-    //   nga.field('website','reference')
-    //     .targetEntity(website)
-    //     .targetField(nga.field('name'))
-    //     .validation({ required: true }),
-    //   nga.field('path')
-    //
-    // ]);
-    // metadata.listView().fields([
-    //   nga.field('website.name'),
-    //   nga.field('path')
-    // ]);
-    // metadata.showView().fields(metadata.listView().fields());
-    // admin.addEntity(website);
-    // admin.addEntity(metadata);
+    // var user = nga.entity('user');
+    // user.creationView().fields(nga.field('avatar', 'file').uploadInformation({ 'url': '/file', 'apifilename': 'picture_name' }));
+    // user.listView().fields(user.creationView().fields());
+    // admin.addEntity(user);
     nga.configure(admin);
-    //console.log(UserService.getUser());
   }]);
 
   myApp.run(['$rootScope','$location','NgAdminConfiguration','Restangular', 'AuthService', 'PermissionsService', function($rootScope, $location, NgAdminConfiguration, Restangular, AuthService, PermissionsService){
-    // console.log('refresh in run');
-    // PermissionsService.permittedModels.getList().then(function(results){
-    //   var permitted = [];
-    //   for (var i = 0; i < results.data.length; i++) {
-    //     permitted.push(results.data[i]);
-    //   }
-    //   console.log(permitted);
-    //   NgAdminConfiguration()._entities = PermissionsService.filterModels(NgAdminConfiguration()._entities, permitted);
-    //   delete NgAdminConfiguration()._dashboard._collections['user'];
-    //   console.log('NgAdminConfiguration()', NgAdminConfiguration());
-    // })
-    // controllo token e eventuale redirect
-    // $rootScope.$on('$locationChangeStart', function(event, next, current){
-    //   if(!AuthService.isLogged()){
-    //     event.preventDefault();
-    //     AuthService.redirectLogin();
-    //   }
-    // });
-    //console.log('NgAdminConfiguration()', NgAdminConfiguration());
 
-
-    //var permitted = ['website','metadata'];
-
-    //console.log('PermissionsService.permittedModels', PermissionsService.permittedModels());
-    // var permitted = ['user'];
-    // var infos = Restangular.one('infos');
-    // infos.get().then(function(result){
-    //   var expr = '('+result.data+')';
-    //   console.log('expr', expr);
-    //
-    // var foo = eval(expr);
-    // console.log(foo);
-    // });
-    // for (var i = 0; i < NgAdminConfiguration()._entities.length; i++) {
-    //   if(permitted.indexOf(NgAdminConfiguration()._entities[i]._name) == -1){
-    //     //console.log('dentro ciclo',NgAdminConfiguration()._entities[i]._name);
-    //     NgAdminConfiguration()._entities.splice(i,1);
-    //   }else {
-    //     NgAdminConfiguration()._entities[i]._views.ListView._fields.splice(2,1);
-    //   }
-    //
-    // }
-  //  NgAdminConfiguration()._entities.pop();
   }]);
 
 })();

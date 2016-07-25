@@ -20,6 +20,7 @@ module.exports = (req, res) => {
     permitted.push(fields[i].name);
   }
   values = _.pick(values, permitted);
+
   Model
     .create(values)
     .then(function(created){

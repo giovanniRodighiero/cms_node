@@ -58,6 +58,9 @@ function prepareFields(fields, complexItem) {
       field.association.type = complexItem.fields[i].isAssociation.type;
       field.association.searchWith = complexItem.fields[i].isAssociation.searchWith;
     }
+    if(complexItem.fields[i].isFile){
+      field.file = true;
+    }
     fields.push(setUpFieldsAux(field, complexItem, i));
   });
     return fields;
