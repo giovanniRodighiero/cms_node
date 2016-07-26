@@ -14,7 +14,6 @@ module.exports = {
     return infos;
   },
    hasAsset: function(modelName) {
-    console.log(modelName);
     var fields = sails.config.fields_helper.fieldsInfo[modelName].fields;
     for (var i = 0; i < fields.length; i++) {
       if(fields[i].file)
@@ -27,7 +26,6 @@ module.exports = {
     if (err) throw err;
     var infos = AssetsService.getAssetInfos(url, '.');
     var aux = AssetsService.getAssetInfos(infos.name, '/');
-    console.log('assets/uploads/images/'+aux.name+'/'+prefix+'_'+aux.ext+'.'+infos.ext);
     img.resize(width, height)            // resize
       .write('assets/uploads/images/'+aux.name+'/'+prefix+'_'+aux.ext+'.'+infos.ext); // save
 });

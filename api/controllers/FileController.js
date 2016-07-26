@@ -4,10 +4,11 @@
  * @description :: Server-side logic for managing users
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+var uuid = require('node-uuid');
 
 module.exports = {
   uploadFile: function (req, res) {
-    var fileName = Date.now()+'.jpg';
+    var fileName = uuid.v1()+'.jpg';
     var infos = AssetsService.getAssetInfos(fileName, '.');
 
     req.file('file').upload({
