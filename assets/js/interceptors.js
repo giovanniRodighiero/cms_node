@@ -6,13 +6,11 @@
       return {
        'request': function(config) {
          var $cookies = $injector.get('$cookies');
-           console.log(config);
            config.headers['authorization'] = 'JWT '+$cookies.get('cms-token');
            return config;
         },
 
         'response': function(response) {
-          console.log(response);
           if(response.config.url === '/uploadFile'){
             var payload = response.data.data;
             response.data['picture_name'] = payload.picture_name;
@@ -36,7 +34,6 @@
     Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params, httpConfig) {
       // if(url === 'http://localhost:1337/user')
       //   element['mioHeader'] = 3;
-      console.log(url, element);
       if (operation == 'getList') {
           params.page = params._page;
           params.limit = params._perPage;
@@ -49,7 +46,6 @@
     Restangular.setDefaultHeaders({authorization: 'JWT '+$cookies.get('cms-token')});
 
     Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
-      console.log(responseHandler);
       switch (response.status) {
         case 401:
           AuthService.redirectLogin();

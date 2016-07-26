@@ -2,7 +2,17 @@
   "use strict";
   var myApp = angular.module('myApp', ['ng-admin','interceptors','services']);
   var permitted;
-
+  var customHeaderTemplate = '<div class="navbar-header">'+
+      '<button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">'+
+          '<span class="icon-bar"></span>'+
+          '<span class="icon-bar"></span>'+
+          '<span class="icon-bar"></span>'+
+      '</button>'+
+      '<a class="navbar-brand" href="#" ng-click="appController.displayHome()">CMS NODE</a>'+
+  '</div>'+
+  '<ul class="nav navbar-top-links navbar-right">'+
+    '<li><a href="/" ><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>'+
+  '</ul>';
 /*
   ****************** app bootstrap ********************
 */
@@ -191,7 +201,6 @@
       model.editionView().fields(fields['edit'].writeFields);
 
     model.showView().fields(fields['findone'].readFields);
-    console.log('modelname', model);
     model = setServerSideValidation(model);
 
     //model.listView().listActions(['show','edit','delete']);
@@ -219,6 +228,7 @@
     // user.creationView().fields(nga.field('avatar', 'file').uploadInformation({ 'url': '/file', 'apifilename': 'picture_name' }));
     // user.listView().fields(user.creationView().fields());
     // admin.addEntity(user);
+    admin.header(customHeaderTemplate);
     nga.configure(admin);
   }]);
 

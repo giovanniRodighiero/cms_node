@@ -20,7 +20,8 @@
 login.controller('LoginController',['$scope','$cookies','$http','$window', function($scope, $cookies, $http, $window){
   $scope.login = {};
   $scope.error = false;
-  //$cookies.remove('cms-token');
+  if($cookies.get('cms-token'))
+    $cookies.remove('cms-token');
   $scope.submit = function(){
     $http.post('/signin', $scope.login).then(function(result){
       $cookies.put('cms-token', result.data.data.token);
