@@ -16,23 +16,29 @@
       "searchableFields":["email"]
     },
     {
-      "modelName":"image",
+      "modelName":"news",
       "inheritsFrom": "assets",
-      "fields":[],
-      "searchableFields":["name"]
-    },
-    {
-      "modelName":"alone",
-      "inheritsFrom": "empty",
       "fields":[
-        {"name":"name", "params":[
+        {"name":"title", "params":[
           {"parName":"type","value":"string"},
-          {"parName":"minLength","value":"4"},
+          {"parName":"required","value":"true"}
+          ]
+        },
+        {"name":"subtitle", "params":[
+          {"parName":"type","value":"string"}
+          ]
+        },
+        {"name":"content", "params":[
+          {"parName":"type","value":"text"}
+          ]
+        },
+        {"name":"published", "params":[
+          {"parName":"type","value":"bool"},
           {"parName":"required","value":"true"}
           ]
         }
-      ],
-      "searchableFields":["name"]
+    ],
+      "searchableFields":["title"]
     }
   ]
 }

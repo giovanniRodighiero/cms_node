@@ -25,16 +25,28 @@
       },
       "assets":{
         "fields":[
-          {"name":"url","isFile":"true" ,"params":[
-            {"parName":"type","value":"string"},
-            {"parName":"required","value":"true"}
-            ]
-          },
-          {"name":"name", "params":[
-            {"parName":"type","value":"string"},
-            {"parName":"required","value":"true"}
+          {"name":"asset","isFile":"true" ,"params":[
+            {"parName":"type","value":"string"}
             ]
           }
+        ]
+      },
+      "block":{
+        "fields":[
+          {"name":"block_name", "params":[
+            {"parName":"type", "value":"string"},
+            {"parName":"unique", "value":"true"},
+            {"parName":"required", "value":"true"}
+            ]
+          },
+          {"name":"title", "params":[
+            {"parName":"type", "value":"string"}
+            ]
+          },
+          {"name":"subtitle", "params":[
+            {"parName":"type", "value":"string"}
+            ]
+          },
         ]
       },
       "empty":{
