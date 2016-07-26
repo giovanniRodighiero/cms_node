@@ -4,7 +4,7 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const takeAliases = _.partial(_.map, _, item => item.alias);
 const populateAliases = (model, alias) => model.populate(alias);
 function isAssociation(fieldName) {
-  var assoc = sails.models['news'].associations;
+  var assoc = sails.models['dummymodel'].associations;
   for (var i = 0; i < assoc.length; i++) {
     if(assoc[i].alias === fieldName)
       return true;
@@ -15,46 +15,16 @@ module.exports = {
   attributes: {
     // base model fields
     
-      asset: {
+    
+      news: {
+        
+          model:"news",
+        
+      },
+    
+      name: {
         
           type:"string",
-        
-      },
-    
-    
-      title: {
-        
-          type:"string",
-        
-          required:true,
-        
-      },
-    
-      subtitle: {
-        
-          type:"string",
-        
-      },
-    
-      content: {
-        
-          type:"text",
-        
-      },
-    
-      published: {
-        
-          type:"boolean",
-        
-          required:true,
-        
-      },
-    
-      dummyModels: {
-        
-          collection:"dummymodel",
-        
-          via:"news",
         
       },
     
@@ -69,14 +39,14 @@ module.exports = {
   },
 
   afterCreate(destroyedRecords, next){
-    sails.models.news.count().exec(function(err, count){
-      sails.config.fields_helper.modelCount['news'] = count;
+    sails.models.dummymodel.count().exec(function(err, count){
+      sails.config.fields_helper.modelCount['dummymodel'] = count;
       next();
     })
   },
   afterDestroy(destroyedRecords, next){
-    sails.models.news.count().exec(function(err, count){
-      sails.config.fields_helper.modelCount['news'] = count;
+    sails.models.dummymodel.count().exec(function(err, count){
+      sails.config.fields_helper.modelCount['dummymodel'] = count;
       next();
     })
   },
@@ -84,22 +54,22 @@ module.exports = {
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
-    var totPages = Math.ceil(sails.config.fields_helper.modelCount['news']/opts.limit);
+    var totPages = Math.ceil(sails.config.fields_helper.modelCount['dummymodel']/opts.limit);
     if(opts.sortField && opts.sortDir && !isAssociation(opts.sortField)){
       var order = opts.sortField+' '+opts.sortDir;
       opts.query.sort = order;
     }
     opts.query.skip = (pageIndex - 1) * limit;
     opts.query.limit = limit;
-    var query = sails.models['news'].find(opts.query);
-    const findQuery = _.reduce(takeAliases(sails.models['news'].associations), populateAliases, query);
+    var query = sails.models['dummymodel'].find(opts.query);
+    const findQuery = _.reduce(takeAliases(sails.models['dummymodel'].associations), populateAliases, query);
 
-  //  sails.models['news'].find(opts.query).paginate({page: pageIndex, limit: limit})
+  //  sails.models['dummymodel'].find(opts.query).paginate({page: pageIndex, limit: limit})
     findQuery
     .then(function(results){
       var customResults = [];
       for (var i = 0; i < results.length; i++) {
-        _.assign(results[i], {'model': 'news'});
+        _.assign(results[i], {'model': 'dummymodel'});
       }
       var myResult = {
         results: results,

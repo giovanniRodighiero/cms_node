@@ -57,8 +57,5 @@ module.exports.policies = {
   },
   UserController:{
     'create': ['loadLoggedUser']
-  },
-  NewsController:{
-    'find':['loadLoggedUser']
   }
 };

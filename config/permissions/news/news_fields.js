@@ -22,5 +22,9 @@ module.exports.news = {
         return true;
       }),
     
+      dummyModels: (function(page, associatedModel , user){
+        return true;
+      }),
+    
   }
 }
