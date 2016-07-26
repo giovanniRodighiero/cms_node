@@ -29,18 +29,17 @@ module.exports = (req, res, next) => {
                 var ids = [];
                 for (var j = 0; j < result[associations[i].alias].length; j++) {
                   // result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
-                  var fieldsNames = sails.config.models_structure.getFieldsNames(modelIdentity);
-                  console.log('result[associations[i].alias][j]',result[associations[i].alias][j]);
-                  if((fieldsNames.indexOf('published') != -1) && (req.user === undefined))
-                    ids.push(_.pick(result[associations[i].alias][j],['id']).id);
+                  ids.push(_.pick(result[associations[i].alias][j],['id']).id);
                 }
                 result[associations[i].alias] = ids;
               }else {
               //  _.assign(result[associations[i].alias], {'model': modelIdentity});
                 if(result[associations[i].alias]){
-                  for (var j = 0; j < result[associations[i].alias].length; j++) {
-                    result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
-                  }
+                  // console.log('dentro if');
+                  // var fieldsNames = sails.config.models_structure.getFieldsNames(modelIdentity);
+                  // console.log('result[associations[i].alias]',result[associations[i].alias]);
+                  // if((fieldsNames.indexOf('published') != -1) && (req.user === undefined) && (result[associations[i].alias].published == true))
+                    result[associations[i].alias] = _.assign(result[associations[i].alias], {'model': modelIdentity});
                 }
               }
             }
