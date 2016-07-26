@@ -41,7 +41,7 @@
       "inheritsFrom":"empty",
       "fields":[
         {"name":"news", "isAssociation":{"type":"single", "searchWith":"name"}, "params":[
-            {"parName":"website", ""}
+            {"parName":"model", "value":"website"}
           ]
         }
       ]
