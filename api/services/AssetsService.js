@@ -29,5 +29,10 @@ module.exports = {
     img.resize(width, height)            // resize
       .write('assets/uploads/images/'+aux.name+'/'+prefix+'_'+aux.ext+'.'+infos.ext); // save
 });
-  }
+  },
+  helper: (function(cut, url){
+    var infos = AssetsService.getAssetInfos(url, '.');
+    var aux = AssetsService.getAssetInfos(infos.name, '/');
+    return 'uploads/images/'+aux.name+'/'+cut+'_'+aux.ext+'.'+infos.ext;
+  })
 }

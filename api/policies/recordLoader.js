@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
   if(req.param('id')){
     var Model = req.options.controller;
 
-    if(sails.models[Model]){
+    if(sails.models[Model]){// dentro api
       Model = sails.models[Model];
       var associations = Model.associations;
       var query = Model.findOne({id: req.param('id')});
@@ -52,7 +52,7 @@ module.exports = (req, res, next) => {
       .catch(function(err){
         ErrorService.handleError(req, res, sails.config.errors.SERVER_ERROR, sails.config.errors.SERVER_ERROR.message, 'danger','/admin/'+Model);
       })
-    }else{
+    }else{// dentro adminModel (server side template controllers)
       var aux = Model.split('/', 2);
       var Model = sails.models[aux[1]];
       var associations = Model.associations;

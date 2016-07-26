@@ -1,4 +1,5 @@
 "use strict";
+var serialize = require('serialize-javascript');
 
 const _ = require('lodash');
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
@@ -56,7 +57,8 @@ module.exports = (req, res) => {
     if(err){
       return res.negotiate(err);
     }
-    else
+    else{
       return res.ok(results);
-    });
-  };
+    }
+  });
+};

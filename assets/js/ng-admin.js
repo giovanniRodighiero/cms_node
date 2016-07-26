@@ -138,19 +138,18 @@
    var html = '<div id="errors">';
    var errorData = Object.keys(error.data.data);
    for (var i = 0; i < errorData.length; i++) {
-       var list = '<ul>';
-     for (var j = 0; j < error.data.data[errorData[i]].length; j++) {
-       list = list + '<strong>' + error.data.data[errorData[i]][j].value + '</strong>';
-       list = list + '<li>' + error.data.data[errorData[i]][j].rule + '</li>';
-       list = list + '<li>' + error.data.data[errorData[i]][j].message + '</li>';
-     }
-     list = list + '</ul> <br>';
-   }
-   html = html + list + '</div>';
-   element.prepend(stringa);
-
-    progression.done();
-    notification.log(`Some values are invalid, see details in the form`, { addnCls: 'humane-flatty-error' });
+    var list = '<ul>';
+    for (var j = 0; j < error.data.data[errorData[i]].length; j++) {
+      list = list + '<strong>' + error.data.data[errorData[i]][j].value + '</strong>';
+      list = list + '<li>' + error.data.data[errorData[i]][j].rule + '</li>';
+      list = list + '<li>' + error.data.data[errorData[i]][j].message + '</li>';
+    }
+    list = list + '</ul> <br>';
+  }
+  html = html + list + '</div>';
+  element.prepend(html);
+  progression.done();
+  notification.log(`Some values are invalid, see details in the form`, { addnCls: 'humane-flatty-error' });
    return false;
  }
  // handle server side validation appending an html block to the original template
