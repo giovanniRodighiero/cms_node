@@ -113,8 +113,9 @@
           .targetFields([nga.field(modelField.association.searchWith)])
       }
     }else{
-      if(modelField.file)
-        return nga.field(modelField.name, 'template').template('<img src="{{ entry.values.url }}" height="100px" width="100px" />');
+      if(modelField.file){
+        return nga.field(modelField.name, 'template').template('<img src="{{ entry.values.asset }}" height="100px" width="100px" />');
+      }
       return setNormalFields(modelField, entities, nga);
     }
   }

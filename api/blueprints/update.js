@@ -36,7 +36,7 @@ module.exports = (req, res) => {
         AssetsService.deleteAssets(infos.name);
         var cuts = sails.config.services.assets.cuts;
         for (var i = 0; i < cuts.length; i++) {
-          AssetsService.createCuts(updated[0].url, cuts[i].name ,cuts[i].width, cuts[i].height);
+          AssetsService.createCuts(updated[0][AssetsService.hasAsset(Model.identity)], cuts[i].name ,cuts[i].width, cuts[i].height);
         }
       }
       return res.ok(updated);

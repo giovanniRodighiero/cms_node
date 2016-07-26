@@ -27,7 +27,7 @@ module.exports = (req, res) => {
       if(AssetsService.hasAsset(Model.identity)){
         var cuts = sails.config.services.assets.cuts;
         for (var i = 0; i < cuts.length; i++) {
-          AssetsService.createCuts(created.url, cuts[i].name ,cuts[i].width, cuts[i].height);
+          AssetsService.createCuts(created[AssetsService.hasAsset(Model.identity)], cuts[i].name ,cuts[i].width, cuts[i].height);
         }
       }
       return res.created(created);

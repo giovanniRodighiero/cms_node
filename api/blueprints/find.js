@@ -24,8 +24,6 @@ module.exports = (req, res) => {
   const Model = actionUtil.parseModel(req);
   // const where = actionUtil.parseCriteria(req);// off
   var permitted = sails.config.fields_helper.fieldsInfo[Model.identity].searchableFields;
-  permitted.push('createdAt');
-  permitted.push('updatedAt');
   var params = {
     page: 1,
     limit: 5,
@@ -47,6 +45,11 @@ module.exports = (req, res) => {
     convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};
   }
   params.query = convertedQuery;
+  // display only published=true result (if published is present) in the public API
+  var fieldsNames = sails.config.models_structure.getFieldsNames(Model.identity);
+  if((fieldsNames.indexOf('published') != -1) && (req.user === undefined))
+    params.query.published = true;
+
   //params.published
   // var query = Model.find(convertedQuery);
   // const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione

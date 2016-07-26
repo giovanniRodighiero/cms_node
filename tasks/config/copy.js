@@ -20,13 +20,12 @@
  *
  */
 module.exports = function(grunt) {
-
   grunt.config.set('copy', {
     dev: {
       files: [{
         expand: true,
         cwd: './assets',
-        src: ['js/**/*.js','styles/**/*.css','templates/**/*','vendor/**/*.min.*','uploads/**/*'],
+        src: require('../pipeline').toCopy,
         dest: '.tmp/public'
       }]
     },

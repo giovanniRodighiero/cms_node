@@ -17,7 +17,7 @@ module.exports = {
     var fields = sails.config.fields_helper.fieldsInfo[modelName].fields;
     for (var i = 0; i < fields.length; i++) {
       if(fields[i].file)
-        return true;
+        return fields[i].name;
     }
     return false;
   },

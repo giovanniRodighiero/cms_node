@@ -46,7 +46,7 @@
           {"name":"subtitle", "params":[
             {"parName":"type", "value":"string"}
             ]
-          },
+          }
         ]
       },
       "empty":{

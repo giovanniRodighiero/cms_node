@@ -22,7 +22,7 @@ module.exports = {
       migrate: 'alter'
     },
   log: {
-    level: 'debug'
+    level: 'silly'
   },
   autoreload: {
     active: true,

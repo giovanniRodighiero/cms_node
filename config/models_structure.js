@@ -97,5 +97,12 @@ module.exports.models_structure = {
     fields = prepareFields(fields, complexItem.root);
     fields = prepareFields(fields, complexItem.child);
     return fields;
+  },
+  getFieldsNames(name){
+    fields = sails.config.models_structure.getFields(name);
+    var fieldsNames = fields.map(function(field){
+      return field.name;
+    });
+    return fieldsNames;
   }
 };

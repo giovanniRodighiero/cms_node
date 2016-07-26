@@ -46,12 +46,6 @@ module.exports = {
       },
     
     
-      avatar: {
-        
-          model:"image",
-        
-      },
-    
       description: {
         
           type:"string",

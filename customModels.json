@@ -4,16 +4,12 @@
       "modelName":"user",
       "inheritsFrom": "user",
       "fields":[
-        {"name":"avatar", "isAssociation":{"type":"single", "searchWith":"name"} , "params":[
-          {"parName":"model","value":"image"}
-          ]
-        },
         {"name":"description", "params":[
           {"parName":"type","value":"string"}
           ]
         }
       ],
-      "searchableFields":["email"]
+      "searchableFields":["email","createdAt","updatedAt"]
     },
     {
       "modelName":"news",
@@ -33,12 +29,12 @@
           ]
         },
         {"name":"published", "params":[
-          {"parName":"type","value":"bool"},
+          {"parName":"type","value":"boolean"},
           {"parName":"required","value":"true"}
           ]
         }
     ],
-      "searchableFields":["title"]
+      "searchableFields":["title","createdAt","updatedAt"]
     }
   ]
 }

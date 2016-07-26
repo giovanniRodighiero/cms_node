@@ -50,15 +50,15 @@ module.exports.policies = {
 		// feed : ['isNiceToAnimals', 'hasRabbitFood']
 	// }
 
-  '*': ['isAuthenticated','recordLoader'],
+  '*': ['loadLoggedUser','isAuthenticated','recordLoader'],
 
   AuthController:{
     'signin': true
   },
-  AdminController:{
-    'getInfos':true
-  },
   UserController:{
-    'create': true
+    'create': ['loadLoggedUser']
+  },
+  NewsController:{
+    'find':['loadLoggedUser']
   }
 };

@@ -10,7 +10,14 @@
  * For more information see:
  *   https://github.com/balderdashy/sails-docs/blob/master/anatomy/myApp/tasks/pipeline.js.md
  */
-
+var toCopy = ['vendor/bower_components/ng-admin/build/ng-admin.min.js',
+'vendor/bower_components/ng-admin/build/ng-admin.min.css',
+'vendor/bower_components/angular-cookies/angular-cookies.min.js',
+'js/dependencies/sails.io.js',
+'js/**/*.js',
+'styles/**/*.css',
+'uploads/**/*'
+];
 
 // CSS files to inject in order
 //
@@ -66,6 +73,7 @@ var tmpPath = '.tmp/public/';
 // Prefix relative paths to source files so they point to the proper locations
 // (i.e. where the other Grunt tasks spit them out, or in some cases, where
 // they reside in the first place)
+module.exports.toCopy = toCopy;
 module.exports.cssFilesToInject = cssFilesToInject.map(function(cssPath) {
   return require('path').join('.tmp/public/', cssPath);
 });

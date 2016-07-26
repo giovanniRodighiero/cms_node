@@ -14,10 +14,6 @@ module.exports.user = {
       }),
     
     
-      avatar: (function(page, associatedModel , user){
-        return true;
-      }),
-    
       description: (function(page, associatedModel , user){
         return true;
       }),
