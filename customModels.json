@@ -32,6 +32,11 @@
           {"parName":"type","value":"boolean"},
           {"parName":"required","value":"true"}
           ]
+        },
+        {"name":"dummyModels", "isAssociation":{"type":"multiple", "searchWith":"name"}, "params":[
+            {"parName":"collection", "value":"dummyModel"},
+            {"parName":"via", "value":"news"}
+          ]
         }
     ],
       "searchableFields":["title","createdAt","updatedAt"]
@@ -40,8 +45,12 @@
       "modelName":"dummyModel",
       "inheritsFrom":"empty",
       "fields":[
-        {"name":"news", "isAssociation":{"type":"single", "searchWith":"name"}, "params":[
-            {"parName":"model", "value":"website"}
+        {"name":"news", "isAssociation":{"type":"single", "searchWith":"title"}, "params":[
+            {"parName":"model", "value":"news"}
+          ]
+        },
+        {"name":"name", "params":[
+          {"parName":"type", "value":"string"}
           ]
         }
       ]
