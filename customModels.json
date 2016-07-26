@@ -35,6 +35,17 @@
         }
     ],
       "searchableFields":["title","createdAt","updatedAt"]
+    },
+    {
+      "modelName":"dummyModel",
+      "inheritsFrom":"empty",
+      "fields":[
+        {"name":"news", "isAssociation":{"type":"single", "searchWith":"name"}, "params":[
+            {"parName":"website", ""}
+          ]
+        }
+      ]
     }
+
   ]
 }
