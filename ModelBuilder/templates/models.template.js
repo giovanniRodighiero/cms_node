@@ -100,6 +100,10 @@ module.exports = {
       for (var i = 0; i < results.length; i++) {
         _.assign(results[i], {'model': '<%=modelNameLow%>'});
       }
+      if(opts.user === undefined)
+        for (var i = 0; i < sails.models['dummymodel'].associations.length; i++) {
+          results = AssociationsService.cutNotWantedSingle(results, sails.models['dummymodel'].associations[i], 'published', true);
+        }
       var myResult = {
         results: results,
         pageIndex: pageIndex,

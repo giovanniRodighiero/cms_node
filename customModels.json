@@ -37,6 +37,11 @@
             {"parName":"collection", "value":"dummymodel"},
             {"parName":"via", "value":"news"}
           ]
+        },
+        {"name":"manydummyModels", "isAssociation":{"type":"multiple", "searchWith":"name"}, "params":[
+            {"parName":"collection", "value":"dummymodel"},
+            {"parName":"via", "value":"manynews"}
+          ]
         }
     ],
       "searchableFields":["title","createdAt","updatedAt"]
@@ -51,6 +56,11 @@
         },
         {"name":"name", "params":[
           {"parName":"type", "value":"string"}
+          ]
+        },
+        {"name":"manynews", "isAssociation":{"type":"multiple", "searchWith":"title"}, "params":[
+            {"parName":"collection", "value":"news"},
+            {"parName":"via", "value":"manydummyModels"}
           ]
         }
       ],
