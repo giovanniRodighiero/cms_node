@@ -6,10 +6,12 @@ var done = false;
 var modelsFile = fs.readFileSync('customModels.json');
 //var usersModelsFile = fs.readFileSync('user.json');
 
+// put first letter to upperCase
 function firstToUpperCase( str ) {
   return str.substr(0, 1).toUpperCase() + str.substr(1);
 }
 
+// inject the routes needed to use the jade server-side templates and the admin panel made with them ( admin/action )
 function injectRoutes(modelsFile, filePath) {
   var models = JSON.parse(modelsFile).models;
   file = fs.readFileSync(filePath, 'utf-8');
@@ -22,8 +24,6 @@ function injectRoutes(modelsFile, filePath) {
       partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.find\',\n');// index
 
       partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'/edit/:id\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.edit\',\n');// edit
-
-
 
       partial = partial.concat('\t \'get /admin/'+models[i].modelName.toString()+'/new\': \'admin/'+firstToUpperCase(models[i].modelName.toString())+'Controller.new\',\n');// new
 
@@ -42,7 +42,7 @@ function injectRoutes(modelsFile, filePath) {
     var newGenerator = fs.writeFileSync(filePath, result);
   }
 }
-
+// run the sails generator to build the apis: model, controller and routes with blueprints action are created after that.
 function makeApis(modelsFile) {
   var models = JSON.parse(modelsFile).models;
   var execSync = cp.execSync;
@@ -53,7 +53,7 @@ function makeApis(modelsFile) {
   }
 }
 
-
+// redefine the models files with the infos collected from the config files (defaultModels.json and customModels.json)
 function makeModels(modelsFile, cmd) {
   var models = JSON.parse(modelsFile).models;
   var execSync = cp.execSync;
@@ -63,6 +63,7 @@ function makeModels(modelsFile, cmd) {
     console.log('redefinito modello '+i);
   }
 }
+// build the folders and the files needed to configure the visibility of the fields and the permissions function for resource/action authrorization
 function makePermissions() {
   var models = JSON.parse(modelsFile).models;
   var execSync = cp.execSync;
