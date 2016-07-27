@@ -14,50 +14,50 @@ function isAssociation(fieldName) {
 module.exports = {
   attributes: {
     // base model fields
-    
+
       asset: {
-        
+
           type:"string",
-        
+
       },
-    
-    
+
+
       title: {
-        
+
           type:"string",
-        
+
           required:true,
-        
+
       },
-    
+
       subtitle: {
-        
+
           type:"string",
-        
+
       },
-    
+
       content: {
-        
+
           type:"text",
-        
+
       },
-    
+
       published: {
-        
+
           type:"boolean",
-        
+
           required:true,
-        
+
       },
-    
+
       dummyModels: {
-        
+
           collection:"dummymodel",
-        
+
           via:"news",
-        
+
       },
-    
+
     toJSON: function() {
       for (var key in this.object) {
         if (typeof this.object[key] === 'function') {
@@ -80,7 +80,6 @@ module.exports = {
       next();
     })
   },
-  
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;

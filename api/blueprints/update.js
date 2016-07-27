@@ -31,12 +31,13 @@ module.exports = (req, res) => {
     .update(pk, permitted)
     .then(function(updated){
       _.assign(updated, {'model': Model.identity});
-      if(AssetsService.hasAsset(Model.identity) && (req.record.url != updated[0].url)){
-        var infos = AssetsService.getAssetInfos(req.record.url, '/');
+      if(AssetsService.hasAsset(Model.identity) && (req.record[AssetsService.hasAsset(Model.identity)] != updated[0][AssetsService.hasAsset(Model.identity)])){
+        console.log('dentro if');
+        var infos = AssetsService.getAssetInfos(req.record[AssetsService.hasAsset(Model.identity)], '/');
         AssetsService.deleteAssets(infos.name);
         var cuts = sails.config.services.assets.cuts;
-        for (var i = 0; i < cuts.length; i++) {
-          AssetsService.createCuts(updated[0][AssetsService.hasAsset(Model.identity)], cuts[i].name ,cuts[i].width, cuts[i].height);
+        for (var i = 0; i < cuts[Model.identity].length; i++) {
+          AssetsService.createCuts(updated[0][AssetsService.hasAsset(Model.identity)], cuts[Model.identity][i].name ,cuts[Model.identity][i].width, cuts[Model.identity][i].height);
         }
       }
       return res.ok(updated);
