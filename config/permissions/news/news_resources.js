@@ -4,10 +4,7 @@ module.exports.news = {
       return true;
     }),
     findone: (function(record, user){
-      if(!record.published && !user)
-        return false;
-      else
-        return true;
+      return true;
     }),
     create: (function(record, user){
       return true;

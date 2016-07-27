@@ -200,7 +200,7 @@
     // else
       model.editionView().fields(fields['edit'].writeFields);
 
-    model.showView().fields(fields['findone'].readFields);
+    model.showView().fields(fields['findone'].writeFields);
     model = setServerSideValidation(model);
 
     //model.listView().listActions(['show','edit','delete']);

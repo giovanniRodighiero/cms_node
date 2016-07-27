@@ -16,7 +16,8 @@ var toCopy = ['vendor/bower_components/ng-admin/build/ng-admin.min.js',
 'js/dependencies/sails.io.js',
 'js/**/*.js',
 'styles/**/*.css',
-'uploads/**/*'
+'uploads/**/*',
+'templates/**/*.html'
 ];
 
 // CSS files to inject in order

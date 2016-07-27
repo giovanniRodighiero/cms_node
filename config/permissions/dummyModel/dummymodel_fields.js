@@ -10,5 +10,9 @@ module.exports.dummymodel = {
         return true;
       }),
     
+      manynews: (function(page, associatedModel , user){
+        return true;
+      }),
+    
   }
 }

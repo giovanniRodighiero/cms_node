@@ -3,7 +3,6 @@ var _ = require('lodash');
 const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
 const takeAliases = _.partial(_.map, _, item => item.alias);
 const populateAliases = (model, alias) => model.populate(alias);
-
 function isAssociation(fieldName) {
   var assoc = sails.models['news'].associations;
   for (var i = 0; i < assoc.length; i++) {
@@ -15,50 +14,58 @@ function isAssociation(fieldName) {
 module.exports = {
   attributes: {
     // base model fields
-
+    
       asset: {
-
+        
           type:"string",
-
+        
       },
-
-
+    
+    
       title: {
-
+        
           type:"string",
-
+        
           required:true,
-
+        
       },
-
+    
       subtitle: {
-
+        
           type:"string",
-
+        
       },
-
+    
       content: {
-
+        
           type:"text",
-
+        
       },
-
+    
       published: {
-
+        
           type:"boolean",
-
+        
           required:true,
-
+        
       },
-
+    
       dummyModels: {
-
+        
           collection:"dummymodel",
-
+        
           via:"news",
-
+        
       },
-
+    
+      manydummyModels: {
+        
+          collection:"dummymodel",
+        
+          via:"manynews",
+        
+      },
+    
     toJSON: function() {
       for (var key in this.object) {
         if (typeof this.object[key] === 'function') {
@@ -81,6 +88,7 @@ module.exports = {
       next();
     })
   },
+  
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
@@ -101,6 +109,10 @@ module.exports = {
       for (var i = 0; i < results.length; i++) {
         _.assign(results[i], {'model': 'news'});
       }
+      if(opts.user === undefined)
+        for (var i = 0; i < sails.models['dummymodel'].associations.length; i++) {
+          results = AssociationsService.cutNotWantedSingle(results, sails.models['dummymodel'].associations[i], 'published', true);
+        }
       var myResult = {
         results: results,
         pageIndex: pageIndex,

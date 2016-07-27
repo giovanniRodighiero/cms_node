@@ -25,13 +25,18 @@ module.exports = (req, res, next) => {
                 modelIdentity = associations[i].collection;
               //_.assign(result[associations[i].alias], {'model': modelIdentity});
               if(associations[i].type === 'collection'){
-                var ids = [];
-                for (var j = 0; j < result[associations[i].alias].length; j++) {
-                  // result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
-                  ids.push(_.pick(result[associations[i].alias][j],['id']).id);
+                if(req.param('expand')){
+                  if(req.user === undefined)
+                    result = AssociationsService.cutNotWantedSingle(result, associations[i],'published',true);
+                }else{
+                  var ids = [];
+                  for (var j = 0; j < result[associations[i].alias].length; j++) {
+                    // result[associations[i].alias][j] = _.assign(result[associations[i].alias][j], {'model': modelIdentity});
+                    ids.push(_.pick(result[associations[i].alias][j],['id']).id);
+                  }
+                  result[associations[i].alias] = ids;
                 }
-                result[associations[i].alias] = ids;
-              }else {
+              }else{
               //  _.assign(result[associations[i].alias], {'model': modelIdentity});
                 if(result[associations[i].alias]){
                   result[associations[i].alias] = _.assign(result[associations[i].alias], {'model': modelIdentity});

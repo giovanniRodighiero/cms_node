@@ -61,5 +61,9 @@ module.exports.policies = {
   NewsController:{
     'find':['loadLoggedUser'],
     'findOne':['loadLoggedUser','recordLoader']
+  },
+  DummymodelController:{
+    'find':['loadLoggedUser'],
+    'findOne':['loadLoggedUser','recordLoader']
   }
 };
