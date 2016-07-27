@@ -8,7 +8,6 @@ module.exports = (req, res, next) => {
 
   if(req.param('id')){
     var Model = req.options.controller;
-
     if(sails.models[Model]){// dentro api
       Model = sails.models[Model];
       var associations = Model.associations;
@@ -35,11 +34,9 @@ module.exports = (req, res, next) => {
               }else {
               //  _.assign(result[associations[i].alias], {'model': modelIdentity});
                 if(result[associations[i].alias]){
-                  // console.log('dentro if');
-                  // var fieldsNames = sails.config.models_structure.getFieldsNames(modelIdentity);
-                  // console.log('result[associations[i].alias]',result[associations[i].alias]);
-                  // if((fieldsNames.indexOf('published') != -1) && (req.user === undefined) && (result[associations[i].alias].published == true))
-                    result[associations[i].alias] = _.assign(result[associations[i].alias], {'model': modelIdentity});
+                  result[associations[i].alias] = _.assign(result[associations[i].alias], {'model': modelIdentity});
+                  if(req.user === undefined)
+                    result = AssociationsService.cutNotWantedSingle(result, associations[i],'published',true);
                 }
               }
             }

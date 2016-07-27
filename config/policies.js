@@ -59,6 +59,7 @@ module.exports.policies = {
     'create': ['loadLoggedUser']
   },
   NewsController:{
-    'find':['loadLoggedUser']
+    'find':['loadLoggedUser'],
+    'findOne':['loadLoggedUser','recordLoader']
   }
 };

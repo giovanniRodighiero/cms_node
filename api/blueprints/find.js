@@ -45,6 +45,8 @@ module.exports = (req, res) => {
     convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};
   }
   params.query = convertedQuery;
+
+  params.user = req.user;
   // display only published=true result (if published is present) in the public API
   var fieldsNames = sails.config.models_structure.getFieldsNames(Model.identity);
   if((fieldsNames.indexOf('published') != -1) && (req.user === undefined))
