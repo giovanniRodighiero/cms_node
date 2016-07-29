@@ -27,7 +27,7 @@ module.exports = (req, res, next) => {
               if(associations[i].type === 'collection'){
                 if(req.param('expand')){
                   if(req.user === undefined)
-                    result = AssociationsService.cutNotWantedSingle(result, associations[i],'published',true);
+                    result = AssociationsService.cutNotWanted(result, associations[i],'published',true);
                 }else{
                   var ids = [];
                   for (var j = 0; j < result[associations[i].alias].length; j++) {
@@ -41,7 +41,7 @@ module.exports = (req, res, next) => {
                 if(result[associations[i].alias]){
                   result[associations[i].alias] = _.assign(result[associations[i].alias], {'model': modelIdentity});
                   if(req.user === undefined)
-                    result = AssociationsService.cutNotWantedSingle(result, associations[i],'published',true);
+                    result = AssociationsService.cutNotWanted(result, associations[i],'published',true);
                 }
               }
             }

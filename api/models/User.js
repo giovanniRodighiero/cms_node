@@ -14,44 +14,44 @@ function isAssociation(fieldName) {
 module.exports = {
   attributes: {
     // base model fields
-    
+
       password: {
-        
+
           type:"string",
-        
+
           required:true,
-        
+
       },
-    
+
       role: {
-        
+
           type:"string",
-        
+
           enum:"['admin','superAdmin']",
-        
+
           required:true,
-        
+
           defaultsTo:"admin",
-        
+
       },
-    
+
       email: {
-        
+
           type:"email",
-        
+
           required:true,
-        
+
           unique:true,
-        
+
       },
-    
-    
+
+
       description: {
-        
+
           type:"string",
-        
+
       },
-    
+
     toJSON: function() {
       for (var key in this.object) {
         if (typeof this.object[key] === 'function') {
@@ -74,7 +74,7 @@ module.exports = {
       next();
     })
   },
-  
+
     toJSON() {
       let obj = this.toObject();
       delete obj.password;
@@ -103,7 +103,7 @@ module.exports = {
       })
       .catch(next);
   },
-  
+
   findCustom: function(opts, callback){
     var pageIndex =  parseInt(opts.page);
     var limit =  opts.limit;
@@ -126,7 +126,7 @@ module.exports = {
       }
       if(opts.user === undefined)
         for (var i = 0; i < sails.models['dummymodel'].associations.length; i++) {
-          results = AssociationsService.cutNotWantedSingle(results, sails.models['dummymodel'].associations[i], 'published', true);
+          results = AssociationsService.cutNotWanted(results, sails.models['dummymodel'].associations[i], 'published', true);
         }
       var myResult = {
         results: results,

@@ -15,6 +15,7 @@ const populateAlias = (model, alias) => model.populate(alias);
  * If an id was specified, just the instance with that unique id will be returned.
  */
 module.exports = (req, res) => {
+  //check for authorization on this action
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'find', req.user))
     return res.forbidden();
   // blakclist dei parametri accettati
@@ -23,26 +24,29 @@ module.exports = (req, res) => {
   // const populate = req.param('populate') ? req.param('populate').replace(/ /g, '').split(',') : [];// off
   const Model = actionUtil.parseModel(req);
   // const where = actionUtil.parseCriteria(req);// off
+
+  //get the fields you allowed to be searchable
   var permitted = sails.config.fields_helper.fieldsInfo[Model.identity].searchableFields;
   var params = {
     page: 1,
     limit: 5,
     query: {}
   };
-  if(req.param('limit'))
+  if(req.param('limit'))// limit per page
     params.limit = parseInt(req.param('limit'));
-  if(req.param('page'))
+  if(req.param('page'))// offset, page to skip
     params.page = parseInt(req.param('page'));
-  if(req.param('_sortField') && req.param('_sortDir') && (permitted.indexOf(req.param('_sortField'))) != -1 ){
+  if(req.param('_sortField') && req.param('_sortDir') && (permitted.indexOf(req.param('_sortField'))) != -1 ){// ordering
     params.sortField = req.param('_sortField');
     params.sortDir = req.param('_sortDir');
   }
+  // preparing the query parsing the parameters
   var allParams = req.allParams();
   var filteredParams = _.pick(allParams, permitted);
   var keys = Object.keys(filteredParams);
   var convertedQuery = {};
   for (var i = 0; i < keys.length; i++) {
-    convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};
+    convertedQuery[keys[i]] = {'contains': filteredParams[keys[i]]};// using the containts filter
   }
   params.query = convertedQuery;
 
@@ -55,8 +59,9 @@ module.exports = (req, res) => {
   //params.published
   // var query = Model.find(convertedQuery);
   // const findQuery = _.reduce(_.intersection('', takeAlias(Model.associations)), populateAlias, query); // non popola nessuna associazione
-  var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
 
+  var totPages = Math.ceil(sails.config.fields_helper.modelCount[Model.identity]/params.limit);
+  // inject total count header in the response
   res.set('X-Total-Count',sails.config.fields_helper.modelCount[Model.identity]);
   Model.findCustom(params, function(err, results){
     if(err){

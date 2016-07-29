@@ -13,12 +13,13 @@ const populateAliases = (model, alias) => model.populate(alias);
  * An API call to find and return a single model instance from the data adapter using the specified id.
  */
 module.exports = (req, res) => {
+  // check for authorization on this action
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'findone', req.user))
     return res.forbidden();
-
+  // check for authorization on this resource
   if(!sails.config.authorization.authorize_resource(req.record, 'findone', req.user))
     return res.forbidden();
-  //sails.log(req.record.toJSON());
+ // the record was preloaded in the 'recordLoader.js' policy  
   return res.ok(req.record);
 
   //_.set(req.options, 'criteria.blacklist', ['fields', 'populate', 'limit', 'skip', 'page', 'sort']);

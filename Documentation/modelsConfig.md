@@ -26,7 +26,7 @@ where each value starting with a `_` means that its content is supposed to be de
 ### Structure detailed description
 1. root of the file.
 2. entry point for a model, the value should be the model's name, all the chars of the model's name have to be written on lowcase, like `mysuperfancymodel`, or with _underscores_ like `my_super_fancy_model`.
- *NOTE:* it is *wrong* to use uppercase letter, even in the middle of the word, like ~~mySuperFancyModel.~~, that is because of how waterline transforms the model class into a database table: it converts the name on **all** lowcase letters, so to avoid conflict and mismatches of names it's easier to keep the names on lowcase chars.
+ *NOTE:* it is *wrong* to use uppercase letter, even in the middle of the word, like ~~mySuperFancyModel.~~, that is because of how waterline transforms the model class into a database table: it converts the name on **all** lowcase letters, so to avoid conflict and mismatches of names it's easier to keep the names on lowcase chars. For the same reason the name has also to be singular.
 3. for each field you want to use, you need one of this entry, where `"_field_name"` is the actual name of the field, and `"params":[]` contains the field's infos. It is also possible **to mark it as a file**, writing a simple flag `"isFile":"true"`, that way the in the admin panel the field is going to be shown as a *browse button* to upload a file.
 4. map each key - value attributes of a field, refer to [Waterline docs](https://github.com/balderdashy/waterline-docs/blob/master/models/data-types-attributes.md) for infos on which values are allowed.
 

@@ -10,14 +10,17 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
  * An API call to update a model instance with the specified `id`, treating the other unbound parameters as attributes.
  */
 module.exports = (req, res) => {
+  // check for authorization on this action
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'update', req.user))
     return res.forbidden();
+  // check for authorization on this resource
   if(!sails.config.authorization.authorize_resource(req.record, 'update', req.user))
     return res.forbidden();
 
   const Model = actionUtil.parseModel(req);
   const pk = actionUtil.requirePk(req);
   var values = actionUtil.parseValues(req);
+  // get the permitted fields to parse in the payload
   var permitted = [];
   var fields = sails.config.fields_helper.fieldsInfo[Model.identity];
   for (var i = 0; i < fields.length; i++) {
@@ -31,6 +34,7 @@ module.exports = (req, res) => {
     .update(pk, permitted)
     .then(function(updated){
       _.assign(updated, {'model': Model.identity});
+      // handle update of the images if the model has a file type field
       if(AssetsService.hasAsset(Model.identity) && (req.record[AssetsService.hasAsset(Model.identity)] != updated[0][AssetsService.hasAsset(Model.identity)])){
         console.log('dentro if');
         var infos = AssetsService.getAssetInfos(req.record[AssetsService.hasAsset(Model.identity)], '/');

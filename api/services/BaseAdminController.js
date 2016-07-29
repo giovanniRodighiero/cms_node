@@ -27,9 +27,6 @@ function Base() {
   this.index = function(r, res){
 		return res.view('admins/index', {page:'index'});
   },
-  this.getInfos = function(req, res){
-		return res.json({data: serialize(sails.config.user.actions.find)});
-	},
   this.permittedModels = function(req, res){
 		var permittedModels = {};
 		var originalModels = sails.config.models_structure.getModels();

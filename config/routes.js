@@ -46,7 +46,6 @@ module.exports.routes = {
   'get /signout':'AuthController.signout',
   'get /admin/index': 'AdminController.index',
   'post /uploadFile':'FileController.uploadFile',
-  'get /infos': 'AdminController.getInfos',
   'get /permittedModels': 'AdminController.permittedModels',
 
 // INJECT ROUTES

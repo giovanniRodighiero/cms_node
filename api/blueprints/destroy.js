@@ -9,8 +9,10 @@ const actionUtil = require('sails/lib/hooks/blueprints/actionUtil');
  */
 
 module.exports = (req, res) => {
+  // check for authorization on the action
   if(! sails.config.authorization.authorize_controller(req.options.controller, 'destroy', req.user))
     return res.forbidden();
+  // check for authorization on this resource
   if(!sails.config.authorization.authorize_resource(req.record, 'update', req.user))
     return res.forbidden();
 
@@ -19,6 +21,7 @@ module.exports = (req, res) => {
   Model
     .destroy(pk)
     .then(function(destroyed){
+      // delete the associated images if the model has a file type field
       if(AssetsService.hasAsset(Model.identity)){
         var infos = AssetsService.getAssetInfos(destroyed[0].url, '/');
         AssetsService.deleteAssets(infos.name);

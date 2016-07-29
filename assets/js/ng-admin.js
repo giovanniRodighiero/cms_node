@@ -1,7 +1,7 @@
 (function(){
   "use strict";
   var myApp = angular.module('myApp', ['ng-admin','interceptors','services']);
-  var permitted;
+  // template for the header
   var customHeaderTemplate = '<div class="navbar-header">'+
       '<button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">'+
           '<span class="icon-bar"></span>'+
@@ -13,6 +13,8 @@
   '<ul class="nav navbar-top-links navbar-right">'+
     '<li><a href="/" ><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>'+
   '</ul>';
+
+  var permitted;
 /*
   ****************** app bootstrap ********************
 */
@@ -131,6 +133,7 @@
   writeField.validation(validation);
   return writeField;
  }
+ //inject and html element containing all the server-side validation response
  function addErrors(error, form, progression, notification) {
    var element = angular.element( document.querySelector( '#create-view' ) );
    var previousErrors = angular.element( document.querySelector( '#errors' ) );
@@ -153,7 +156,7 @@
   notification.log(`Some values are invalid, see details in the form`, { addnCls: 'humane-flatty-error' });
    return false;
  }
- // handle server side validation appending an html block to the original template
+ // add callback to a specific view to handle a 400 code response from the server
  function setServerSideValidation(model) {
    model.creationView().onSubmitError(['error', 'form', 'progression', 'notification', function(error, form, progression, notification) {
      return addErrors(error, form, progression, notification);

@@ -2,7 +2,7 @@
 var _ = require('lodash');
 
 module.exports = {
-  cutNotWantedSingle: function(results, item, fieldName, value){
+  cutNotWanted: function(results, item, fieldName, value){
     if(Array.isArray(results)){
       for (var i = 0; i < results.length; i++) {// loop the query results
         if(Array.isArray(results[i][item.alias])){

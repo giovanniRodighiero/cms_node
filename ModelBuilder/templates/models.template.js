@@ -102,7 +102,7 @@ module.exports = {
       }
       if(opts.user === undefined)
         for (var i = 0; i < sails.models['dummymodel'].associations.length; i++) {
-          results = AssociationsService.cutNotWantedSingle(results, sails.models['dummymodel'].associations[i], 'published', true);
+          results = AssociationsService.cutNotWanted(results, sails.models['dummymodel'].associations[i], 'published', true);
         }
       var myResult = {
         results: results,
