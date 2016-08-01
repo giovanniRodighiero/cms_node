@@ -10,8 +10,8 @@
  * For more information see:
  *   https://github.com/balderdashy/sails-docs/blob/master/anatomy/myApp/tasks/pipeline.js.md
  */
-var toCopy = ['vendor/bower_components/ng-admin/build/ng-admin.min.js',
-'vendor/bower_components/ng-admin/build/ng-admin.min.css',
+var toCopy = ['vendor/bower_components/ng-admin-custom/build/ng-admin.min.js',
+'vendor/bower_components/ng-admin-custom/build/ng-admin.min.css',
 'vendor/bower_components/angular-cookies/angular-cookies.min.js',
 'js/dependencies/sails.io.js',
 'js/**/*.js',
@@ -26,7 +26,7 @@ var toCopy = ['vendor/bower_components/ng-admin/build/ng-admin.min.js',
 //  to change `assets/styles/importer.less` instead.)
 var cssFilesToInject = [
   'styles/**/*.css',
-  'vendor/bower_components/ng-admin/build/ng-admin.min.css'
+  'vendor/bower_components/ng-admin-custom/build/ng-admin.min.css'
 ];
 
 
@@ -34,7 +34,8 @@ var cssFilesToInject = [
 // (uses Grunt-style wildcard/glob/splat expressions)
 var jsFilesToInject = [
   //'vendor/bower_components/angular/angular.min.js',
-  'vendor/bower_components/ng-admin/build/ng-admin.min.js',
+  'vendor/bower_components/ng-admin-custom/build/ng-admin.min.js',
+  'vendor/bower_components/ng-admin-custom/build/ng-admin.min.js',
   'vendor/bower_components/angular-cookies/angular-cookies.min.js',
 
   // Load sails.io before everything else
