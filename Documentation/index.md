@@ -1,4 +1,11 @@
 # Instructions
+
+## Dependency installation
+1. npm install in the root of the project;
+2. npm install in `AuthorizationBuilder` and `ModelBuilder` folders;
+3. bower install in `assets/vendor` folder;
+
+## Project configuration
 1. Configure the defaultsModels in the *defaultModels.json* file (see modelsConfig.md);
 2. Configure the customModels in the *customModels.json* file (see modelsConfig.md);
 3. Run the command `node setup.js` (see setupScript.md);
