@@ -14,9 +14,9 @@ services: {// 1)
   }
 }
 ```
-1. append to the config object services;
-2. append to the property assets;
-3. append to the property cuts, which contains the information on how to process an image;
+1. appends to the config object services;
+2. appends to the property assets;
+3. appends to the property cuts, which contains the information on how to process an image;
 4. settings for the model "news", each item of the array will create an image with the settings expressed;
 5. single image setting: *name* is the name of the cut and will be prepended to the source image, like this `small_sourceImageUUID.png`,
   width and height are the size of the new image in pixels.

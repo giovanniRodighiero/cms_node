@@ -26,7 +26,7 @@ where each value starting with a `_` means that its content is supposed to be de
 ### Structure detailed description
 1. root of the file.
 2. entry point for a model, the value should be the model's name, all the chars of the model's name have to be written on lowcase, like `mysuperfancymodel`, or with _underscores_ like `my_super_fancy_model`.
- *NOTE:* it is *wrong* to use uppercase letter, even in the middle of the word, like ~~mySuperFancyModel.~~, that is because of how waterline transforms the model class into a database table: it converts the name on **all** lowcase letters, so to avoid conflict and mismatches of names it's easier to keep the names on lowcase chars. For the same reason the name has also to be singular.
+ **NOTE:** it is *wrong* to use uppercase letter, even in the middle of the word, like ~~mySuperFancyModel.~~, that is because of how waterline transforms the model class into a database table: it converts the name on **all** lowcase letters, so to avoid conflict and mismatches of names it's easier to keep the names on lowcase chars. For the same reason the name has also to be singular.
 3. for each field you want to use, you need one of this entry, where `"_field_name"` is the actual name of the field, and `"params":[]` contains the field's infos. It is also possible **to mark it as a file**, writing a simple flag `"isFile":"true"`, that way the in the admin panel the field is going to be shown as a *browse button* to upload a file.
 4. map each key - value attributes of a field, refer to [Waterline docs](https://github.com/balderdashy/waterline-docs/blob/master/models/data-types-attributes.md) for infos on which values are allowed.
 
@@ -59,7 +59,7 @@ The structure of the file is the following:
 3. the name of the model to inherits from.
 4. as for the *defaultModels.json* this object defines a field of the model, it has the same structure of that file.
 5. as for the *defaultModels.json* this object defines the attributes of a field, it has the same structure of that file.
-6. defines the fields you want to be searchable on gets request, every field not listed in here will be ignored in the actual queries.
+6. defines the fields you want to be searchable on gets requests, every field not listed in here will be ignored in the actual queries.
 
 ### Associations with other models
 To express associations with other models, you have to mark the field in a specific way:
@@ -70,9 +70,28 @@ To express associations with other models, you have to mark the field in a speci
   ]
 }
 ```
+in this example we are specifying that "news_id" is a field that refers to the model "news", in a one-to-x association.
 
-in this example we are specifying that "news_id" is a field that refers to the model "news", in a one-to-many association.
-* "*isAssociation*" flags the field as an association; "type" specify if it is a one-to-many (**-> single**) or a many-to-many(**-> multiple**); "searchWith" specify the field's name of the associated model (in this example that model is "news") to be used as label while displaying the populated field (in this example that label in "title", so in the admin panel instead of the id of the record, the field "title" will be shown).
-* "*attributes*" for *single* type associations (one-to-many), one of the attributes has to be `{"parName":"model", "value":"_model_name"}`, to respect [waterline's convention on association]("https://github.com/balderdashy/waterline-docs/blob/master/models/associations/one-to-many.md"); while for *multiple* type of associations (many-to-many), two of the attributes has to be `{"parName":"collection", "value":"news"},{"parName":"via", "value":"manydummyModels"}`.
+* "*isAssociation*" flags the field as an association; "type" specify if it is a one-to-x (**-> single**) or a many-to-x(**-> multiple**); "searchWith" specify the field's name of the associated model (in this example that model is "news") to be used as label while displaying the populated field (in this example that label in "title", so in the admin panel instead of the id of the record, the field "title" will be shown).
+* "*attributes*" for *single* type associations (one-to-x), one of the attributes has to be `{"parName":"model", "value":"_model_name"}`, to respect [waterline's convention on association]("https://github.com/balderdashy/waterline-docs/blob/master/models/associations/one-to-many.md"); while for *multiple* type of associations (many-to-x), two of the attributes has to be `{"parName":"collection", "value":"news"},{"parName":"via", "value":"manydummyModels"}`.
+
+This informations needs to be specified on each model that is involved in that association, for example after you defined
+```javascript
+{"name":"news_id", "isAssociation":{"type":"single", "searchWith":"title"}, "params":[
+    {"parName":"model", "value":"news"}
+  ]
+}
+```
+in the model that could be named "event", you have to mark the other side of that association, so in the "news" model you'll have something like this
+```javascript
+{"name":"event", "isAssociation":{"type":"multiple", "searchWith":"title"}, "params":[
+    {"parName":"model", "value":"event"}
+  ]
+}
+```
+which says that the field "event" has multiple event associated.
+
+* In the case of one-way-association you actually have to specify the association only on one side of it and if that association is a one-to-one, you also need to specify the `unique: true` attribute. [Sails doc reference]("http://sailsjs.org/documentation/concepts/models-and-orm/associations/one-to-one")
+
 
 Waterline convention for naming join tables is 'firstModelName_fieldName__secondModelName_fieldName'
