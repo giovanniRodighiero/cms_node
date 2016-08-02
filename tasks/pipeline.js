@@ -15,7 +15,7 @@ var toCopy = ['vendor/bower_components/ng-admin-custom/build/ng-admin.min.js',
 'vendor/bower_components/angular-cookies/angular-cookies.min.js',
 'js/dependencies/sails.io.js',
 'js/**/*.js',
-'styles/**/*.css',
+'styles/**/*.css', 
 'uploads/**/*',
 'templates/**/*.html'
 ];

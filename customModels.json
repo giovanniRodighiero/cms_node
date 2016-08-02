@@ -3,27 +3,34 @@
     {
       "modelName":"user",
       "inheritsFrom": "user",
-      "fields":[
-        {"name":"description", "params":[
-          {"parName":"type","value":"string"}
-          ]
-        }
-      ],
+      "fields":[],
       "searchableFields":["email","createdAt","updatedAt"]
     },
     {
-      "modelName":"news",
-      "inheritsFrom": "assets",
+      "modelName":"gallery",
+      "inheritsFrom":"asset",
       "fields":[
-        {"name":"title", "params":[
-          {"parName":"type","value":"string"},
-          {"parName":"required","value":"true"}
+        {"name":"slug", "params":[
+          {"parName":"type", "value":"string"}
           ]
         },
-        {"name":"subtitle", "params":[
-          {"parName":"type","value":"string"}
+        {"name":"news", "isAssociation":{"type":"multiple", "searchWith":"title"}, "params":[
+            {"parName":"collection", "value":"news"},
+            {"parName":"via", "value":"images"}
           ]
         },
+        {"name":"products", "isAssociation":{"type":"multiple", "searchWith":"title"}, "params":[
+            {"parName":"collection", "value":"product"},
+            {"parName":"via", "value":"icon"}
+          ]
+        }
+      ],
+      "searchableFields":["slug","createdAt","updatedAt"]
+    },
+    {
+      "modelName":"news",
+      "inheritsFrom": "block",
+      "fields":[
         {"name":"content", "params":[
           {"parName":"type","value":"text"}
           ]
@@ -33,38 +40,28 @@
           {"parName":"required","value":"true"}
           ]
         },
-        {"name":"dummyModels", "isAssociation":{"type":"multiple", "searchWith":"name"}, "params":[
-            {"parName":"collection", "value":"dummymodel"},
+        {"name":"images", "isAssociation":{"type":"multiple", "searchWith":"slug"}, "params":[
+            {"parName":"collection", "value":"gallery"},
             {"parName":"via", "value":"news"}
-          ]
-        },
-        {"name":"manydummyModels", "isAssociation":{"type":"multiple", "searchWith":"name"}, "params":[
-            {"parName":"collection", "value":"dummymodel"},
-            {"parName":"via", "value":"manynews"}
-          ]
-        }
-    ],
-      "searchableFields":["title","createdAt","updatedAt"]
-    },
-    {
-      "modelName":"dummymodel",
-      "inheritsFrom":"empty",
-      "fields":[
-        {"name":"news", "isAssociation":{"type":"single", "searchWith":"title"}, "params":[
-            {"parName":"model", "value":"news"}
-          ]
-        },
-        {"name":"name", "params":[
-          {"parName":"type", "value":"string"}
-          ]
-        },
-        {"name":"manynews", "isAssociation":{"type":"multiple", "searchWith":"title"}, "params":[
-            {"parName":"collection", "value":"news"},
-            {"parName":"via", "value":"manydummyModels"}
           ]
         }
       ],
-      "searchableFields":["name","createdAt","updatedAt"]
+      "searchableFields":["title","createdAt","updatedAt"]
+    },
+    {
+      "modelName":"product",
+      "inheritsFrom":"block",
+      "fields":[
+        {"name":"price", "params":[
+          {"parName":"type", "value":"integer"}
+          ]
+        },
+        {"name":"icon", "isAssociation":{"type":"single", "searchWith":"slug"}, "params":[
+            {"parName":"model", "value":"gallery"}
+          ]
+        }
+      ],
+      "searchableFields":["title","price","createdAt","updatedAt"]
     }
   ]
 }

@@ -75,6 +75,10 @@
             ]);
             return aux;
           break;
+        case 'integer':
+          var aux = nga.field(modelField.name, 'number');
+          return aux;
+          break;
         default:
           var aux = nga.field(modelField.name, modelField.infos.type);
           return aux;
