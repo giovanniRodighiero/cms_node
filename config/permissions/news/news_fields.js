@@ -1,10 +1,6 @@
 module.exports.news = {
   fields:{
     
-      block_name: (function(page, associatedModel , user){
-        return true;
-      }),
-    
       title: (function(page, associatedModel , user){
         return true;
       }),

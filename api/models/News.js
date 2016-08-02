@@ -15,16 +15,6 @@ module.exports = {
   attributes: {
     // base model fields
     
-      block_name: {
-        
-          type:"string",
-        
-          unique:true,
-        
-          required:true,
-        
-      },
-    
       title: {
         
           type:"string",

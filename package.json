@@ -36,6 +36,7 @@
     "sails": "~0.12.3",
     "sails-disk": "~0.10.9",
     "sails-hook-flash": "^0.2.1",
+    "sails-mongo": "^0.12.1",
     "sails-mysql": "^0.11.5",
     "sails-service-cipher": "^3.2.1",
     "sails-service-hash": "^3.2.1",

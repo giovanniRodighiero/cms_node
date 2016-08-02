@@ -55,14 +55,15 @@ module.exports.policies = {
   AuthController:{
     'signin': true
   },
-  UserController:{
-    'create': ['loadLoggedUser']
-  },
   NewsController:{
     'find':['loadLoggedUser'],
     'findOne':['loadLoggedUser','recordLoader']
   },
-  DummymodelController:{
+  ProductController:{
+    'find':['loadLoggedUser'],
+    'findOne':['loadLoggedUser','recordLoader']
+  },
+  GalleryController:{
     'find':['loadLoggedUser'],
     'findOne':['loadLoggedUser','recordLoader']
   }
